@@ -1,0 +1,53 @@
+:root {
+	font-family: Inter, Avenir, 'Avenir Next', 'Segoe UI', Helvetica, Arial, sans-serif;
+	font-synthesis: none;
+	color: #172b3d;
+	background: #f3f0e9;
+	--ink: #172b3d;
+	--navy: #112c46;
+	--navy-soft: #23445f;
+	--copper: #bd6840;
+	--copper-dark: #99502e;
+	--teal: #168f8a;
+	--paper: #fffdf8;
+	--parchment: #f3f0e9;
+	--line: #dcd7cd;
+	--muted: #657381;
+	--shadow: 0 10px 32px rgb(17 44 70 / 8%);
+}
+
+* {
+	box-sizing: border-box;
+}
+html {
+	min-width: 20rem;
+	background: var(--parchment);
+}
+body {
+	min-width: 20rem;
+	min-height: 100vh;
+	margin: 0;
+	background:
+		radial-gradient(circle at 78% 0%, rgb(36 184 178 / 5%), transparent 28rem), var(--parchment);
+}
+button,
+input {
+	font: inherit;
+}
+button {
+	cursor: pointer;
+}
+a {
+	color: inherit;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+	outline: 3px solid rgb(22 143 138 / 35%);
+	outline-offset: 2px;
+}
+::selection {
+	color: white;
+	background: var(--teal);
+}

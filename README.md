@@ -1,42 +1,52 @@
-# sv
+# SALSAH 2
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+SALSAH 2 is a project-neutral archive management application and Virtual Research Environment for the OLDAP backend. It is built with SvelteKit, TypeScript, Paraglide, and custom CSS without a component or CSS framework.
 
-## Creating a project
+The current increment provides:
 
-If you're seeing this, you've probably already done this step. Congrats!
+- OLDAP login, refresh-cookie session restoration, and global logout;
+- runtime working-project selection based on the authenticated user's memberships;
+- canonical project routes under `/p/[projectShortName]`;
+- a responsive archive workspace prototype with project switching.
+
+`oldap:SystemProject` and `oldap:SharedProject` remain authorization contexts but are never exposed as working projects.
+
+## Development
+
+Install dependencies and copy the public runtime configuration:
 
 ```sh
-# create a new project
-npx sv create my-app
+npm install
+cp .env.example .env.local
 ```
 
-To recreate this project with the same configuration:
+`PUBLIC_API_URL` must point to the browser-visible OLDAP API origin, for example `http://localhost:8000`. The API deployment must include the SALSAH frontend origin in `OLDAP_AUTH_ALLOWED_ORIGINS`; cookie-backed session refresh and logout require credential-enabled CORS.
 
-```sh
-# recreate this project
-npx sv@0.17.0 create --template minimal --types ts --add prettier eslint vitest="usages:unit,component" playwright sveltekit-adapter="adapter:node" paraglide="languageTags:de, fr, it, en+demo:no" --install npm salsah-2
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Start the development server:
 
 ```sh
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+## Verification
 
-To create a production version of your app:
+Before committing, run:
 
 ```sh
+npm run check
+npm run lint
+npm run test:unit -- --run
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+End-to-end tests build and preview the application on port 4173:
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```sh
+npm run test:e2e
+```
+
+The Playwright command installs its required browser binaries when necessary.
+
+## Project context
+
+Architecture, repository state, and the incremental roadmap are documented in [`codex.md`](./codex.md). Technical changes are recorded newest-first in [`CODEX_LOG.md`](./CODEX_LOG.md).
