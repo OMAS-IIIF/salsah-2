@@ -13,6 +13,7 @@ export const authSession = writable<AuthSessionState>({
 });
 
 let restorePromise: Promise<boolean> | null = null;
+let renewalPromise: Promise<string | null> | null = null;
 
 function accessTokenFromResponse(value: unknown): string {
 	if (!value || typeof value !== 'object') throw new Error('Invalid authentication response.');
@@ -129,6 +130,40 @@ export function restoreSession(): Promise<boolean> {
 		}
 	})();
 	return restorePromise;
+}
+
+/**
+ * Renew the in-memory access token through the HttpOnly refresh cookie.
+ * Concurrent callers share one request so an expired token cannot trigger a
+ * refresh storm from several resource requests.
+ */
+export function renewAccessToken(): Promise<string | null> {
+	if (renewalPromise) return renewalPromise;
+
+	renewalPromise = (async () => {
+		try {
+			const baseUrl = getApiBaseUrl();
+			const response = await fetch(`${baseUrl}/admin/auth/refresh`, {
+				method: 'POST',
+				credentials: 'include',
+				headers: { Accept: 'application/json' }
+			});
+			if (!response.ok) {
+				authSession.set({ status: 'anonymous', user: null, accessToken: null });
+				return null;
+			}
+			const accessToken = accessTokenFromResponse(await response.json());
+			await establishSession(baseUrl, accessToken);
+			return accessToken;
+		} catch {
+			authSession.set({ status: 'anonymous', user: null, accessToken: null });
+			return null;
+		} finally {
+			renewalPromise = null;
+		}
+	})();
+
+	return renewalPromise;
 }
 
 /** Revoke the cookie-backed session and always clear in-memory credentials. */

@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import LiveResourceList from '$lib/components/resources/LiveResourceList.svelte';
 	import ResourceTabs from '$lib/components/workspace/ResourceTabs.svelte';
 	import { authSession } from '$lib/auth/session';
 	import { demoWorkspace } from '$lib/demo/workspace';
 	import { m } from '$lib/paraglide/messages';
+	import { projectContext } from '$lib/projects/context';
 	import { getGreetingPeriod, type GreetingPeriod } from '$lib/utils/greeting';
 
 	let greetingPeriod = $state<GreetingPeriod | null>(null);
@@ -22,10 +24,6 @@
 	onMount(() => {
 		greetingPeriod = getGreetingPeriod(new Date().getHours());
 	});
-
-	function resourceType(kind: (typeof demoWorkspace.recentResources)[number]['kind']): string {
-		return { letter: m.type_letter, photograph: m.type_photograph, record: m.type_record }[kind]();
-	}
 </script>
 
 <div class="page-shell">
@@ -50,6 +48,10 @@
 		ariaLabel={m.open_resources()}
 		closeLabel={m.close_tab()}
 	/>
+
+	{#if $projectContext.current}
+		<LiveResourceList project={$projectContext.current.projectShortName} />
+	{/if}
 
 	<div class="content-grid">
 		<div class="main-column">
@@ -107,27 +109,6 @@
 							><strong>{m.collection_oral_history()}</strong><small>486 {m.objects()}</small></span
 						><time>{m.updated_last_week()}</time>
 					</div>
-				</div>
-			</section>
-
-			<section class="panel">
-				<header class="panel-heading">
-					<div>
-						<p class="kicker">{m.recent_kicker()}</p>
-						<h2>{m.recent_title()}</h2>
-					</div>
-					<a href="#history">{m.show_history()}</a>
-				</header>
-				<div class="resource-list">
-					{#each demoWorkspace.recentResources as resource (resource.title)}
-						<a href="#resource" class="resource"
-							><span class="document {resource.color}"><i></i><i></i><i></i></span><span
-								><small>{resourceType(resource.kind)}</small><strong>{resource.title}</strong><em
-									>{resource.meta}</em
-								></span
-							><b>→</b></a
-						>
-					{/each}
 				</div>
 			</section>
 		</div>
@@ -323,8 +304,7 @@
 		font-weight: 700;
 		text-decoration: none;
 	}
-	.collections,
-	.resource-list {
+	.collections {
 		border-top: 1px solid #e8e3da;
 	}
 	.collection {
@@ -336,8 +316,7 @@
 		padding: 0.55rem 1.25rem;
 		border-bottom: 1px solid #ece8e0;
 	}
-	.collection:hover,
-	.resource:hover {
+	.collection:hover {
 		background: #faf7f1;
 	}
 	.arrow {
@@ -391,59 +370,6 @@
 		width: 1px;
 		background: #ddd5c9;
 		content: '';
-	}
-	.resource {
-		display: grid;
-		grid-template-columns: 3rem minmax(0, 1fr) auto;
-		align-items: center;
-		gap: 0.9rem;
-		padding: 0.8rem 1.25rem;
-		border-bottom: 1px solid #ece8e0;
-		text-decoration: none;
-	}
-	.document {
-		display: grid;
-		align-content: center;
-		gap: 0.25rem;
-		width: 2.4rem;
-		height: 2.9rem;
-		padding: 0.55rem 0.4rem;
-		border-radius: 0.15rem;
-	}
-	.document i {
-		height: 1px;
-		background: rgb(255 255 255 / 70%);
-	}
-	.document i:last-child {
-		width: 65%;
-	}
-	.resource > span:nth-child(2) {
-		display: grid;
-		gap: 0.12rem;
-		min-width: 0;
-	}
-	.resource small {
-		color: var(--copper-dark);
-		font-size: 0.61rem;
-		font-weight: 750;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-	}
-	.resource strong {
-		overflow: hidden;
-		color: var(--navy);
-		font-family: Georgia, serif;
-		font-size: 0.9rem;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-	.resource em {
-		color: var(--muted);
-		font-size: 0.68rem;
-		font-style: normal;
-	}
-	.resource b {
-		color: var(--teal);
 	}
 	.context-column {
 		display: flex;

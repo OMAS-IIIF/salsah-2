@@ -1,0 +1,7 @@
+{
+	"iri": "BaldwinLocomotiveWorks",
+	"schema:name": ["Baldwin Locomotive Works@de", "Baldwin Locomotive Works@en"],
+	"oldap:attachedToRole": {
+		"oldap:Unknown": "DATA_VIEW"
+	}
+}

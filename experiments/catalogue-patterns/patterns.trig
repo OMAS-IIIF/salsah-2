@@ -1,0 +1,250 @@
+@prefix model: <http://example.org/salsah2/model-experiment#> .
+@prefix graph: <http://example.org/salsah2/graph/> .
+@prefix af: <http://example.org/salsah2/chama/archive-first/> .
+@prefix mf: <http://example.org/salsah2/chama/media-first/> .
+@prefix oldap: <http://oldap.org/base#> .
+@prefix shared: <http://oldap.org/shared#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcmitype: <http://purl.org/dc/dcmitype/> .
+@prefix schema: <https://schema.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+graph:vocabulary {
+    model:PhotographicWork a owl:Class ;
+        rdfs:subClassOf shared:ArchiveUnit ;
+        rdfs:label "Photographic work (experiment)"@en .
+
+    model:CataloguedMediaObject a owl:Class ;
+        rdfs:subClassOf shared:MediaObject ;
+        rdfs:label "Catalogued media object (experiment)"@en .
+
+    model:AnalogueCarrier a owl:Class ;
+        rdfs:subClassOf oldap:Thing ;
+        rdfs:label "Analogue carrier (experiment)"@en .
+
+    model:KnowledgeContribution a owl:Class ;
+        rdfs:subClassOf oldap:Thing ;
+        rdfs:label "Knowledge contribution (experiment)"@en .
+
+    model:RailwayStructure a owl:Class ;
+        rdfs:subClassOf oldap:Thing .
+
+    model:Locomotive a owl:Class ;
+        rdfs:subClassOf oldap:Thing .
+
+    model:capturePlace a owl:ObjectProperty .
+    model:depicts a owl:ObjectProperty .
+    model:hasSourceCarrier a owl:ObjectProperty .
+    model:digitizedBy a owl:ObjectProperty .
+    model:hasKnowledgeContribution a owl:ObjectProperty .
+
+    model:normalizedDescription a owl:DatatypeProperty .
+    model:uncertaintyNote a owl:DatatypeProperty .
+    model:evidenceFile a owl:DatatypeProperty .
+    model:dateBasis a owl:DatatypeProperty .
+    model:embeddedCameraTimestamp a owl:DatatypeProperty .
+    model:sourcePath a owl:DatatypeProperty .
+    model:pixelWidth a owl:DatatypeProperty .
+    model:pixelHeight a owl:DatatypeProperty .
+    model:publicDisplayPermission a owl:DatatypeProperty .
+    model:creditLine a owl:DatatypeProperty .
+    model:rightsNote a owl:DatatypeProperty .
+}
+
+graph:archiveFirst {
+    af:RuediSinger a schema:Person, dcterms:Agent ;
+        schema:name "Ruedi Singer" .
+
+    af:LukasRosenthaler a schema:Person, dcterms:Agent ;
+        schema:name "Lukas Rosenthaler" .
+
+    af:LobatoTrestle a model:RailwayStructure ;
+        schema:name "Lobato Trestle" .
+
+    af:Locomotive488 a model:Locomotive ;
+        schema:name "C&TS 488" .
+
+    af:LobatoDate a oldap:Dating ;
+        oldap:normalizedStart "1981-01-01"^^xsd:date ;
+        oldap:normalizedEnd "1981-12-31"^^xsd:date ;
+        oldap:datePrecision oldap:YearPrecision ;
+        oldap:inCalendar oldap:GregorianCalendar ;
+        oldap:verbatimDate "1981; exact day unknown" .
+
+    af:LobatoPhotograph a model:PhotographicWork, shared:ArchiveUnit ;
+        shared:archiveLevel shared:Item ;
+        schema:name "Lobato Trestle auf der Cumbres & Toltec Scenic Railroad"@de ;
+        schema:description "Ein Zug der Cumbres & Toltec Scenic Railroad fährt langsam auf die stählerne Lobato Trestle unweit von Chama."@de ;
+        dcterms:creator af:RuediSinger ;
+        dcterms:temporal af:LobatoDate ;
+        model:capturePlace af:LobatoTrestle ;
+        model:depicts af:LobatoTrestle ;
+        model:hasSourceCarrier af:LobatoSlide ;
+        shared:hasMediaObject af:LobatoScan ;
+        model:hasKnowledgeContribution af:LobatoContribution ;
+        model:publicDisplayPermission true ;
+        model:creditLine "Lukas Rosenthaler / Ruedi Singer" ;
+        model:rightsNote "Photograph attributed to Ruedi Singer; formal permission basis still to be documented."@en .
+
+    af:LobatoSlide a model:AnalogueCarrier ;
+        schema:name "Original photographic slide for the Lobato Trestle photograph"@en ;
+        schema:description "Photographic slide; physical format not yet recorded."@en .
+
+    af:LobatoScan a shared:MediaObject ;
+        dcterms:type dcmitype:StillImage ;
+        shared:mediaAccessMode "local" ;
+        shared:originalName "PICT0111.jpg" ;
+        shared:originalMimeType "image/jpeg" ;
+        shared:checksum "0d794a6199c0279339fb8584bc85060f3a30c43ad197c3742425c2d96499b781" ;
+        shared:protocol "custom" ;
+        model:sourcePath "../../../demo-data/PICT0111.jpg" ;
+        model:pixelWidth 3900 ;
+        model:pixelHeight 2600 ;
+        model:hasSourceCarrier af:LobatoSlide ;
+        model:digitizedBy af:LukasRosenthaler .
+
+    af:LobatoContribution a model:KnowledgeContribution ;
+        dcterms:contributor af:LukasRosenthaler ;
+        dcterms:created "2026-08-21"^^xsd:date ;
+        dcterms:language "de" ;
+        model:evidenceFile "../../../demo-data/annotations/file-photo-1981-trip.md" ;
+        model:normalizedDescription "Owner-supplied description, personal recollection, provenance clarification, uncertainty, and normalization decisions."@en ;
+        model:uncertaintyNote "Exact locomotive, train, day, and Kern camera model remain unknown."@en .
+
+    af:PanoramaDate a oldap:Dating ;
+        oldap:normalizedStart "2018-07-10"^^xsd:date ;
+        oldap:normalizedEnd "2018-07-10"^^xsd:date ;
+        oldap:datePrecision oldap:DayPrecision ;
+        oldap:inCalendar oldap:GregorianCalendar .
+
+    af:ChamaStation a schema:Place ;
+        schema:name "Chama station"@en .
+
+    af:PanoramaPhotograph a model:PhotographicWork, shared:ArchiveUnit ;
+        shared:archiveLevel shared:Item ;
+        schema:name "K-36 #488 im Panorama"@de ;
+        schema:description "Die Panoramaaufnahme zeigt die K-36-Dampflokomotive Nr. 488 kurz vor der Abfahrt aus dem Bahnhof Chama."@de ;
+        dcterms:creator af:LukasRosenthaler ;
+        dcterms:temporal af:PanoramaDate ;
+        model:capturePlace af:ChamaStation ;
+        model:depicts af:Locomotive488 ;
+        shared:hasMediaObject af:PanoramaFile ;
+        model:hasKnowledgeContribution af:PanoramaContribution ;
+        model:publicDisplayPermission true ;
+        model:creditLine "Lukas Rosenthaler" .
+
+    af:PanoramaFile a shared:MediaObject ;
+        dcterms:type dcmitype:StillImage ;
+        shared:mediaAccessMode "local" ;
+        shared:originalName "IMG_1751.HEIC" ;
+        shared:originalMimeType "image/heic" ;
+        shared:checksum "9cd7b2288c6a1b50d6c9c1a5de0479b20f57018f463a6ed9e104dc309a5e6ace" ;
+        shared:protocol "custom" ;
+        model:sourcePath "../../../demo-data/IMG_1751.HEIC" ;
+        model:pixelWidth 9944 ;
+        model:pixelHeight 3700 ;
+        model:embeddedCameraTimestamp "2018-07-10T09:20:34"^^xsd:dateTime .
+
+    af:PanoramaContribution a model:KnowledgeContribution ;
+        dcterms:contributor af:LukasRosenthaler ;
+        dcterms:created "2026-08-21"^^xsd:date ;
+        dcterms:language "de" ;
+        model:evidenceFile "../../../demo-data/annotations/file-photo-1751.md" ;
+        model:normalizedDescription "Owner-supplied technical history, operating context, sensory recollection, uncertainty, and normalization decisions."@en .
+}
+
+graph:mediaFirst {
+    mf:RuediSinger a schema:Person, dcterms:Agent ;
+        schema:name "Ruedi Singer" .
+
+    mf:LukasRosenthaler a schema:Person, dcterms:Agent ;
+        schema:name "Lukas Rosenthaler" .
+
+    mf:LobatoTrestle a model:RailwayStructure ;
+        schema:name "Lobato Trestle" .
+
+    mf:Locomotive488 a model:Locomotive ;
+        schema:name "C&TS 488" .
+
+    mf:LobatoDate a oldap:Dating ;
+        oldap:normalizedStart "1981-01-01"^^xsd:date ;
+        oldap:normalizedEnd "1981-12-31"^^xsd:date ;
+        oldap:datePrecision oldap:YearPrecision ;
+        oldap:inCalendar oldap:GregorianCalendar ;
+        oldap:verbatimDate "1981; exact day unknown" .
+
+    mf:LobatoMedia a model:CataloguedMediaObject, shared:MediaObject ;
+        dcterms:type dcmitype:StillImage ;
+        schema:name "Lobato Trestle auf der Cumbres & Toltec Scenic Railroad"@de ;
+        schema:description "Ein Zug der Cumbres & Toltec Scenic Railroad fährt langsam auf die stählerne Lobato Trestle unweit von Chama."@de ;
+        dcterms:creator mf:RuediSinger ;
+        dcterms:temporal mf:LobatoDate ;
+        shared:mediaAccessMode "local" ;
+        shared:originalName "PICT0111.jpg" ;
+        shared:originalMimeType "image/jpeg" ;
+        shared:checksum "0d794a6199c0279339fb8584bc85060f3a30c43ad197c3742425c2d96499b781" ;
+        shared:protocol "custom" ;
+        model:sourcePath "../../../demo-data/PICT0111.jpg" ;
+        model:pixelWidth 3900 ;
+        model:pixelHeight 2600 ;
+        model:capturePlace mf:LobatoTrestle ;
+        model:depicts mf:LobatoTrestle ;
+        model:hasSourceCarrier mf:LobatoSlide ;
+        model:digitizedBy mf:LukasRosenthaler ;
+        model:hasKnowledgeContribution mf:LobatoContribution ;
+        model:publicDisplayPermission true ;
+        model:creditLine "Lukas Rosenthaler / Ruedi Singer" ;
+        model:rightsNote "Photograph attributed to Ruedi Singer; formal permission basis still to be documented."@en .
+
+    mf:LobatoSlide a model:AnalogueCarrier ;
+        schema:name "Original photographic slide for the Lobato Trestle photograph"@en ;
+        schema:description "Photographic slide; physical format not yet recorded."@en .
+
+    mf:LobatoContribution a model:KnowledgeContribution ;
+        dcterms:contributor mf:LukasRosenthaler ;
+        dcterms:created "2026-08-21"^^xsd:date ;
+        dcterms:language "de" ;
+        model:evidenceFile "../../../demo-data/annotations/file-photo-1981-trip.md" ;
+        model:normalizedDescription "Owner-supplied description, personal recollection, provenance clarification, uncertainty, and normalization decisions."@en ;
+        model:uncertaintyNote "Exact locomotive, train, day, and Kern camera model remain unknown."@en .
+
+    mf:PanoramaDate a oldap:Dating ;
+        oldap:normalizedStart "2018-07-10"^^xsd:date ;
+        oldap:normalizedEnd "2018-07-10"^^xsd:date ;
+        oldap:datePrecision oldap:DayPrecision ;
+        oldap:inCalendar oldap:GregorianCalendar .
+
+    mf:ChamaStation a schema:Place ;
+        schema:name "Chama station"@en .
+
+    mf:PanoramaMedia a model:CataloguedMediaObject, shared:MediaObject ;
+        dcterms:type dcmitype:StillImage ;
+        schema:name "K-36 #488 im Panorama"@de ;
+        schema:description "Die Panoramaaufnahme zeigt die K-36-Dampflokomotive Nr. 488 kurz vor der Abfahrt aus dem Bahnhof Chama."@de ;
+        dcterms:creator mf:LukasRosenthaler ;
+        dcterms:temporal mf:PanoramaDate ;
+        shared:mediaAccessMode "local" ;
+        shared:originalName "IMG_1751.HEIC" ;
+        shared:originalMimeType "image/heic" ;
+        shared:checksum "9cd7b2288c6a1b50d6c9c1a5de0479b20f57018f463a6ed9e104dc309a5e6ace" ;
+        shared:protocol "custom" ;
+        model:sourcePath "../../../demo-data/IMG_1751.HEIC" ;
+        model:pixelWidth 9944 ;
+        model:pixelHeight 3700 ;
+        model:embeddedCameraTimestamp "2018-07-10T09:20:34"^^xsd:dateTime ;
+        model:capturePlace mf:ChamaStation ;
+        model:depicts mf:Locomotive488 ;
+        model:hasKnowledgeContribution mf:PanoramaContribution ;
+        model:publicDisplayPermission true ;
+        model:creditLine "Lukas Rosenthaler" .
+
+    mf:PanoramaContribution a model:KnowledgeContribution ;
+        dcterms:contributor mf:LukasRosenthaler ;
+        dcterms:created "2026-08-21"^^xsd:date ;
+        dcterms:language "de" ;
+        model:evidenceFile "../../../demo-data/annotations/file-photo-1751.md" ;
+        model:normalizedDescription "Owner-supplied technical history, operating context, sensory recollection, uncertainty, and normalization decisions."@en .
+}

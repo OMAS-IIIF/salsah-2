@@ -1,0 +1,10 @@
+{
+	"iri": "K36",
+	"schema:name": ["D&RGW-Baureihe K-36@de", "D&RGW class K-36@en"],
+	"schema:description": [
+		"Die K-36 sind Schmalspur-Dampflokomotiven mit Innenrahmen und aussenliegenden Gegengewichten. Sie wurden 1925 von den Baldwin Locomotive Works für die Denver & Rio Grande Western Railroad gebaut.@de"
+	],
+	"oldap:attachedToRole": {
+		"oldap:Unknown": "DATA_VIEW"
+	}
+}

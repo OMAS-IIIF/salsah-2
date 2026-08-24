@@ -1,0 +1,10 @@
+{
+  "iri": "ChamaStation",
+  "schema:name": [
+    "Bahnhof Chama@de",
+    "Chama station@en"
+  ],
+  "oldap:attachedToRole": {
+    "oldap:Unknown": "DATA_VIEW"
+  }
+}

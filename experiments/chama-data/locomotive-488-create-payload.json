@@ -1,0 +1,9 @@
+{
+	"iri": "Locomotive488",
+	"schema:name": ["C&TS 488@de", "C&TS 488@en"],
+	"schema:identifier": "488",
+	"chama:locomotiveClass": "chama:K36",
+	"oldap:attachedToRole": {
+		"oldap:Unknown": "DATA_VIEW"
+	}
+}

@@ -1,0 +1,7 @@
+{
+	"iri": "CumbresAndToltecScenicRailroad",
+	"schema:name": ["Cumbres & Toltec Scenic Railroad@de", "Cumbres & Toltec Scenic Railroad@en"],
+	"oldap:attachedToRole": {
+		"oldap:Unknown": "DATA_VIEW"
+	}
+}

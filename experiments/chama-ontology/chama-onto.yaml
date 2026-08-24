@@ -1,0 +1,542 @@
+ontology:
+  project:
+    shortname: chama
+    iri: https://chama.salsah.org
+    namespace: https://chama.salsah.org/ns/
+    start: '2026-08-23'
+    label:
+      en: SALSAH 2 Chama Demo
+      de: SALSAH-2-Chama-Demo
+    comment:
+      en: Demonstration project for testing generic SALSAH 2 archive, media, discovery, and narrative workflows with historical railway material from Chama, New Mexico.
+      de: Demonstrationsprojekt zur Erprobung generischer Archiv-, Medien-, Such- und Erzählworkflows von SALSAH 2 mit historischem Eisenbahnmaterial aus Chama, New Mexico.
+
+  external_ontologies:
+    dcterms:
+      namespace: http://purl.org/dc/terms/
+      label: Dublin Core
+      proposedResourceClass:
+        - Agent
+      proposedDatatypePropertyClass:
+        - created
+      proposedObjectPropertyClass:
+        - contributor
+        - creator
+        - temporal
+    schema:
+      namespace: https://schema.org/
+      label: schema.org
+      proposedResourceClass:
+        - Organization
+        - Person
+        - Place
+      proposedDatatypePropertyClass:
+        - description
+        - identifier
+        - name
+
+  classes:
+    chama:Agent:
+      superclass:
+        - dcterms:Agent
+      label:
+        en: Agent
+        de: Akteur
+        fr: Agent
+        it: Agente
+      comment:
+        en: A person or organization participating in the creation, provision, description, operation, or rights context of a Chama resource.
+      properties: []
+
+    chama:Person:
+      superclass:
+        - schema:Person
+        - chama:Agent
+      label:
+        en: Person
+        de: Person
+        fr: Personne
+        it: Persona
+      properties:
+        - iri: schema:name
+          datatype: rdf:langString
+          name:
+            en: Name
+            de: Name
+            fr: Nom
+            it: Nome
+          min_count: 1
+          unique_lang: true
+          order: 1
+          editor: TEXT_FIELD_WITH_LANG
+
+    chama:Organization:
+      superclass:
+        - schema:Organization
+        - chama:Agent
+      label:
+        en: Organization
+        de: Organisation
+        fr: Organisation
+        it: Organizzazione
+      properties:
+        - iri: schema:name
+          datatype: rdf:langString
+          name:
+            en: Name
+            de: Name
+            fr: Nom
+            it: Nome
+          min_count: 1
+          unique_lang: true
+          order: 1
+          editor: TEXT_FIELD_WITH_LANG
+
+    chama:Place:
+      superclass:
+        - schema:Place
+      label:
+        en: Place
+        de: Ort
+        fr: Lieu
+        it: Luogo
+      properties:
+        - iri: schema:name
+          datatype: rdf:langString
+          name:
+            en: Name
+            de: Name
+            fr: Nom
+            it: Nome
+          min_count: 1
+          unique_lang: true
+          order: 1
+          editor: TEXT_FIELD_WITH_LANG
+        - iri: schema:description
+          datatype: rdf:langString
+          name:
+            en: Description
+            de: Beschreibung
+            fr: Description
+            it: Descrizione
+          unique_lang: true
+          order: 2
+          editor: TEXT_AREA_WITH_LANG
+
+    chama:LocomotiveClass:
+      label:
+        en: Locomotive class
+        de: Lokomotivbaureihe
+        fr: Série de locomotives
+        it: Gruppo di locomotive
+      properties:
+        - iri: schema:name
+          datatype: rdf:langString
+          name:
+            en: Name
+            de: Name
+            fr: Nom
+            it: Nome
+          min_count: 1
+          unique_lang: true
+          order: 1
+          editor: TEXT_FIELD_WITH_LANG
+        - iri: schema:description
+          datatype: rdf:langString
+          name:
+            en: Description
+            de: Beschreibung
+            fr: Description
+            it: Descrizione
+          unique_lang: true
+          order: 2
+          editor: TEXT_AREA_WITH_LANG
+
+    chama:Locomotive:
+      label:
+        en: Locomotive
+        de: Lokomotive
+        fr: Locomotive
+        it: Locomotiva
+      properties:
+        - iri: schema:name
+          datatype: rdf:langString
+          name:
+            en: Name
+            de: Name
+            fr: Nom
+            it: Nome
+          min_count: 1
+          unique_lang: true
+          order: 1
+          editor: TEXT_FIELD_WITH_LANG
+        - iri: schema:identifier
+          datatype: xsd:string
+          name:
+            en: Identifier
+            de: Kennung
+            fr: Identifiant
+            it: Identificatore
+          max_count: 1
+          order: 2
+          editor: TEXT_FIELD
+        - iri: chama:locomotiveClass
+          to_class: chama:LocomotiveClass
+          name:
+            en: Locomotive class
+            de: Lokomotivbaureihe
+            fr: Série de locomotives
+            it: Gruppo di locomotive
+          max_count: 1
+          order: 3
+        - iri: chama:manufacturer
+          to_class: chama:Organization
+          name:
+            en: Manufacturer
+            de: Hersteller
+            fr: Fabricant
+            it: Costruttore
+          max_count: 1
+          order: 4
+        - iri: chama:operator
+          to_class: chama:Organization
+          name:
+            en: Operator
+            de: Betreiber
+            fr: Exploitant
+            it: Operatore
+          order: 5
+
+    chama:AnalogueCarrier:
+      label:
+        en: Analogue carrier
+        de: Analoger Träger
+        fr: Support analogique
+        it: Supporto analogico
+      properties:
+        - iri: schema:name
+          datatype: rdf:langString
+          name:
+            en: Name
+            de: Name
+            fr: Nom
+            it: Nome
+          min_count: 1
+          unique_lang: true
+          order: 1
+          editor: TEXT_FIELD_WITH_LANG
+        - iri: schema:description
+          datatype: rdf:langString
+          name:
+            en: Description
+            de: Beschreibung
+            fr: Description
+            it: Descrizione
+          unique_lang: true
+          order: 2
+          editor: TEXT_AREA_WITH_LANG
+
+    chama:KnowledgeContribution:
+      label:
+        en: Knowledge contribution
+        de: Wissensbeitrag
+        fr: Contribution de connaissances
+        it: Contributo di conoscenza
+      properties:
+        - iri: chama:describes
+          to_class: oldap:Thing
+          inverse_of: chama:hasKnowledgeContribution
+          name:
+            en: Describes
+            de: Beschreibt
+            fr: Décrit
+            it: Descrive
+          min_count: 1
+          max_count: 1
+          order: 1
+        - iri: dcterms:contributor
+          to_class: chama:Agent
+          name:
+            en: Contributor
+            de: Beitragende Person oder Organisation
+            fr: Contributeur
+            it: Contributore
+          min_count: 1
+          max_count: 1
+          order: 2
+        - iri: dcterms:created
+          datatype: xsd:date
+          name:
+            en: Contribution date
+            de: Beitragsdatum
+            fr: Date de contribution
+            it: Data del contributo
+          min_count: 1
+          max_count: 1
+          order: 3
+        - iri: chama:contributionLanguage
+          datatype: xsd:string
+          name:
+            en: Contribution language
+            de: Beitragssprache
+            fr: Langue de la contribution
+            it: Lingua del contributo
+          min_count: 1
+          max_count: 1
+          order: 4
+          editor: TEXT_FIELD
+        - iri: chama:sourceContext
+          datatype: xsd:string
+          name:
+            en: Source context
+            de: Quellenkontext
+            fr: Contexte de la source
+            it: Contesto della fonte
+          max_count: 1
+          order: 5
+          editor: TEXT_FIELD
+        - iri: chama:originalText
+          datatype: rdf:langString
+          name:
+            en: Original contribution
+            de: Originalbeitrag
+            fr: Contribution originale
+            it: Contributo originale
+          min_count: 1
+          unique_lang: true
+          order: 6
+          editor: TEXT_AREA_WITH_LANG
+        - iri: chama:normalizedDescription
+          datatype: rdf:langString
+          name:
+            en: Normalized description
+            de: Normalisierte Beschreibung
+            fr: Description normalisée
+            it: Descrizione normalizzata
+          unique_lang: true
+          order: 7
+          editor: TEXT_AREA_WITH_LANG
+        - iri: chama:uncertaintyNote
+          datatype: rdf:langString
+          name:
+            en: Uncertainty
+            de: Unsicherheit
+            fr: Incertitude
+            it: Incertezza
+          unique_lang: true
+          order: 8
+          editor: TEXT_AREA_WITH_LANG
+        - iri: chama:normalizationNote
+          datatype: rdf:langString
+          name:
+            en: Normalization note
+            de: Normalisierungshinweis
+            fr: Note de normalisation
+            it: Nota di normalizzazione
+          unique_lang: true
+          order: 9
+          editor: TEXT_AREA_WITH_LANG
+
+    chama:DigitalRepresentation:
+      superclass:
+        - shared:MediaObject
+      label:
+        en: Digital representation
+        de: Digitale Repräsentation
+        fr: Représentation numérique
+        it: Rappresentazione digitale
+      properties:
+        - iri: chama:sourceCarrier
+          to_class: chama:AnalogueCarrier
+          name:
+            en: Source carrier
+            de: Ausgangsträger
+            fr: Support source
+            it: Supporto sorgente
+          max_count: 1
+          order: 1
+        - iri: chama:digitizedBy
+          to_class: chama:Agent
+          name:
+            en: Digitized by
+            de: Digitalisiert von
+            fr: Numérisé par
+            it: Digitalizzato da
+          max_count: 1
+          order: 2
+
+    chama:PhotographicWork:
+      superclass:
+        - shared:ArchiveUnit
+      label:
+        en: Photographic work
+        de: Fotografisches Werk
+        fr: Œuvre photographique
+        it: Opera fotografica
+      properties:
+        - iri: chama:capturePlace
+          to_class: chama:Place
+          name:
+            en: Capture place
+            de: Aufnahmeort
+            fr: Lieu de prise de vue
+            it: Luogo di ripresa
+          max_count: 1
+          order: 20
+        - iri: chama:depicts
+          to_class: oldap:Thing
+          name:
+            en: Depicts
+            de: Zeigt
+            fr: Représente
+            it: Raffigura
+          order: 21
+        - iri: chama:hasSourceCarrier
+          to_class: chama:AnalogueCarrier
+          name:
+            en: Has source carrier
+            de: Hat Ausgangsträger
+            fr: A pour support source
+            it: Ha come supporto sorgente
+          order: 22
+        - iri: chama:hasKnowledgeContribution
+          to_class: chama:KnowledgeContribution
+          inverse_of: chama:describes
+          name:
+            en: Knowledge contribution
+            de: Wissensbeitrag
+            fr: Contribution de connaissances
+            it: Contributo di conoscenza
+          order: 23
+        - iri: chama:publicDisplayPermission
+          datatype: xsd:boolean
+          name:
+            en: Public display permitted
+            de: Öffentliche Anzeige erlaubt
+            fr: Affichage public autorisé
+            it: Visualizzazione pubblica consentita
+          max_count: 1
+          order: 24
+        - iri: chama:creditLine
+          datatype: xsd:string
+          name:
+            en: Credit line
+            de: Urheberangabe
+            fr: Mention de crédit
+            it: Credito
+          max_count: 1
+          order: 25
+          editor: TEXT_FIELD
+        - iri: chama:rightsNote
+          datatype: rdf:langString
+          name:
+            en: Rights note
+            de: Rechtehinweis
+            fr: Note sur les droits
+            it: Nota sui diritti
+          unique_lang: true
+          order: 26
+          editor: TEXT_AREA_WITH_LANG
+
+    chama:CataloguedPhotograph:
+      superclass:
+        - shared:MediaObject
+      label:
+        en: Catalogued photograph
+        de: Erschlossene Fotografie
+        fr: Photographie cataloguée
+        it: Fotografia catalogata
+      properties:
+        - iri: schema:name
+          datatype: rdf:langString
+          name:
+            en: Title
+            de: Titel
+            fr: Titre
+            it: Titolo
+          min_count: 1
+          unique_lang: true
+          order: 20
+          editor: TEXT_FIELD_WITH_LANG
+        - iri: schema:description
+          datatype: rdf:langString
+          name:
+            en: Description
+            de: Beschreibung
+            fr: Description
+            it: Descrizione
+          unique_lang: true
+          order: 21
+          editor: TEXT_AREA_WITH_LANG
+        - iri: dcterms:creator
+          to_class: chama:Agent
+          name:
+            en: Creator
+            de: Urheber
+            fr: Créateur
+            it: Creatore
+          order: 22
+        - iri: chama:creationDating
+          to_class: oldap:Dating
+          name:
+            en: Content creation date
+            de: Entstehungsdatum des Inhalts
+            fr: Date de création du contenu
+            it: Data di creazione del contenuto
+          max_count: 1
+          order: 23
+        - iri: chama:capturePlace
+          to_class: chama:Place
+          name:
+            en: Capture place
+            de: Aufnahmeort
+            fr: Lieu de prise de vue
+            it: Luogo di ripresa
+          max_count: 1
+          order: 24
+        - iri: chama:depicts
+          to_class: oldap:Thing
+          name:
+            en: Depicts
+            de: Zeigt
+            fr: Représente
+            it: Raffigura
+          order: 25
+        - iri: chama:hasKnowledgeContribution
+          to_class: chama:KnowledgeContribution
+          inverse_of: chama:describes
+          name:
+            en: Knowledge contribution
+            de: Wissensbeitrag
+            fr: Contribution de connaissances
+            it: Contributo di conoscenza
+          order: 26
+        - iri: chama:publicDisplayPermission
+          datatype: xsd:boolean
+          name:
+            en: Public display permitted
+            de: Öffentliche Anzeige erlaubt
+            fr: Affichage public autorisé
+            it: Visualizzazione pubblica consentita
+          max_count: 1
+          order: 27
+        - iri: chama:creditLine
+          datatype: xsd:string
+          name:
+            en: Credit line
+            de: Urheberangabe
+            fr: Mention de crédit
+            it: Credito
+          max_count: 1
+          order: 28
+          editor: TEXT_FIELD
+        - iri: chama:rightsNote
+          datatype: rdf:langString
+          name:
+            en: Rights note
+            de: Rechtehinweis
+            fr: Note sur les droits
+            it: Nota sui diritti
+          unique_lang: true
+          order: 29
+          editor: TEXT_AREA_WITH_LANG

@@ -1,0 +1,10 @@
+{
+	"iri": "DenverAndRioGrandeWestern",
+	"schema:name": [
+		"Denver & Rio Grande Western Railroad@de",
+		"Denver & Rio Grande Western Railroad@en"
+	],
+	"oldap:attachedToRole": {
+		"oldap:Unknown": "DATA_VIEW"
+	}
+}

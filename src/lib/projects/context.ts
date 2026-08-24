@@ -170,3 +170,8 @@ export function projectPath(projectShortName: string, suffix = '', hash = ''): s
 	const normalizedSuffix = suffix && !suffix.startsWith('/') ? `/${suffix}` : suffix;
 	return `/p/${encodeURIComponent(projectShortName)}${normalizedSuffix}${hash}`;
 }
+
+/** Build the canonical route for an ontology-driven resource QName or IRI. */
+export function projectResourcePath(projectShortName: string, resourceIri: string): string {
+	return projectPath(projectShortName, `resource/${encodeURIComponent(resourceIri)}`);
+}

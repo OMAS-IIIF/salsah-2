@@ -93,6 +93,9 @@
 			return;
 		}
 		if ($projectContext.status !== 'ready') return;
+		// The login route owns its validated `next` destination. Redirecting a
+		// newly authenticated sole-project user here would race that deep link.
+		if (isLoginRoute) return;
 
 		const projects = $projectContext.projects;
 		if (page.route.id === '/') {
@@ -264,7 +267,7 @@
 			{/if}
 			<main class="workspace">
 				{#if isProjectRoute && hasValidatedProject && currentProject}
-					{#key currentProject.projectIri}
+					{#key `${currentProject.projectIri}:${page.url.pathname}`}
 						{@render children()}
 					{/key}
 				{:else if isProjectRoute}

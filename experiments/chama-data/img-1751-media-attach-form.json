@@ -1,0 +1,12 @@
+{
+	"projectId": "chama",
+	"path": "catalogue",
+	"identifier": "IMG_1751",
+	"targetFormat": "tiff",
+	"existingResourceIri": "chama:IMG_1751",
+	"file": {
+		"path": "demo-data/IMG_1751.HEIC",
+		"mimeType": "image/heic",
+		"sha256": "9cd7b2288c6a1b50d6c9c1a5de0479b20f57018f463a6ed9e104dc309a5e6ace"
+	}
+}

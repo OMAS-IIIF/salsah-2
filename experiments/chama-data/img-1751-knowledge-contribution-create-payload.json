@@ -1,0 +1,23 @@
+{
+	"iri": "Annotation_IMG_1751_2026_08_21",
+	"chama:describes": "chama:IMG_1751",
+	"dcterms:contributor": "chama:LukasRosenthaler",
+	"dcterms:created": "2026-08-21",
+	"chama:contributionLanguage": "de",
+	"chama:sourceContext": "Project-owner annotation supplied during SALSAH 2 demo preparation",
+	"chama:originalText": [
+		"Titel: K-36 #488 im Panorama\n\nWas ist zu sehen: Die Lok K-36 #488 vor Abfahrt aus dem Bahnhof Chama, um den Cumbres Pass zu erklimmen. Die Loks vom Typ K-36 sind die modernsten und stärksten Loks auf der CATS (bis auf die Serie K-37, welche aber aus älteren Normalspurloks umgebaut wurden). Die Lok hat einen Innenrahmen mit den Gegengewichten zu den Triebstangen aussen, was ihnen ein sehr markantes Aussehen verleiht. Die Lok wurde 1925 von den Baldwin Locomotive Works (Philadelphia, PA) für die Denver & Rio Grande Western Railroad (D&RGW) gebaut. Sie war bis 1968 für die D&RGW als Güterzuglok in Betrieb.\n\nAufnahmeort und Blickrichtung: Im Bahnhof von Chama in Richtung Mainstreen (Norden)\n\nLokomotiven, Wagen, Gebäude oder andere erkennbare Objekte: K-36 #488 und einige Wagen. Ganz rechts ein Weichenstellhebel\n\nWas geschieht gerade: Vorbereitung zur Abfahrt über den Cumbres Pass. Die fast kontinuierliche Steigung von 4% zwischen Chama und Cumbres erfordert ein gutes Befeuern der Lok\n\nPersönliche Erinnerung oder Kontext: Das Bild gibt die Athmosphäre auf in Chama auf eine ganz tolle weise wieder. Wenn ich das Bild sehe, höre ich das Feuer, den kochenden Kessel, die Luftpumpe und rieche den wohligen Kohlerauch\n\nUnsicherheiten: Keine Unsicherheit wurde angegeben.\n\nDarf öffentlich gezeigt werden: Ja\n\nGewünschte Urheberangabe: Lukas Rosenthaler@de"
+	],
+	"chama:normalizedDescription": [
+		"Die Panoramaaufnahme zeigt die K-36-Dampflokomotive Nr. 488 kurz vor der Abfahrt aus dem Bahnhof Chama. Sie wird für die Fahrt zum Cumbres Pass vorbereitet. Auf dem nahezu durchgehend vier Prozent steilen Abschnitt zwischen Chama und Cumbres muss die Lok besonders sorgfältig und kräftig befeuert werden. Hinter der Lok sind mehrere Wagen zu sehen; ganz rechts steht ein Weichenstellhebel. Der Blick geht innerhalb des Bahnhofs nach Norden in Richtung Main Street.\n\nDie Nr. 488 wurde 1925 von den Baldwin Locomotive Works in Philadelphia für die Denver & Rio Grande Western Railroad gebaut und stand dort bis 1968 als Güterzuglok im Einsatz. Der Innenrahmen und die aussen sichtbaren Gegengewichte des Triebwerks verleihen den Lokomotiven der Klasse K-36 ihr markantes Erscheinungsbild. Nach Einordnung des Fotografen gehören die K-36 zu den modernsten und leistungsstärksten Dampflokomotiven der Cumbres & Toltec Scenic Railroad; die noch stärkeren K-37 entstanden durch den Umbau älterer Normalspurlokomotiven.\n\nFür den Fotografen vermittelt das Panorama die Atmosphäre von Chama besonders lebendig: Beim Betrachten erinnert er sich an das Feuer, das Geräusch des arbeitenden Kessels und der Luftpumpe sowie an den angenehmen Geruch des Kohlerauchs.@de"
+	],
+	"chama:uncertaintyNote": [
+		"Die Lokomotivgeschichte, der technische Vergleich der Baureihen K-36 und K-37, die Streckensteigung, die betriebliche Einordnung und die Objektidentifikationen sind vom Beitragenden geliefertes Expertenwissen und noch nicht anhand dokumentarischer oder publizierter Quellen überprüft. Der durch die Wagen repräsentierte Zug oder Ausflug ist nicht identifiziert.@de"
+	],
+	"chama:normalizationNote": [
+		"Rechtschreibung, Grammatik und Zeichensetzung wurden nur in der normalisierten Beschreibung angepasst; der Originalbeitrag bleibt unverändert. CATS und D&RGW wurden ausgeschrieben, «Mainstreen» wurde als «Main Street» interpretiert, und historische sowie technische Aussagen bleiben bis zur Quellenprüfung ausdrücklich dem Beitragenden zugeschrieben.@de"
+	],
+	"oldap:attachedToRole": {
+		"oldap:Unknown": "DATA_VIEW"
+	}
+}

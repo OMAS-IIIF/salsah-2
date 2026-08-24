@@ -6,6 +6,7 @@ import {
 	projectContext,
 	projectDisplayName,
 	projectPath,
+	projectResourcePath,
 	SYSTEM_PROJECT_IRIS,
 	workingProjectMemberships
 } from './context';
@@ -48,6 +49,9 @@ describe('project context helpers', () => {
 
 	it('builds encoded project routes', () => {
 		expect(projectPath('my project', 'search', '#result')).toBe('/p/my%20project/search#result');
+		expect(projectResourcePath('my project', 'archive:Item/1')).toBe(
+			'/p/my%20project/resource/archive%3AItem%2F1'
+		);
 	});
 
 	it('does not let a stale load overwrite a newer session for the same user', async () => {

@@ -1,0 +1,20 @@
+{
+  "iri": "IMG_1751",
+  "dcterms:type": "dcmitype:StillImage",
+  "shared:mediaAccessMode": "local",
+  "shared:originalName": "IMG_1751.HEIC",
+  "shared:originalMimeType": "image/heic",
+  "shared:checksum": "9cd7b2288c6a1b50d6c9c1a5de0479b20f57018f463a6ed9e104dc309a5e6ace",
+  "shared:protocol": "custom",
+  "schema:name": [
+    "K-36 #488 im Panorama@de"
+  ],
+  "schema:description": [
+    "Die Panoramaaufnahme zeigt die K-36-Dampflokomotive Nr. 488 kurz vor der Abfahrt aus dem Bahnhof Chama. Sie wird für die Fahrt zum Cumbres Pass vorbereitet. Hinter der Lok sind mehrere Wagen zu sehen; ganz rechts steht ein Weichenstellhebel. Der Blick geht innerhalb des Bahnhofs nach Norden in Richtung Main Street.@de"
+  ],
+  "chama:publicDisplayPermission": true,
+  "chama:creditLine": "Lukas Rosenthaler",
+  "oldap:attachedToRole": {
+    "oldap:Unknown": "DATA_VIEW"
+  }
+}

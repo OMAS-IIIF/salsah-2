@@ -7,7 +7,20 @@ The current increment provides:
 - OLDAP login, refresh-cookie session restoration, and global logout;
 - runtime working-project selection based on the authenticated user's memberships;
 - canonical project routes under `/p/[projectShortName]`;
+- ontology-driven, read-only resource pages under
+  `/p/[projectShortName]/resource/[resourceIri]`, including resolved resource links
+  and permission-aware media delivery;
+- a reusable, dynamically loaded OpenSeadragon viewer for local IIIF Image API
+  resources, plus direct rendering for externally managed images;
+- a live, permission-aware list of recently modified project resources on the
+  project workspace, with direct links to their detail pages;
 - a responsive archive workspace prototype with project switching.
+
+The first complete live vertical slice is the Chama record
+`/p/chama/resource/chama:IMG_1751`. Its HEIC original is attached to the existing
+catalogue resource, delivered as pyramidal IIIF tiles, and displayed through the
+generic viewer. Media records without a deliverable binary still show an explicit
+placeholder.
 
 `oldap:SystemProject` and `oldap:SharedProject` remain authorization contexts but are never exposed as working projects.
 
@@ -49,4 +62,4 @@ The Playwright command installs its required browser binaries when necessary.
 
 ## Project context
 
-Architecture, repository state, and the incremental roadmap are documented in [`codex.md`](./codex.md). Technical changes are recorded newest-first in [`CODEX_LOG.md`](./CODEX_LOG.md).
+The durable product vision and engineering principles are defined in [`FOUNDATIONS.md`](./FOUNDATIONS.md). The first evidence-based modelling sketch is documented in [`docs/minimal-data-model-v0.1.md`](./docs/minimal-data-model-v0.1.md), with a concrete archive-first/media-first comparison in [`experiments/catalogue-patterns/`](./experiments/catalogue-patterns/README.md), the first locally validated Chama ontology draft in [`experiments/chama-ontology/`](./experiments/chama-ontology/README.md), and the accepted placement strategy for generic archive semantics in [`docs/architecture/generic-archive-foundation.md`](./docs/architecture/generic-archive-foundation.md). Architecture, repository state, and the incremental roadmap are documented in [`codex.md`](./codex.md). Technical changes are recorded newest-first in [`CODEX_LOG.md`](./CODEX_LOG.md).

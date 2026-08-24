@@ -6,6 +6,8 @@ SALSAH 2 is a project-neutral, configurable archive management application and V
 
 The application will reuse proven interaction patterns and selected implementation ideas from FasnachtsPage while keeping tenant configuration, OLDAP ontology semantics, and generic user-interface behavior clearly separated.
 
+The durable product vision, its three pillars (archive work, discovery and public presentation, and narrative contextualization), and the governing engineering principles are defined in `FOUNDATIONS.md`. Architectural and product decisions must remain consistent with that document.
+
 ## Current Repository State
 
 - The repository contains a minimal SvelteKit application written in TypeScript.
@@ -14,9 +16,18 @@ The application will reuse proven interaction patterns and selected implementati
 - A responsive application shell now provides the global header, runtime project context, primary navigation, resource tabs, overview workspace, archive preview, and contextual activity panel.
 - Illustrative workspace records live in an explicit demo fixture, and the shell already supports local navigation and tab state.
 - Generated demo routes and test examples are still present outside the new root workspace.
-- Browser authentication now uses the OLDAP cookie-backed login, refresh, profile-loading, and global-logout contract. The authenticated user's working projects are loaded from OLDAP memberships and project metadata; no general authenticated API client or production resource data flow has been implemented yet.
+- Browser authentication now uses the OLDAP cookie-backed login, refresh, profile-loading, and global-logout contract. The authenticated user's working projects are loaded from OLDAP memberships and project metadata. A general authenticated fetch boundary keeps access tokens in memory, performs one shared refresh after a `401`, and retries each failed request once.
+- A first production-data read path is available at `/p/[project]/resource/[...iri]`. The generic detail component loads the project and Shared data models, derives inherited property labels and link targets from the ontology, resolves directly linked resources, and presents the live record without Chama-specific rendering logic. `chama:IMG_1751` now links to its creator, capture place, and depicted `chama:Locomotive488`; the locomotive links onward to `chama:K36`. Media delivery is resolved separately through OLDAP's permission-aware MediaObject endpoint: attached IIIF images open in a reusable OpenSeadragon viewer, external images use the direct representation, and absent binary media remains an honest placeholder.
+- The project workspace now exposes a live “recently catalogued” section backed by OLDAP's structured search. It queries readable `oldap:Thing` instances, orders them by last modification, and builds canonical resource links without project-specific IRIs. The surrounding statistics, archive tree, tabs, and activity content remain explicit prototype fixtures.
+- A first real demonstration corpus is being prepared in the sibling `../demo-data/` directory around Chama, New Mexico and the Cumbres & Toltec Scenic Railroad. Its working inventory distinguishes intellectual works from file representations and records provenance, rights uncertainty, technical metadata, and SHA-256 fixity without yet committing to an OLDAP ontology.
+- Chama is strictly a concrete validation corpus, not the SALSAH 2 product domain. The resulting model and UI boundaries must remain applicable to materially different art, cultural, and historical collections; the Friends of the Cumbres & Toltec Scenic Railroad and the Historical Museum Basel are potential future validation contexts, not assumed customers.
+- All six photographs in the first Chama selection now have reviewed owner annotations. `docs/minimal-data-model-v0.1.md` derives a provisional three-layer model from them, compares it with the real Fasnacht ontology, documents existing OLDAP reuse and gaps, and checks the generic boundary against a hypothetical Historical Museum Basel photograph without yet defining an ontology. The comparison leaves archive-first versus media-first catalogue identity deliberately open for a two-record experiment.
+- `experiments/catalogue-patterns/` now represents `PICT0111.jpg` and `IMG_1751.HEIC` in both archive-first and media-first RDF graphs. The comparison supports an adaptive default: media-first for standalone media assets and archive-first for a separately meaningful work, physical carrier, archival hierarchy item, or compound resource. Its placeholder vocabulary is not an ontology contract or GraphDB import.
+- `experiments/chama-ontology/` contains the reviewed and validated minimal ontology YAML for the two selected patterns. The live OLDAP project has shortname `chama`, project IRI `https://chama.salsah.org`, namespace `https://chama.salsah.org/ns/`, and label `SALSAH 2 Chama Demo`; its ontology is loaded, user `rosenth` has project-administration permission, and the first demonstration instance has been created.
+- `experiments/chama-data/` records the exact non-secret API payloads and round-trip observations for the first live data increments. `chama:IMG_1751` has been created and verified as a media-first `chama:CataloguedPhotograph`; `chama:LukasRosenthaler` is its creator, `chama:ChamaStation` its capture place, its day-precision creation date is 2018-07-10, and it depicts `chama:Locomotive488`, which belongs to `chama:K36`. `chama:Annotation_IMG_1751_2026_08_21` preserves the owner's first complete KnowledgeContribution; only its canonical `chama:describes` relation is stored, while OLDAP reasoning exposes the inverse relation on the photograph. Baldwin is now its verified manufacturer and D&RGW plus C&TS are its verified operators; live generic navigation to all three public Organization resources succeeds. The current multivalued `chama:operator` relation is not temporally qualified, so its values describe operators across the locomotive biography rather than simultaneous operation. All directly addressable resources grant anonymous `DATA_VIEW`. The original HEIC has now been attached to the existing resource, converted to a pyramidal TIFF, verified through IIIF Image API 3 level 2 at 9944 × 3700 pixels, and displayed in the live generic viewer.
+- `docs/architecture/generic-archive-foundation.md` records the accepted decision to keep stable, cross-domain archive building blocks in the automatically available Shared SHACL/OWL graphs under strict admission and compatibility rules. The foundation grows bottom-up; media-first is a first-class simple path, while archive and cultural objects may have zero, one, or many heterogeneous media representations. A separate dependency-managed module graph is deferred because current model loading, inheritance, factories, queries, and caches explicitly compose only the project and Shared models.
 - The initial horizontal SALSAH 2 SVG logo lives in `static/brand/salsah-2.0-logo-horizontal.svg`.
-- The directory is initialized as a Git repository; the initial SvelteKit scaffold is committed and the current application work remains available as uncommitted changes for review.
+- The directory is initialized as a Git repository; the initial scaffold and authenticated project-scoped workspace are committed. Login and interactive project selection have been exercised successfully against a live OLDAP API; the zero-project and sole-project cases still require live verification.
 
 ## Architectural Decisions
 
@@ -32,15 +43,37 @@ The application will reuse proven interaction patterns and selected implementati
 - Do not implement freely floating desktop windows initially. Preserve multi-resource work through tabs, browser-deep-linkable resources, and later an optional split view.
 - Treat drag-and-drop as a progressive convenience. Every operation must also have an explicit, accessible action.
 - Reuse code only after a genuinely generic boundary is demonstrated. Avoid prematurely extracting a shared component library from FasnachtsPage.
+- Keep all Chama-specific entities and terminology in its OLDAP project ontology, data, and presentation configuration. Generic application code must operate on configured resource classes, properties, relationships, media, provenance, rights, and narratives rather than railway concepts.
+- Grow Shared archive semantics bottom-up. Treat media-first resources and media-free or multi-representation archive objects as equally valid ontology-driven resource patterns; SALSAH components must not assume that every object has exactly one medium.
+- Give the first public Chama demonstration record `oldap:Unknown` with `DATA_VIEW`; public visibility must be an explicit instance permission and must not be inferred from descriptive rights metadata such as `publicDisplayPermission`.
+- Drive read-only resource presentation from the OLDAP project and Shared models. Merge inherited class properties, use ontology-provided labels, and resolve object links through declared `toClass` constraints; do not add project-specific field mappings to the generic component.
+- Route resource identity through `/p/[project]/resource/[...iri]`. Preserve the requested deep link across login and avoid project auto-selection redirects racing the validated post-login destination.
+- Distinguish navigable resource relations from OLDAP-managed qualified value structures. `oldap:Dating` is persisted as an RDF resource but serialized by the instance API as a scalar display value; render it as metadata rather than inventing a broken resource link. Keep this platform exception explicit until the API offers a generic value-object marker or structured representation.
+- Preserve paragraph breaks in scalar metadata values so long-form annotations and other textual contributions remain readable without introducing class-specific rendering.
+- Discover project resources through the permission-aware structured-search API and the generic `oldap:Thing` root rather than embedding demonstration IRIs in application code. Keep the live section visibly labelled while the remainder of the workspace still contains prototype fixtures.
+- Keep viewer libraries behind small SALSAH component contracts. Resolve short-lived media capabilities separately from descriptive metadata, authorize both IIIF `info.json` and tile requests, and do not couple the archive model to OpenSeadragon or Chama.
 
 ## Key Locations
 
+- `FOUNDATIONS.md`: durable product vision, scope, principles, system boundaries, and decision criteria.
+- `docs/minimal-data-model-v0.1.md`: evidence-based working model separating generic archival semantics, Chama-domain semantics, and presentation configuration.
+- `docs/architecture/generic-archive-foundation.md`: accepted boundary, admission criteria, initial inventory, and evolution rules for generic OLDAP archive definitions.
+- `experiments/catalogue-patterns/`: syntactically valid RDF and a human-readable comparison of archive-first and media-first catalogue identity using two real Chama records.
+- `experiments/chama-ontology/`: loaded minimal Chama ontology, concept classification, deliberate omissions, accepted decisions, and the next instance-creation gate.
+- `experiments/chama-data/`: reproducible request evidence and round-trip findings from live Chama instance experiments; not yet a generic data-import format.
 - `src/routes/`: SvelteKit routes and layouts.
 - `src/lib/components/`: reusable application-shell and workspace components.
 - `src/lib/auth/`: in-memory authentication state, login/refresh/logout orchestration, and safe post-login navigation.
+- `src/lib/api/client.ts`: authenticated browser fetch boundary with single-flight token renewal and one retry after authentication expiry.
 - `src/lib/api/baseUrl.ts`: browser-visible OLDAP API origin resolved from `PUBLIC_API_URL`.
 - `src/lib/projects/`: typed project loading, infrastructure-project filtering, localized display names, selection state, and canonical project paths.
+- `src/lib/resources/`: generic OLDAP resource/model loading plus ontology-driven presentation transformation.
+- `src/lib/media/`: generic media-delivery helpers, including capability-safe IIIF request URLs.
+- `src/lib/components/media/IiifImageViewer.svelte`: reusable OpenSeadragon-backed IIIF image component with localized controls and no project-specific knowledge.
+- `src/lib/components/resources/ResourceDetail.svelte`: reusable read-only resource presentation, media composition, relation navigation, and explicit missing-media state.
+- `src/lib/components/resources/LiveResourceList.svelte`: project-neutral, permission-aware recent-resource discovery on the workspace.
 - `src/lib/demo/`: backend-independent fixture data that must never be confused with OLDAP records.
+- `../demo-data/`: source media plus a cautious CSV working inventory and fixity manifest for the Chama demonstration; it is research material, not an application fixture or a set of automatically publishable assets.
 - `src/lib/`: future domain code, API client code, and utilities.
 - `messages/`: Paraglide translation messages.
 - `static/brand/`: version-controlled brand assets served unchanged.
@@ -63,11 +96,11 @@ The application will reuse proven interaction patterns and selected implementati
 1. Replace the generated starter page with a static application-shell prototype. Completed as an initial visual baseline.
 2. Evaluate navigation, resource tabs, contextual panel, responsive behavior, and the visual language using static sample resources. In progress.
 3. Establish runtime OLDAP project selection and project-bound deep links. Completed as the first tenant-context foundation; project-specific UI configuration remains open.
-4. Add OLDAP authentication and a typed API boundary. Login, refresh, user-profile loading, route guarding, and logout are implemented; the general authenticated API boundary remains open.
-5. Implement a first vertical resource workflow: list/search, open, create, and edit one configured resource class.
+4. Add OLDAP authentication and a typed API boundary. Login, refresh, user-profile loading, route guarding, logout, and the general authenticated read boundary are implemented. Mutation-specific API behavior remains deliberately deferred.
+5. Apply the accepted Shared placement rules to the completed minimal data-model sketch and catalogue-pattern experiment; derive and load the confirmed subset as a Chama demonstration ontology; explicitly classify every reused or new concept; then implement one media-first and one archive-first resource through the same vertical workflow. Ontology loading and the first complete media-first path through metadata, binary attachment, IIIF delivery, and generic UI are complete; the archive-first instance remains open.
 6. Add archive navigation, media, staging, and ZIP import as independently testable modules.
 7. Add concrete VRE capabilities only when justified by real research workflows.
 
 ## Immediate Next Step
 
-Exercise login with users assigned to zero, one, and several domain projects against a local OLDAP API. Then add a small authenticated fetch boundary with single-flight token renewal before implementing archive navigation and the first real project-bound resource workflow.
+Review the live OpenSeadragon interaction at normal and narrow viewport sizes, then close this media-first vertical slice. The next independent data-model experiment should create the archive-first `PICT0111.jpg` example with intellectual work, physical slide, digital representation, and derivative identities kept distinct. Keep IIIF Presentation manifests and a generic `oldap-tools data` format as later, separate increments.
