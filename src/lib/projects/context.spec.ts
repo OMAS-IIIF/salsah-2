@@ -3,10 +3,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
 	clearProjectContext,
 	loadWorkingProjects,
+	projectArchivePath,
 	projectContext,
 	projectDisplayName,
 	projectPath,
 	projectResourcePath,
+	projectSearchPath,
 	SYSTEM_PROJECT_IRIS,
 	workingProjectMemberships
 } from './context';
@@ -49,8 +51,12 @@ describe('project context helpers', () => {
 
 	it('builds encoded project routes', () => {
 		expect(projectPath('my project', 'search', '#result')).toBe('/p/my%20project/search#result');
+		expect(projectArchivePath('my project')).toBe('/p/my%20project/archive');
 		expect(projectResourcePath('my project', 'archive:Item/1')).toBe(
 			'/p/my%20project/resource/archive%3AItem%2F1'
+		);
+		expect(projectSearchPath('my project', ' steam & smoke ')).toBe(
+			'/p/my%20project/search?q=steam%20%26%20smoke'
 		);
 	});
 

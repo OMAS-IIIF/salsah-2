@@ -1,0 +1,16 @@
+{
+	"endpoint": "http://localhost:8088/upload",
+	"projectId": "chama",
+	"path": "catalogue",
+	"identifier": "PICT0111",
+	"targetFormat": "tiff",
+	"existingResourceIri": "chama:PICT0111",
+	"file": {
+		"path": "/Users/rosenth/ProgDev/OLDAP/demo-data/PICT0111.jpg",
+		"name": "PICT0111.jpg",
+		"mimeType": "image/jpeg",
+		"sha256": "0d794a6199c0279339fb8584bc85060f3a30c43ad197c3742425c2d96499b781",
+		"width": 3900,
+		"height": 2600
+	}
+}

@@ -175,3 +175,15 @@ export function projectPath(projectShortName: string, suffix = '', hash = ''): s
 export function projectResourcePath(projectShortName: string, resourceIri: string): string {
 	return projectPath(projectShortName, `resource/${encodeURIComponent(resourceIri)}`);
 }
+
+/** Build the canonical project search route with an optional shareable query. */
+export function projectSearchPath(projectShortName: string, query = ''): string {
+	const path = projectPath(projectShortName, 'search');
+	const normalizedQuery = query.trim();
+	return normalizedQuery ? `${path}?q=${encodeURIComponent(normalizedQuery)}` : path;
+}
+
+/** Build the canonical read-only archive-tree route for a project. */
+export function projectArchivePath(projectShortName: string): string {
+	return projectPath(projectShortName, 'archive');
+}

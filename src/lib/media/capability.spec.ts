@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { withMediaCapability } from './capability';
+import { mediaPreviewUrl, withMediaCapability } from './capability';
 
 describe('media capability URLs', () => {
 	it('adds the capability to IIIF metadata and tile requests', () => {
@@ -15,5 +15,36 @@ describe('media capability URLs', () => {
 		expect(withMediaCapability('https://media.example.org/info.json', null)).toBe(
 			'https://media.example.org/info.json'
 		);
+	});
+});
+
+describe('media preview URLs', () => {
+	it('creates an authorized bounded IIIF image request', () => {
+		expect(
+			mediaPreviewUrl({
+				kind: 'iiif-image',
+				infoUrl: 'https://media.example.org/iiif/3/IMG%201751/info.json',
+				capability: 'short lived'
+			})
+		).toBe(
+			'https://media.example.org/iiif/3/IMG%201751/full/!720,480/0/default.jpg?token=short+lived'
+		);
+	});
+
+	it('prefers an external thumbnail and otherwise uses the original URL', () => {
+		expect(
+			mediaPreviewUrl({
+				kind: 'external-image',
+				url: 'https://images.example.org/full.jpg',
+				thumbnailUrl: 'https://images.example.org/thumb.jpg'
+			})
+		).toBe('https://images.example.org/thumb.jpg');
+		expect(
+			mediaPreviewUrl({
+				kind: 'external-image',
+				url: 'https://images.example.org/full.jpg',
+				thumbnailUrl: null
+			})
+		).toBe('https://images.example.org/full.jpg');
 	});
 });

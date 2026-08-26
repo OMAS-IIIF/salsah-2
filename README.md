@@ -12,9 +12,15 @@ The current increment provides:
   and permission-aware media delivery;
 - a reusable, dynamically loaded OpenSeadragon viewer for local IIIF Image API
   resources, plus direct rendering for externally managed images;
-- a live, permission-aware list of recently modified project resources on the
-  project workspace, with direct links to their detail pages;
-- a responsive archive workspace prototype with project switching.
+- a live, permission-aware card overview of recently modified project resources,
+  including ontology labels, direct-media previews, archive-first representation
+  previews, neutral non-media states, and detail links;
+- project-wide text search through the existing header field and the canonical
+  `/p/[projectShortName]/search?q=...` route, with unique ontology-labelled
+  results, media previews, keyboard focus through `Cmd/Ctrl+K`, and localized
+  loading, error, empty, and result states;
+- a responsive project workspace with project switching and no fictitious
+  archive statistics or activity data.
 
 The first complete live vertical slice is the Chama record
 `/p/chama/resource/chama:IMG_1751`. Its HEIC original is attached to the existing
@@ -62,4 +68,4 @@ The Playwright command installs its required browser binaries when necessary.
 
 ## Project context
 
-The durable product vision and engineering principles are defined in [`FOUNDATIONS.md`](./FOUNDATIONS.md). The first evidence-based modelling sketch is documented in [`docs/minimal-data-model-v0.1.md`](./docs/minimal-data-model-v0.1.md), with a concrete archive-first/media-first comparison in [`experiments/catalogue-patterns/`](./experiments/catalogue-patterns/README.md), the first locally validated Chama ontology draft in [`experiments/chama-ontology/`](./experiments/chama-ontology/README.md), and the accepted placement strategy for generic archive semantics in [`docs/architecture/generic-archive-foundation.md`](./docs/architecture/generic-archive-foundation.md). Architecture, repository state, and the incremental roadmap are documented in [`codex.md`](./codex.md). Technical changes are recorded newest-first in [`CODEX_LOG.md`](./CODEX_LOG.md).
+The durable product vision and engineering principles are defined in [`FOUNDATIONS.md`](./FOUNDATIONS.md). The first evidence-based modelling sketch is documented in [`docs/minimal-data-model-v0.1.md`](./docs/minimal-data-model-v0.1.md), with a concrete archive-first/media-first comparison in [`experiments/catalogue-patterns/`](./experiments/catalogue-patterns/README.md), the first locally validated Chama ontology draft in [`experiments/chama-ontology/`](./experiments/chama-ontology/README.md), and the accepted placement strategy for generic archive semantics in [`docs/architecture/generic-archive-foundation.md`](./docs/architecture/generic-archive-foundation.md). The search baseline and its future ontology-defined Lucene integration are documented in [`docs/architecture/project-search.md`](./docs/architecture/project-search.md). Architecture, repository state, and the incremental roadmap are documented in [`codex.md`](./codex.md). Technical changes are recorded newest-first in [`CODEX_LOG.md`](./CODEX_LOG.md).

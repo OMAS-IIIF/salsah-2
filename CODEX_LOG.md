@@ -1,5 +1,75 @@
 # CODEX_LOG
 
+### Update 2026-08-27 00:34
+
+- Decisions: Treat a unit's `shared:hasMediaObject` links as expandable archive contents while keeping them visually and semantically distinct from structural `shared:ArchiveUnit` children; a disclosure control must never appear inert when readable media contents exist.
+- Implementation: Included media IRIs in bounded level searches, resolved them through one permission-aware summary batch with authorized delivery, and rendered linked media rows with thumbnails, localized type labels, fallback icons, and canonical detail links. Expansion now combines direct ArchiveUnit children and readable media, while a truly empty checked unit becomes a leaf. Added media mapping coverage and extended the browser scenario through Chama 2023 to its photo and thumbnail.
+- Open: Review the live Chama 2018 four-photo and Chama 2023 one-photo presentation; decide later whether archive-first Item representations should default to collapsed or remain explicitly expandable after more sample data.
+- Risks/Assumptions: Media omitted by the summary endpoint is missing or unreadable and is not exposed. Associated media are listed after structural child units. Sibling queries remain capped at 100; summary batches already chunk at 100.
+
+### Update 2026-08-27 00:19
+
+- Decisions: Make the first archive view read-only and project-neutral; load roots and direct children incrementally through existing permission-aware structured search rather than introducing an archive-specific read endpoint or loading the complete tree.
+- Implementation: Activated `/p/[project]/archive` and sidebar navigation; added a reusable localized archive tree with async expansion, sibling ordering, archive-level badges, canonical detail links, loading/empty/error states, and accessible tree semantics; added typed search mapping, path and client regressions, and a full mocked login/root/child/detail-link browser scenario. Recorded the live idempotent five-unit import and verified Lobato move.
+- Open: Perform the live signed-in Chama visual short test. Defer editing, drag-and-drop, larger sibling pagination, and project-specific hierarchy profiles until the read-only interaction has been reviewed with more sample data.
+- Risks/Assumptions: The first slice deliberately caps each sibling query at 100. Project subclasses are discovered through `shared:ArchiveUnit` reasoning; oldaplib 0.7.16 now also accepts those subclasses in integrity-sensitive moves. No new API contract or Chama-specific UI mapping was introduced.
+
+### Update 2026-08-26 23:48
+
+- Decisions: Represent the heterogeneous Chama demo root as `shared:ArchiveGroup`, not a provenance-based Fonds; group Lukas Rosenthaler's born-digital media by 2018/2023 Files and retain the existing Lobato photographic work as the sole archive-first Item.
+- Implementation: Added and locally validated a five-resource create-only data YAML with explicit public permissions and media links; added the cycle-safe Lobato move payload, an idempotent password-prompting API script in `/private/tmp`, and synchronized experiment/stable documentation.
+- Open: Run live dry-run/apply/rerun, execute the Lobato move script, and verify the resulting hierarchy before implementing the read-only SALSAH archive tree.
+- Risks/Assumptions: `IMG_0171` is grouped under 2023 according to its imported `2023-08-25` Dating despite its filename sequence. The root is explicitly a curated demonstration aggregation and must not be presented as an organically accumulated fonds.
+
+### Update 2026-08-26 01:01
+
+- Decisions: Adopt the additive OLDAP summary contract for card and detail enrichment while retaining complete single-resource reads for the primary record and never probing omitted hidden/missing resources.
+- Implementation: Added typed, automatically chunked summary requests; replaced per-hit and per-linked-resource metadata/media calls in workspace, search, and resource detail; retained sole-representation selection; updated mocks and focused unit/browser contracts.
+- Open: Publish/install the paired oldaplib and oldap-api revisions, restart the API, and compare live Chama timings and IIIF rendering.
+- Risks/Assumptions: The API batch limit is 100 and the client chunks larger sets. Archive-first cards may require one second bounded batch. Short-lived media capabilities remain memory-only.
+
+### Update 2026-08-25 23:41
+
+- Decisions: Keep `/data/text/{project}` as the permission-aware, ontology-neutral first search baseline and a future fallback. Do not hard-code Fasnacht Lucene fields; connector-aware SALSAH search requires a small OLDAP runtime search-profile contract.
+- Implementation: Activated the header and sidebar search through the canonical `/p/[project]/search?q=...` route, added `Cmd/Ctrl+K`, localized full search states, deduplicated property-level OLDAP hits by IRI, and enriched unique results with live names, ontology class labels, detail links, and shared direct/archive-first media cards. Added focused unit and end-to-end coverage plus `docs/architecture/project-search.md`.
+- Open: Exercise real Chama queries, then decide whether the next slice exposes Lucene profiles and installs a Chama connector or addresses an observed result-presentation issue. Facets, highlighting, pagination, and connector-driven ranking remain deferred.
+- Risks/Assumptions: Broad literal search is intentionally bounded to 24 returned rows before client deduplication and does not provide Lucene ranking. The current OLDAP data-model response does not expose ontology YAML Lucene field configuration. Verification passes with 46 unit tests, 8 Playwright scenarios, Svelte diagnostics, targeted ESLint, production build, and visual review of the mocked search page.
+
+### Update 2026-08-25 16:33
+
+- Decisions: Make the normal project workspace truthful and production-data-only. Use the permission-aware `oldap:Thing` search for discovery, enrich at most eight results with ontology class labels and optional media previews, support both direct media and a sole archive-first representation, and never let preview failure hide an otherwise readable resource.
+- Implementation: Replaced the compact live list with a responsive resource-card overview; added capability-authorized bounded IIIF preview URLs and external-thumbnail fallback; resolved direct and sole-linked representation media generically; localized the new states in four languages; removed all fictitious statistics, Burckhardt archive rows, activity, research note, demo tabs, and non-functional create/import actions from the project workspace; added archive-first unit coverage and a browser test for the authorized preview and absence of fixtures.
+- Open: Implement the first small project-wide text search through the existing header field. Broader archive navigation, real activity, tabs, create/import UI, and advanced facets remain separate evidence-driven increments.
+- Risks/Assumptions: Overview enrichment currently performs bounded parallel resource reads for up to eight hits; this is proportionate for the first slice but should be measured before increasing the limit. A resource with several representations intentionally receives no implicit preview until a generic primary-representation rule exists.
+
+### Update 2026-08-24 23:20
+
+- Decisions: Attach the owner KnowledgeContribution to the archive-first photographic work, not to its JPEG representation. Preserve requested joint display credit while retaining distinct photographer and digitizer roles in the model.
+- Implementation: Added a reviewed public Lobato contribution payload separating verbatim original text and follow-up clarification from normalized description, uncertainty, and normalization notes. Prepared and syntax-checked an idempotent script that verifies every authored field, performs no explicit work update, and requires OLDAP reasoning to expose the inverse work-to-contribution relationship.
+- Open: Run `/private/tmp/add_chama_lobato_contribution.py`, inspect its verification output, and verify both navigation directions in live SALSAH.
+- Risks/Assumptions: Exact locomotive number, train, day, Kern camera model, and film format remain unknown. Historical and technical assertions remain contributor-supplied pending documentary verification; public-display permission is recorded, but its formal legal basis still needs documentation.
+
+### Update 2026-08-24 23:17
+
+- Decisions: Accept the archive-first media round trip as successful only when one authorized IIIF service renders through both the digital-representation route and the work route, without copying technical media metadata onto the work.
+- Implementation: Recorded the successful attachment of `PICT0111.jpg` to `chama:PICT0111`, pyramidal `master.tif` generation, checksum preservation, media-capability verification, and IIIF Image API 3 level-2 response at 3900 × 2600 pixels. Verified visually and semantically in live SALSAH that OpenSeadragon renders the image both directly on `chama:PICT0111` and indirectly on `chama:LobatoTrestlePhotograph1981`; relationship navigation and work-level descriptive metadata remain intact.
+- Open: Add the owner KnowledgeContribution to the work, then review the inherited “Record creator” label versus the intended photographer role.
+- Risks/Assumptions: The single linked representation supplies display media unambiguously. Multiple representations still require an explicit primary-display rule; no technical delivery fields were duplicated onto the photographic work.
+
+### Update 2026-08-24 23:14
+
+- Decisions: For a non-media archive resource, automatically display its sole readable `shared:hasMediaObject` representation; do not choose implicitly when several representations exist. Treat `shared:ArchiveLevel` individuals as controlled metadata values rather than broken project-resource links.
+- Implementation: Recorded the successful creation and exact 1981 Dating round trip for all five public `PICT0111` archive-first resources. Verified live navigation among work, representation, carrier, photographer, place, and K-36. Added generic linked-display-media selection and a work-level missing-media state, plus unit coverage; 42 unit tests, `svelte-check`, targeted ESLint, and both resource-detail browser tests pass. Prepared and syntax-checked the checksum-guarded, idempotent JPEG attachment script and its reviewed multipart evidence.
+- Open: Run `/private/tmp/attach_chama_pict0111_media.py`, then verify the IIIF viewer on both `chama:PICT0111` and `chama:LobatoTrestlePhotograph1981`. Add the KnowledgeContribution separately.
+- Risks/Assumptions: A project with multiple media representations still needs an explicit primary-display rule. `PhotographicWork` currently inherits the Shared label “Record creator” for `dcterms:creator`; a later ontology or presentation-label refinement should say “Photographer” without changing the stored relationship.
+
+### Update 2026-08-24 23:05
+
+- Decisions: Make the first archive-first increment the smallest complete identity structure: photographer, place, analogue carrier, digital representation, and photographic work/archive item. Keep the owner KnowledgeContribution and media binary attachment as separate gates.
+- Implementation: Added five reviewed public create payloads for `PICT0111.jpg` and an idempotent password-prompting script that creates resources in dependency order, refuses unexpected existing content, verifies every supplied field and relationship, and confirms anonymous `DATA_VIEW`. Verified the script compiles using the project environment.
+- Open: Run `/private/tmp/create_chama_pict0111_archive_first.py`, inspect the normalized 1981 Dating value, and navigate the archive-first relationship structure in live SALSAH.
+- Risks/Assumptions: The exact capture day, locomotive number, Kern camera model, and film format remain unknown. The inherited Shared label for `dcterms:creator` is archival “record creator”; hands-on review may show that `PhotographicWork` needs a more precise photographer label without changing the underlying predicate.
+
 ### Update 2026-08-24 22:46
 
 - Decisions: Keep OpenSeadragon behind a generic SALSAH component and keep authorized delivery data separate from ontology-derived display fields. Apply the short-lived media capability to both IIIF metadata and every tile request so the same viewer also works for non-public assets.

@@ -8,12 +8,12 @@
 
 Every ordinary OLDAP project owns four named graphs:
 
-| Graph | Responsibility |
-| --- | --- |
+| Graph             | Responsibility                                                                                 |
+| ----------------- | ---------------------------------------------------------------------------------------------- |
 | `<project>:shacl` | SHACL shapes for future validation and the semantic template used to construct user interfaces |
-| `<project>:onto` | OWL definitions used for reasoning |
-| `<project>:lists` | Hierarchical lists and taxonomies, which sit between schema and instance data |
-| `<project>:data` | Project instances |
+| `<project>:onto`  | OWL definitions used for reasoning                                                             |
+| `<project>:lists` | Hierarchical lists and taxonomies, which sit between schema and instance data                  |
+| `<project>:data`  | Project instances                                                                              |
 
 The special `oldap:shacl` and `oldap:onto` graphs provide engine-level definitions. `shared:shacl` and `shared:onto` provide reusable definitions that every project can reference automatically.
 
@@ -110,27 +110,27 @@ An experimental or merely plausible concept remains in a project ontology until 
 
 ### Existing Shared Building Blocks to Retain
 
-| Building block | Current role | Assessment |
-| --- | --- | --- |
-| `shared:ArchiveUnit` and archive levels | Hierarchical archival description | Good generic archive module; projects opt into it |
-| `shared:parentArchiveUnit` | Archive hierarchy | Retain |
-| `shared:MediaObject` | Technical identity and access metadata for media | Essential generic base |
-| `shared:hasMediaObject` | Media attached to an archive unit | Retain for compatibility; current archive-specific domain needs review |
-| `shared:StagingArea`, folders, and staging media | Generic ingest preparation | Retain as an optional workflow module |
-| `oldap:Dating` | Qualified date or date range | Reuse across projects; it remains an engine-level value structure |
+| Building block                                   | Current role                                     | Assessment                                                             |
+| ------------------------------------------------ | ------------------------------------------------ | ---------------------------------------------------------------------- |
+| `shared:ArchiveUnit` and archive levels          | Hierarchical archival description                | Good generic archive module; projects opt into it                      |
+| `shared:parentArchiveUnit`                       | Archive hierarchy                                | Retain                                                                 |
+| `shared:MediaObject`                             | Technical identity and access metadata for media | Essential generic base                                                 |
+| `shared:hasMediaObject`                          | Media attached to an archive unit                | Retain for compatibility; current archive-specific domain needs review |
+| `shared:StagingArea`, folders, and staging media | Generic ingest preparation                       | Retain as an optional workflow module                                  |
+| `oldap:Dating`                                   | Qualified date or date range                     | Reuse across projects; it remains an engine-level value structure      |
 
 ### High-Value Candidates for the First Chama Ontology
 
 These concepts are needed for the experiment but should initially be tested in the Chama project namespace or represented with suitable external terms:
 
-| Candidate | Current evidence | Promotion condition |
-| --- | --- | --- |
-| Generic relation from any described resource to a media representation | Archive-first Chama, museum example, current archive-only `hasMediaObject` boundary | Confirm semantics and whether a new superproperty is safer than broadening the existing domain |
-| Descriptive media base class | Fasnacht `ArchiveMediaObject` and Chama media-first panorama | Compare the exact common property intersection and avoid inheriting Fasnacht workflow constraints |
-| Direct visual depiction relation | All six Chama photographs and Fasnacht's broad representation relation | Select an established external property if suitable; keep depiction distinct from digitization and `about` |
-| Knowledge contribution | All six Chama annotations | Exercise create/edit/read workflows and compare with a second real institutional contribution workflow |
-| Public-display decision, credit line, and rights-review note | All Chama photographs; Fasnacht publication and licence fields | Specify the rights workflow and evaluate established rights vocabularies before promotion |
-| Precise creation and digitization roles | `PICT0111.jpg`; Fasnacht creator/provider distinction | Test whether explicit properties are sufficient or a reusable activity/role pattern is justified |
+| Candidate                                                              | Current evidence                                                                    | Promotion condition                                                                                        |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Generic relation from any described resource to a media representation | Archive-first Chama, museum example, current archive-only `hasMediaObject` boundary | Confirm semantics and whether a new superproperty is safer than broadening the existing domain             |
+| Descriptive media base class                                           | Fasnacht `ArchiveMediaObject` and Chama media-first panorama                        | Compare the exact common property intersection and avoid inheriting Fasnacht workflow constraints          |
+| Direct visual depiction relation                                       | All six Chama photographs and Fasnacht's broad representation relation              | Select an established external property if suitable; keep depiction distinct from digitization and `about` |
+| Knowledge contribution                                                 | All six Chama annotations                                                           | Exercise create/edit/read workflows and compare with a second real institutional contribution workflow     |
+| Public-display decision, credit line, and rights-review note           | All Chama photographs; Fasnacht publication and licence fields                      | Specify the rights workflow and evaluate established rights vocabularies before promotion                  |
+| Precise creation and digitization roles                                | `PICT0111.jpg`; Fasnacht creator/provider distinction                               | Test whether explicit properties are sufficient or a reusable activity/role pattern is justified           |
 
 ### Concepts to Keep Outside Shared for Now
 
@@ -154,6 +154,21 @@ Because SHACL is both a future validation source and a UI template, Shared shape
 - A Shared class must not require a licence, workflow state, lead image, institution-specific identifier, or other field merely because one current application requires it.
 
 This keeps the globally available base useful without making all OLDAP projects look or behave alike.
+
+### First read-only SALSAH slice
+
+The first archive UI consumes the foundation without introducing a second
+archive-specific backend contract. `/p/[project]/archive` searches
+`shared:ArchiveUnit` through the permission-aware structured instance search.
+It requests roots with `shared:parentArchiveUnit NOT_EXISTS` and loads only the
+direct children of an expanded unit. Expansion also reads the unit's known
+`shared:hasMediaObject` targets in one bounded summary request. These media
+contents appear as visually distinct rows with authorized thumbnails and
+canonical resource links; they do not become structural ArchiveUnits. This
+allows media-first Files and archive-first representations to coexist in one
+honest navigation model. Editing, drag-and-drop, pagination beyond 100 siblings,
+and project-specific hierarchy profiles remain deliberately separate later
+steps.
 
 ## Shared Data Versus Shared Definitions
 

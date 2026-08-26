@@ -1,0 +1,9 @@
+{
+  "iri": "RuediSinger",
+  "schema:name": [
+    "Ruedi Singer@de"
+  ],
+  "oldap:attachedToRole": {
+    "oldap:Unknown": "DATA_VIEW"
+  }
+}

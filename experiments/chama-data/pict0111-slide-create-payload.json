@@ -1,0 +1,13 @@
+{
+  "iri": "Slide_PICT0111",
+  "schema:name": [
+    "Originaldia zur Aufnahme der Lobato Trestle@de",
+    "Original slide for the Lobato Trestle photograph@en"
+  ],
+  "schema:description": [
+    "Von Ruedi Singer 1981 mit einer Kern-Spiegelreflexkamera aufgenommenes Dia; das genaue Kamera- und Filmformat ist noch nicht dokumentiert.@de"
+  ],
+  "oldap:attachedToRole": {
+    "oldap:Unknown": "DATA_VIEW"
+  }
+}

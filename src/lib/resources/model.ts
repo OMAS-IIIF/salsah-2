@@ -22,7 +22,11 @@ const HIDDEN_PROPERTIES = new Set([
 
 // OLDAP stores these ontology classes as qualified value structures and the
 // instance API serializes them as scalar display values rather than target IRIs.
-const EMBEDDED_VALUE_CLASSES = new Set(['oldap:Dating']);
+const EMBEDDED_VALUE_CLASSES = new Set([
+	'oldap:Dating',
+	// Archive levels are controlled named values, not project data resources.
+	'shared:ArchiveLevel'
+]);
 
 interface LocalizedText {
 	text: string;

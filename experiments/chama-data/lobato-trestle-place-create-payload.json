@@ -1,0 +1,13 @@
+{
+  "iri": "LobatoTrestle",
+  "schema:name": [
+    "Lobato Trestle@en",
+    "Lobato-Brücke@de"
+  ],
+  "schema:description": [
+    "Stählerne Eisenbahnbrücke der Cumbres & Toltec Scenic Railroad unweit von Chama, New Mexico.@de"
+  ],
+  "oldap:attachedToRole": {
+    "oldap:Unknown": "DATA_VIEW"
+  }
+}

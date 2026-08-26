@@ -192,6 +192,86 @@ async function mockOldap(page: Page, mediaAttached = false): Promise<void> {
 			});
 			return;
 		}
+		if (path === '/data/text/chama' && request.method() === 'GET') {
+			await route.fulfill({
+				status: 200,
+				headers,
+				json:
+					url.searchParams.get('q') === 'Panorama'
+						? [
+								{
+									iri: 'chama:IMG_1751',
+									resclass: 'chama:CataloguedPhotograph',
+									'schema:description': 'Die Panoramaaufnahme zeigt die Lokomotive Nr. 488.@de'
+								},
+								{
+									iri: 'chama:IMG_1751',
+									resclass: 'chama:CataloguedPhotograph',
+									'schema:name': 'K-36 #488 im Panorama@de'
+								}
+							]
+						: []
+			});
+			return;
+		}
+		if (path === '/data/summaries/chama' && request.method() === 'POST') {
+			const body = request.postDataJSON() as { iris: string[] };
+			const summaryData: Record<string, { resclass: string; data: Record<string, unknown> }> = {
+				'chama:IMG_1751': {
+					resclass: 'chama:CataloguedPhotograph',
+					data: {
+						'rdf:type': ['chama:CataloguedPhotograph'],
+						'schema:name': ['K-36 #488 im Panorama@de'],
+						...(mediaAttached
+							? {
+									'shared:mediaAccessMode': ['local'],
+									'shared:assetId': ['IMG_1751']
+								}
+							: {})
+					}
+				},
+				'chama:LukasRosenthaler': {
+					resclass: 'chama:Person',
+					data: {
+						'rdf:type': ['chama:Person'],
+						'schema:name': ['Lukas Rosenthaler@de']
+					}
+				},
+				'chama:ChamaStation': {
+					resclass: 'chama:Place',
+					data: {
+						'rdf:type': ['chama:Place'],
+						'schema:name': ['Bahnhof Chama@de', 'Chama station@en']
+					}
+				}
+			};
+			await route.fulfill({
+				status: 200,
+				headers,
+				json: {
+					resources: body.iris.flatMap((iri) => {
+						const summary = summaryData[iri];
+						return summary
+							? [
+									{
+										iri,
+										...summary,
+										mediaDelivery:
+											iri === 'chama:IMG_1751' && mediaAttached
+												? {
+														kind: 'iiif-image',
+														infoUrl: 'http://media.test/iiif/3/IMG_1751/info.json',
+														capability: 'test-media-capability'
+													}
+												: null
+									}
+								]
+							: [];
+					})
+				}
+			});
+			return;
+		}
 		if (path === '/data/chama/chama:IMG_1751') {
 			await route.fulfill({
 				status: 200,
@@ -310,4 +390,51 @@ test('opens an attached local image in the generic IIIF viewer', async ({ page }
 	await expect(viewer.getByRole('button', { name: 'Vergrössern' })).toBeVisible();
 	await expect(page.getByText('Mediendatei noch nicht importiert', { exact: true })).toHaveCount(0);
 	await expect(page.getByText('Hochauflösendes Bild wird geladen …')).toHaveCount(0);
+});
+
+test('shows real project resources with an authorized image preview', async ({ page }) => {
+	await mockOldap(page, true);
+	await page.goto('/login?next=/p/chama/resource/chama%3AIMG_1751');
+	await page.getByLabel('User-ID').fill('researcher');
+	await page.getByLabel('Passwort').fill('test-password');
+	await page.getByRole('button', { name: 'Anmelden' }).click();
+	await page.getByRole('link', { name: 'Zurück zum Arbeitsbereich' }).click();
+
+	await expect(page).toHaveURL('http://localhost:4173/p/chama');
+	await expect(page.getByRole('heading', { name: 'Zuletzt erfasst' })).toBeVisible();
+	const card = page.getByRole('link', { name: /K-36 #488 im Panorama/ });
+	await expect(card).toBeVisible();
+	await expect(card.getByText('Erschlossene Fotografie', { exact: true })).toBeVisible();
+	await expect(card.locator('img')).toHaveAttribute(
+		'src',
+		'http://media.test/iiif/3/IMG_1751/full/!720,480/0/default.jpg?token=test-media-capability'
+	);
+	await expect(page.getByText('Nachlass Jacob Burckhardt')).toHaveCount(0);
+	await expect(page.getByText('14’286')).toHaveCount(0);
+	await expect(page.getByRole('button', { name: 'Daten importieren' })).toHaveCount(0);
+});
+
+test('searches the current project from the header and shows a unique live result', async ({
+	page
+}) => {
+	await mockOldap(page, true);
+	await page.goto('/login?next=/p/chama/resource/chama%3AIMG_1751');
+	await page.getByLabel('User-ID').fill('researcher');
+	await page.getByLabel('Passwort').fill('test-password');
+	await page.getByRole('button', { name: 'Anmelden' }).click();
+
+	const headerSearch = page.getByLabel('Globale Suche');
+	await headerSearch.fill('Panorama');
+	await headerSearch.press('Enter');
+
+	await expect(page).toHaveURL('http://localhost:4173/p/chama/search?q=Panorama');
+	await expect(page.getByRole('heading', { name: 'Treffer für „Panorama“' })).toBeVisible();
+	await expect(page.getByText('1 Treffer angezeigt', { exact: true })).toBeVisible();
+	const result = page.getByRole('link', { name: /K-36 #488 im Panorama/ });
+	await expect(result).toHaveCount(1);
+	await expect(result.getByText('Erschlossene Fotografie', { exact: true })).toBeVisible();
+	await expect(result.locator('img')).toHaveAttribute(
+		'src',
+		'http://media.test/iiif/3/IMG_1751/full/!720,480/0/default.jpg?token=test-media-capability'
+	);
 });

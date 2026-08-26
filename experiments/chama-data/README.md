@@ -1,5 +1,45 @@
 # Chama Instance Experiments
 
+## Minimal archive structure
+
+`chama-minimal-archive-structure.yaml` defines the first project-neutral
+archive-tree experiment over the existing Chama resources. It deliberately uses
+`shared:ArchiveGroup` for the root because the demonstration combines material
+from different record creators and must not imply a single provenance-based
+fonds.
+
+The create-only batch adds:
+
+- `chama:ChamaRailwayHeritageDemo` — ArchiveGroup;
+- `chama:LukasRosenthalerRailwayPhotographs` — Series;
+- `chama:LukasRosenthalerChama2018` — File linked to four existing born-digital
+  MediaObjects;
+- `chama:LukasRosenthalerChama2023` — File linked to the existing Foster's
+  MediaObject;
+- `chama:RuediSingerRailwayPhotographs1981` — Series.
+
+The existing archive-first
+`chama:LobatoTrestlePhotograph1981` remains the intellectual Item and is moved
+below the Ruedi Singer series through the cycle-safe archive-move API using
+`lobato-archive-move-payload.json`. It is not recreated or duplicated. This
+tests media-first and archive-first resources inside one hierarchy while
+preserving their distinct catalogue identities.
+
+Apply order:
+
+1. Validate and dry-run the data YAML with `oldap-tools`.
+2. Apply and rerun it to verify idempotency.
+3. Move the pre-existing Lobato Item only after the new parent Series exists.
+
+All three steps have been completed live. A second batch apply returned
+`existing_verified` for all five units, and the move endpoint verified
+`chama:LobatoTrestlePhotograph1981` below
+`chama:RuediSingerRailwayPhotographs1981` at position 1 without creating a
+duplicate Item.
+
+Every new unit explicitly grants `oldap:Unknown` `DATA_VIEW`. Descriptive access
+text remains informational and never substitutes for OLDAP permissions.
+
 ## Status
 
 The first live Chama instance has been created and read back successfully:
@@ -70,6 +110,34 @@ The organization metadata increment has been created and verified:
   therefore be read as historical/current operators across the locomotive's
   biography, not as a claim that both operated it simultaneously
 
+The first archive-first structure for `PICT0111.jpg` has been created and
+verified as five independently addressable public resources:
+
+- `chama:RuediSinger`: photographer
+- `chama:LobatoTrestle`: capture place and depicted structure
+- `chama:Slide_PICT0111`: analogue source carrier
+- `chama:PICT0111`: digital representation, digitized by
+  `chama:LukasRosenthaler`
+- `chama:LobatoTrestlePhotograph1981`: photographic work and archive item,
+  linked to the carrier and digital representation
+
+The exact payloads are stored in the five corresponding `*-create-payload.json`
+files. The 1981 Dating round-trips as
+`1981-01-01 - 1981-12-31 (GREGORIAN, YEAR)`. Generic SALSAH navigation and the
+missing-media state on both the work and representation were verified live.
+The JPEG has subsequently been attached to the existing representation,
+converted to a pyramidal `master.tif`, and verified through IIIF Image API 3
+level 2 at 3900 × 2600 pixels. The same authorized viewer is live on both the
+direct representation and the indirectly resolved photographic work. The owner
+KnowledgeContribution remains a separate verification gate.
+
+`lobato-knowledge-contribution-create-payload.json` now contains the reviewed
+owner contribution for that final gate. It preserves the original German text
+and follow-up clarification verbatim, while keeping the normalized description,
+uncertainty, and normalization decisions in separate fields. The contribution
+describes the photographic work rather than the JPEG representation and retains
+Ruedi Singer as photographer versus Lukas Rosenthaler as digitizer.
+
 `img-1751-create-payload.json` records the exact non-secret JSON body sent to
 `PUT /data/chama/CataloguedPhotograph`. It is experiment evidence, not yet a
 generic import-format contract. `lukas-person-create-payload.json` and
@@ -118,6 +186,8 @@ link at the current API boundary.
 
 ## Next Increment
 
-Close the complete media-first vertical slice after visual review, then model
-`PICT0111.jpg` through the independent archive-first pattern. A generic data
-interchange format and IIIF Presentation manifests remain separate decisions.
+Run `/private/tmp/add_chama_lobato_contribution.py` and verify the inferred inverse
+relationship on the photographic work. Then review whether the project ontology
+should override the inherited “Record creator” label with “Photographer”. A
+generic data interchange format and IIIF Presentation manifests remain separate
+decisions.

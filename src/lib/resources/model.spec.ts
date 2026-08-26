@@ -126,6 +126,7 @@ describe('resource presentation', () => {
 					{ 'rdf:type': ['chama:Person'], 'schema:name': ['Lukas Rosenthaler@de'] }
 				]
 			]),
+			displayMediaIri: null,
 			media: null
 		};
 		const presentation = presentResource(loaded, 'chama:IMG_1751', 'de');

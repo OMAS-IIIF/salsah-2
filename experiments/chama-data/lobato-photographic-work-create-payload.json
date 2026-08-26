@@ -1,0 +1,27 @@
+{
+  "iri": "LobatoTrestlePhotograph1981",
+  "shared:archiveLevel": "shared:Item",
+  "schema:name": [
+    "Lobato Trestle auf der Cumbres & Toltec Scenic Railroad@de"
+  ],
+  "schema:description": [
+    "Ein Zug der Cumbres & Toltec Scenic Railroad fährt langsam auf die stählerne Lobato Trestle unweit von Chama. Die Aufnahme entstand aus dem fahrenden Zug mit Blick in Richtung Chama. Zu sehen sind eine Dampflokomotive der Klasse K-36 und die für die Anfangsjahre des Museumsbetriebs charakteristischen, zu Personenwagen umgebauten Boxcars.@de"
+  ],
+  "dcterms:creator": "chama:RuediSinger",
+  "dcterms:temporal": "1981",
+  "chama:capturePlace": "chama:LobatoTrestle",
+  "chama:depicts": [
+    "chama:LobatoTrestle",
+    "chama:K36"
+  ],
+  "chama:hasSourceCarrier": "chama:Slide_PICT0111",
+  "shared:hasMediaObject": "chama:PICT0111",
+  "chama:publicDisplayPermission": true,
+  "chama:creditLine": "Lukas Rosenthaler / Ruedi Singer",
+  "chama:rightsNote": [
+    "Fotografie von Ruedi Singer; für die öffentliche SALSAH-Demo freigegeben. Die formale urheberrechtliche Grundlage ist noch zu dokumentieren.@de"
+  ],
+  "oldap:attachedToRole": {
+    "oldap:Unknown": "DATA_VIEW"
+  }
+}

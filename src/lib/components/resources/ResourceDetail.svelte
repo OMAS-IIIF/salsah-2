@@ -119,7 +119,7 @@
 					<figure class="external-image">
 						<img src={loaded.media.url} alt={presentation.title} />
 					</figure>
-				{:else if presentation.isMediaObject && !presentation.mediaAvailable}
+				{:else if (presentation.isMediaObject || loaded?.displayMediaIri) && !presentation.mediaAvailable}
 					<section class="media-placeholder" aria-label={m.media_placeholder_title()}>
 						<div class="image-mark" aria-hidden="true">
 							<span></span><i></i><b></b>

@@ -1,0 +1,190 @@
+data:
+  version: 1
+  project: chama
+  resources:
+    # Curated demonstration aggregation, not one provenance-based fonds.
+    - iri: ChamaRailwayHeritageDemo
+      class: shared:ArchiveUnit
+      properties:
+        schema:name:
+          - value: Chama Railway Heritage Demo
+            language: en
+          - value: Demoarchiv zur Eisenbahngeschichte von Chama
+            language: de
+        shared:archiveLevel:
+          - iri: shared:ArchiveGroup
+        schema:identifier:
+          - value: CHAMA-DEMO
+        schema:description:
+          - value: >-
+              Kuratierte Demonstrationsstruktur für unterschiedliche
+              historische und zeitgenössische Quellen zur Eisenbahn in und um
+              Chama, New Mexico. Die Bestandsgruppe dient der Erprobung des
+              generischen SALSAH-Archivmodells und stellt keinen institutionell
+              gewachsenen Provenienzbestand dar.
+            language: de
+          - value: >-
+              Curated demonstration structure for heterogeneous historical and
+              contemporary sources concerning the railway in and around Chama,
+              New Mexico. The archive group tests SALSAH's generic archive model
+              and does not claim to be an organically accumulated fonds.
+            language: en
+        schema:materialExtent:
+          - value: Kleine, schrittweise wachsende digitale Demonstrationssammlung
+            language: de
+          - value: Small incrementally growing digital demonstration collection
+            language: en
+        dcterms:provenance:
+          - value: >-
+              Für die Entwicklung und Prüfung von SALSAH 2 aus Material
+              verschiedener Herkunft zusammengestellt.
+            language: de
+        schema:conditionsOfAccess:
+          - value: >-
+              Für die öffentliche SALSAH-Demo freigegebene Datensätze; die
+              technische Zugriffsentscheidung erfolgt ausschliesslich über die
+              OLDAP-Rollen und -Berechtigungen.
+            language: de
+        schema:position:
+          - value: 1
+      permissions:
+        oldap:Unknown: DATA_VIEW
+
+    - iri: LukasRosenthalerRailwayPhotographs
+      class: shared:ArchiveUnit
+      properties:
+        schema:name:
+          - value: Eisenbahnfotografien von Lukas Rosenthaler
+            language: de
+          - value: Railway photographs by Lukas Rosenthaler
+            language: en
+        shared:archiveLevel:
+          - iri: shared:Series
+        shared:parentArchiveUnit:
+          - iri: chama:ChamaRailwayHeritageDemo
+        schema:identifier:
+          - value: CHAMA-LR
+        schema:description:
+          - value: >-
+              Born-digitale Eigenaufnahmen von Lukas Rosenthaler aus Chama und
+              von der Cumbres & Toltec Scenic Railroad.
+            language: de
+        dcterms:creator:
+          - iri: chama:LukasRosenthaler
+        dcterms:provenance:
+          - value: >-
+              Vom Fotografen aus seinem persönlichen Bestand für die
+              SALSAH-Demo bereitgestellt und beschrieben.
+            language: de
+        schema:position:
+          - value: 1
+      permissions:
+        oldap:Unknown: DATA_VIEW
+
+    - iri: LukasRosenthalerChama2018
+      class: shared:ArchiveUnit
+      properties:
+        schema:name:
+          - value: Chama 2018
+            language: de
+          - value: Chama 2018
+            language: en
+        shared:archiveLevel:
+          - iri: shared:File
+        shared:parentArchiveUnit:
+          - iri: chama:LukasRosenthalerRailwayPhotographs
+        schema:identifier:
+          - value: CHAMA-LR-2018
+        schema:description:
+          - value: >-
+              Auswahl born-digitaler Fotografien, die Lukas Rosenthaler im Juli
+              2018 in Chama aufgenommen hat.
+            language: de
+        dcterms:temporal:
+          - value: "2018"
+        schema:materialExtent:
+          - value: Vier born-digitale Fotografien
+            language: de
+          - value: Four born-digital photographs
+            language: en
+        dcterms:creator:
+          - iri: chama:LukasRosenthaler
+        shared:hasMediaObject:
+          - iri: chama:IMG_1508
+          - iri: chama:IMG_1520
+          - iri: chama:IMG_1521
+          - iri: chama:IMG_1751
+        schema:position:
+          - value: 1
+      permissions:
+        oldap:Unknown: DATA_VIEW
+
+    - iri: LukasRosenthalerChama2023
+      class: shared:ArchiveUnit
+      properties:
+        schema:name:
+          - value: Chama 2023
+            language: de
+          - value: Chama 2023
+            language: en
+        shared:archiveLevel:
+          - iri: shared:File
+        shared:parentArchiveUnit:
+          - iri: chama:LukasRosenthalerRailwayPhotographs
+        schema:identifier:
+          - value: CHAMA-LR-2023
+        schema:description:
+          - value: >-
+              Born-digitale Aufnahme von Foster's Hotel and Saloon vom 25.
+              August 2023.
+            language: de
+        dcterms:temporal:
+          - value: "2023"
+        schema:materialExtent:
+          - value: Eine born-digitale Fotografie
+            language: de
+          - value: One born-digital photograph
+            language: en
+        dcterms:creator:
+          - iri: chama:LukasRosenthaler
+        shared:hasMediaObject:
+          - iri: chama:IMG_0171
+        schema:position:
+          - value: 2
+      permissions:
+        oldap:Unknown: DATA_VIEW
+
+    - iri: RuediSingerRailwayPhotographs1981
+      class: shared:ArchiveUnit
+      properties:
+        schema:name:
+          - value: Eisenbahnfotografien von Ruedi Singer, 1981
+            language: de
+          - value: Railway photographs by Ruedi Singer, 1981
+            language: en
+        shared:archiveLevel:
+          - iri: shared:Series
+        shared:parentArchiveUnit:
+          - iri: chama:ChamaRailwayHeritageDemo
+        schema:identifier:
+          - value: CHAMA-RS-1981
+        schema:description:
+          - value: >-
+              Fotografien von Ruedi Singer von der gemeinsamen USA-Reise im
+              Jahr 1981. Vorhandene analoge Aufnahmen werden als eigenständige
+              archivische Items mit ihren Trägern und Digitalisaten erschlossen.
+            language: de
+        dcterms:temporal:
+          - value: "1981"
+        dcterms:creator:
+          - iri: chama:RuediSinger
+        dcterms:provenance:
+          - value: >-
+              Fotografiert von Ruedi Singer und später von Lukas Rosenthaler
+              digitalisiert; die differenzierten Rollen bleiben an Werk,
+              Träger und digitaler Repräsentation dokumentiert.
+            language: de
+        schema:position:
+          - value: 2
+      permissions:
+        oldap:Unknown: DATA_VIEW

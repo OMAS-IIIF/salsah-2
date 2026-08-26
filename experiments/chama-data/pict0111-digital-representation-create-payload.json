@@ -1,0 +1,14 @@
+{
+  "iri": "PICT0111",
+  "dcterms:type": "dcmitype:StillImage",
+  "shared:mediaAccessMode": "local",
+  "shared:originalName": "PICT0111.jpg",
+  "shared:originalMimeType": "image/jpeg",
+  "shared:checksum": "0d794a6199c0279339fb8584bc85060f3a30c43ad197c3742425c2d96499b781",
+  "shared:protocol": "custom",
+  "chama:sourceCarrier": "chama:Slide_PICT0111",
+  "chama:digitizedBy": "chama:LukasRosenthaler",
+  "oldap:attachedToRole": {
+    "oldap:Unknown": "DATA_VIEW"
+  }
+}

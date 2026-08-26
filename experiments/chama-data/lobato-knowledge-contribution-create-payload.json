@@ -1,0 +1,23 @@
+{
+  "iri": "Annotation_LobatoTrestlePhotograph_2026_08_21",
+  "chama:describes": "chama:LobatoTrestlePhotograph1981",
+  "dcterms:contributor": "chama:LukasRosenthaler",
+  "dcterms:created": "2026-08-21",
+  "chama:contributionLanguage": "de",
+  "chama:sourceContext": "Project-owner annotation and follow-up clarification supplied during SALSAH 2 demo preparation",
+  "chama:originalText": [
+    "Titel: Lobato Trestle auf der Cumbres & Toltec Scenic Railroad\n\nWas ist zu sehen: Der Zug der Cumbres & Toltec Scenic Railroad fährt auf die Lobato Trestle, eine grossen Brücke, kurz vor Chama.\n\nAufnahmeort und Blickrichtung: Aus dem fahrenden Zug, in Richtung Chama\n\nLokomotiven, Wagen, Gebäude oder andere erkennbare Objekte: Lobato Trestle, die K-36 Lok und die alten, umgebauten Boxcars (Güterwagen), welche in den Anfängen des Museumsbetriebs üblich waren\n\nWas geschieht gerade: Der Zug fährt langsam über die stählerne  Brücke. Vor und hinter der Brücke besteht eine 4% Steigung, die Brücke ist nahezu horizontal\n\nPersönliche Erinnerung oder Kontext: Ein Bild, das sich mir eingeprägt hat, obwohl schon so viele Jahre vergangen sind. Und zum Glück kann man dieses Foto auch heute noch machen (wenn auch mit neuen, bequemeren Passagierwagons)\n\nUnsicherheiten: Keine Unsicherheit wurde angegeben.\n\nDarf öffentlich gezeigt werden: Ja\n\nGewünschte Urheberangabe: Lukas Rosenthaler / Ruedi Singer\n\nNachträgliche Präzisierung: Das Foto hat Ruedi Singer mit einer Kern Spiegelreflex-Kamea gemacht. Ich habe mit Super-8 gefilmt ;-) Das Die wurde von mir digitalisert (nicht sehr gut..)@de"
+  ],
+  "chama:normalizedDescription": [
+    "Ein Zug der Cumbres & Toltec Scenic Railroad fährt langsam auf die stählerne Lobato Trestle unweit von Chama. Die Aufnahme entstand aus dem fahrenden Zug mit Blick in Richtung Chama. Zu sehen sind eine Dampflokomotive der Klasse K-36 und die für die Anfangsjahre des Museumsbetriebs charakteristischen, zu Personenwagen umgebauten Boxcars. Die Strecke weist vor und hinter der Brücke eine Steigung von vier Prozent auf, während die Brücke selbst nahezu horizontal verläuft.\n\nDie Szene hat sich dem Beitragenden über viele Jahre eingeprägt. Eine vergleichbare Aufnahme ist auch heute noch möglich, inzwischen jedoch mit neueren und bequemeren Reisezugwagen. Das Originaldia wurde 1981 von Ruedi Singer mit einer Kern-Spiegelreflexkamera aufgenommen und später von Lukas Rosenthaler digitalisiert.@de"
+  ],
+  "chama:uncertaintyNote": [
+    "Die genaue Lokomotivnummer, der Zug, der Aufnahmetag, das Kern-Kameramodell und das Filmformat sind nicht bekannt. Die Datierung 1981 beruht auf der Erinnerung des Beitragenden; das eingebettete Datum 1970 ist ungültig. Streckensteigung, Brückengeometrie, Wageninterpretation und Einordnung in die frühen Museumsjahre sind vom Beitragenden geliefertes Wissen und noch nicht anhand dokumentarischer Quellen überprüft. Die formale urheberrechtliche Grundlage der öffentlichen Freigabe ist noch zu dokumentieren.@de"
+  ],
+  "chama:normalizationNote": [
+    "Rechtschreibung, Grammatik und Zeichensetzung wurden nur in der normalisierten Beschreibung angepasst; der Originalbeitrag bleibt unverändert. «Das Die» wurde aufgrund der ausdrücklichen Beschreibung des fotografischen Originals als «das Dia» interpretiert. Die gewünschte Urheberangabe «Lukas Rosenthaler / Ruedi Singer» bleibt erhalten, während Ruedi Singer als Fotograf und Lukas Rosenthaler als Digitalisierer getrennt modelliert sind. Die Super-8-Aufnahme wird als verwandte Dokumentation erwähnt, nicht als vorhandenes Sammlungsobjekt.@de"
+  ],
+  "oldap:attachedToRole": {
+    "oldap:Unknown": "DATA_VIEW"
+  }
+}

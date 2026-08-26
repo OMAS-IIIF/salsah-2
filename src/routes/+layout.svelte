@@ -14,6 +14,7 @@
 		projectContext,
 		projectDisplayName,
 		projectPath,
+		projectSearchPath,
 		selectWorkingProject
 	} from '$lib/projects/context';
 	import favicon from '$lib/assets/favicon.svg';
@@ -28,6 +29,10 @@
 	let tenantMenuOpen = $state(false);
 	let localeMenuOpen = $state(false);
 	let profileMenuOpen = $state(false);
+	let globalSearchInput = $state<HTMLInputElement>();
+	let globalSearchQuery = $derived(
+		page.route.id === '/p/[project]/search' ? (page.url.searchParams.get('q') ?? '') : ''
+	);
 	let currentProject = $derived(
 		$projectContext.status === 'ready' ? $projectContext.current : null
 	);
@@ -36,10 +41,10 @@
 	);
 
 	const navigation = [
-		{ label: m.nav_workspace, icon: '▦', hash: '' },
-		{ label: m.nav_search, icon: '⌕', hash: '#search' },
-		{ label: m.nav_archive, icon: '▤', hash: '#archive' },
-		{ label: m.nav_import, icon: '⇧', hash: '#import' }
+		{ label: m.nav_workspace, icon: '▦', suffix: '', hash: '' },
+		{ label: m.nav_search, icon: '⌕', suffix: 'search', hash: '' },
+		{ label: m.nav_archive, icon: '▤', suffix: 'archive', hash: '' },
+		{ label: m.nav_import, icon: '⇧', suffix: '', hash: '#import' }
 	] as const;
 
 	function initials(givenName: string, familyName: string): string {
@@ -55,15 +60,41 @@
 		);
 	}
 
-	function currentProjectHref(hash = ''): Pathname {
+	function currentProjectHref(suffix = '', hash = ''): Pathname {
 		return (
-			currentProject ? projectPath(currentProject.projectShortName, '', hash) : '/projects'
+			currentProject ? projectPath(currentProject.projectShortName, suffix, hash) : '/projects'
 		) as Pathname;
+	}
+
+	function navigationActive(suffix: string, hash: string): boolean {
+		if (suffix === 'search') return page.route.id === '/p/[project]/search';
+		if (suffix === 'archive') return page.route.id === '/p/[project]/archive';
+		if (hash) return page.url.hash === hash;
+		return page.route.id === '/p/[project]' && !page.url.hash;
 	}
 
 	function localizedCurrentHref(locale: (typeof locales)[number]): Pathname {
 		const currentHref = `${page.url.pathname}${page.url.search}${page.url.hash}`;
 		return localizeHref(currentHref, { locale }) as Pathname;
+	}
+
+	async function submitGlobalSearch(event: SubmitEvent): Promise<void> {
+		event.preventDefault();
+		if (!currentProject) return;
+		await goto(
+			resolve(projectSearchPath(currentProject.projectShortName, globalSearchQuery) as Pathname)
+		);
+	}
+
+	function handleGlobalSearchShortcut(event: KeyboardEvent): void {
+		if (event.key.toLowerCase() !== 'k' || (!event.metaKey && !event.ctrlKey)) return;
+		event.preventDefault();
+		if (globalSearchInput?.offsetParent) {
+			globalSearchInput.focus();
+			globalSearchInput.select();
+		} else if (currentProject) {
+			void goto(resolve(projectSearchPath(currentProject.projectShortName) as Pathname));
+		}
 	}
 
 	onMount(async () => {
@@ -144,6 +175,8 @@
 	}
 </script>
 
+<svelte:window onkeydown={handleGlobalSearchShortcut} />
+
 <svelte:head>
 	<link rel="icon" href={favicon} />
 	<title>{m.app_title()}</title>
@@ -200,11 +233,17 @@
 			</details>
 
 			<div class="topbar-actions">
-				<label class="global-search">
+				<form class="global-search" role="search" onsubmit={submitGlobalSearch}>
 					<span aria-hidden="true">⌕</span>
-					<input type="search" placeholder={m.search_placeholder()} aria-label={m.search_label()} />
+					<input
+						bind:this={globalSearchInput}
+						bind:value={globalSearchQuery}
+						type="search"
+						placeholder={m.search_placeholder()}
+						aria-label={m.search_label()}
+					/>
 					<kbd>⌘ K</kbd>
-				</label>
+				</form>
 				<details class="locale-menu" bind:open={localeMenuOpen}>
 					<summary aria-label={m.language_label()}>{getLocale().toUpperCase()}</summary>
 					<div>
@@ -249,17 +288,17 @@
 					<nav class="primary-nav">
 						{#each navigation as item (item.icon)}
 							<a
-								class:active={page.url.hash === item.hash}
-								href={resolve(currentProjectHref(item.hash))}
+								class:active={navigationActive(item.suffix, item.hash)}
+								href={resolve(currentProjectHref(item.suffix, item.hash))}
 								><b aria-hidden="true">{item.icon}</b><span>{item.label()}</span></a
 							>
 						{/each}
 					</nav>
 					<nav class="secondary-nav">
-						<a href={resolve(currentProjectHref('#administration'))}
+						<a href={resolve(currentProjectHref('', '#administration'))}
 							><b aria-hidden="true">◇</b><span>{m.nav_administration()}</span></a
 						>
-						<a href={resolve(currentProjectHref('#help'))}
+						<a href={resolve(currentProjectHref('', '#help'))}
 							><b aria-hidden="true">?</b><span>{m.nav_help()}</span></a
 						>
 					</nav>
