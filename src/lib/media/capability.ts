@@ -15,3 +15,11 @@ export function mediaPreviewUrl(media: MediaDelivery): string {
 	preview.pathname = preview.pathname.replace(/\/info\.json$/, '/full/!720,480/0/default.jpg');
 	return withMediaCapability(preview.toString(), media.capability);
 }
+
+/** Build a small lazy-list thumbnail URL without requesting a card-sized image. */
+export function mediaThumbnailUrl(media: MediaDelivery): string {
+	if (media.kind === 'external-image') return media.thumbnailUrl ?? media.url;
+	const thumbnail = new URL(media.infoUrl);
+	thumbnail.pathname = thumbnail.pathname.replace(/\/info\.json$/, '/full/!160,160/0/default.jpg');
+	return withMediaCapability(thumbnail.toString(), media.capability);
+}

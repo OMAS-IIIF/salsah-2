@@ -10,23 +10,23 @@ The document is intentionally provisional. Chama is evidence for the model, not 
 
 The first slice uses these reviewed records:
 
-| Record | Evidence introduced |
-| --- | --- |
-| `file-photo-1508` | Multiple depicted locomotives, a facility, maintenance activity, view direction, sensory memory, and an uncertain machine identification |
-| `file-photo-1520` | A historic building, functional space, route history, restoration, personal attachment, and a visual observation distinct from contributor knowledge |
-| `file-photo-1521` | Naming history, associated person and organization, approximate construction date, renovation event, and repeated personal visits |
-| `file-photo-1751` | Locomotive identity and class, manufacturer and operators, technical characteristics, operating context, and panoramic file dimensions |
-| `file-photo-0171` | Building history and function, current activity, personal evaluation, public-display clearance, and a possible depicted-person review |
+| Record                 | Evidence introduced                                                                                                                                           |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `file-photo-1508`      | Multiple depicted locomotives, a facility, maintenance activity, view direction, sensory memory, and an uncertain machine identification                      |
+| `file-photo-1520`      | A historic building, functional space, route history, restoration, personal attachment, and a visual observation distinct from contributor knowledge          |
+| `file-photo-1521`      | Naming history, associated person and organization, approximate construction date, renovation event, and repeated personal visits                             |
+| `file-photo-1751`      | Locomotive identity and class, manufacturer and operators, technical characteristics, operating context, and panoramic file dimensions                        |
+| `file-photo-0171`      | Building history and function, current activity, personal evaluation, public-display clearance, and a possible depicted-person review                         |
 | `file-photo-1981-trip` | Distinct photographer and digitizer roles, slide original, digital representation, invalid embedded date, requested credit, and related Super-8 documentation |
 
 The source annotations in `../../demo-data/annotations/` preserve the evidence from which this model is derived.
 
 ## Three Deliberate Layers
 
-| Layer | Responsibility | Examples |
-| --- | --- | --- |
-| Generic archival semantics | Durable concepts that recur across institutions and domains | Described resource, archival unit, media representation, agent, place, date, provenance, rights, contribution, subject, depiction |
-| Project-domain semantics | Concepts and relationships supplied by a project's ontology | Locomotive, locomotive class, railroad, station, trestle, route segment, gradient, operator |
+| Layer                      | Responsibility                                                         | Examples                                                                                                                                  |
+| -------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Generic archival semantics | Durable concepts that recur across institutions and domains            | Described resource, archival unit, media representation, agent, place, date, provenance, rights, contribution, subject, depiction         |
+| Project-domain semantics   | Concepts and relationships supplied by a project's ontology            | Locomotive, locomotive class, railroad, station, trestle, route segment, gradient, operator                                               |
 | Presentation configuration | Decisions about how data is labelled, ordered, emphasized, and exposed | Card title, field groups, preferred thumbnail, public caption, featured relationships, specialist terminology, public/internal visibility |
 
 SALSAH application code must not know what a locomotive or trestle is. It should render and edit resource classes and properties according to OLDAP semantics and project presentation configuration.
@@ -152,22 +152,31 @@ For the first slice, use existing rights-holder and access-condition semantics w
 
 Personal recollections are evidence and storytelling material, but they are not neutral catalogue descriptions. Version 0.1 keeps them within the attributed knowledge contribution and may display them separately.
 
-A standalone `Story` resource, editorial sequencing, and reusable story blocks belong to a later narrative vertical slice. The current model must preserve enough attribution and links to support that work without implementing a content-management system now.
+A later evidence-based increment has now started the standalone Story vertical
+slice. It keeps narrative text out of catalogue records and stores a
+multilingual Markdown narrative on a separate Story resource. Stable inline
+directives place independently catalogued assets in the text, while
+`schema:mentions` provides an explicit RDF index of those links. The first
+ordered-StorySection experiment remains readable but proved too indirect for
+natural authoring and reading. The current project-local model, comparison with
+Fasnacht, and promotion criteria are documented in
+`architecture/story-foundation.md`; they do not yet constitute a Shared
+ontology contract or a general content-management system.
 
 ## Chama Project-Domain Model
 
 The following concepts belong in the Chama ontology or its controlled vocabularies, never in generic SALSAH components:
 
-| Candidate resource class | Examples |
-| --- | --- |
-| Photograph | The six reviewed intellectual photographic records |
-| Locomotive | C&TS 488 and 489 |
-| Locomotive class | K-36 and K-37 |
-| Railway organization | C&TS and D&RGW |
-| Railway structure | Lobato Trestle, Chama station, engine house, coaling tower |
-| Rolling stock | Converted boxcars and other cars when individually identified |
-| Route or route segment | Chama–Cumbres and former Chama–Durango continuation |
-| Building or business | Foster's Hotel and Saloon, Shamrock Hotel / The Hotel & Shops |
+| Candidate resource class  | Examples                                                         |
+| ------------------------- | ---------------------------------------------------------------- |
+| Photograph                | The six reviewed intellectual photographic records               |
+| Locomotive                | C&TS 488 and 489                                                 |
+| Locomotive class          | K-36 and K-37                                                    |
+| Railway organization      | C&TS and D&RGW                                                   |
+| Railway structure         | Lobato Trestle, Chama station, engine house, coaling tower       |
+| Rolling stock             | Converted boxcars and other cars when individually identified    |
+| Route or route segment    | Chama–Cumbres and former Chama–Durango continuation              |
+| Building or business      | Foster's Hotel and Saloon, Shamrock Hotel / The Hotel & Shops    |
 | Railway activity or event | Departure preparation, overnight fire maintenance, train arrival |
 
 Possible project relationships include locomotive class, manufacturer, operator, former operator, railway route, and historical function. Exact properties should be introduced only when the first records are instantiated; readable descriptions are sufficient for details that are not yet independently useful for search or linking.
@@ -196,30 +205,30 @@ The current Fasnacht ontology in `../../oldap-tools/fasnacht/fasnacht-onto.yaml`
 
 ### Patterns that Confirm the v0.1 Direction
 
-| Fasnacht pattern | Lesson for SALSAH 2 |
-| --- | --- |
-| `CarnivalThing` / `ArchiveObject` is distinct from `ArchiveMediaObject` | The represented cultural object or event must not be confused with its digital media |
-| `ArchiveMediaObject` derives from `shared:MediaObject` and can carry title, description, date, creator, location, topics, rights, and publication status | A media-first catalogue workflow is a genuine requirement and must remain possible |
-| The link from media to a `CarnivalThing` is optional in the current YAML, while topics and organizations can be attached directly to media | A photograph must remain cataloguable even when no separately modelled depicted object exists |
-| `contributingAgent` is distinct from `dcterms:creator` | File provider or depositor must not be confused with authorship |
-| `creationDating` explicitly concerns original analogue or born-digital content, not later digitization | Capture or creation date and digitization date need distinct semantics |
-| `Place` supports alternate names, hierarchy, types, and WKT geometry | Places should be reusable linked resources rather than repeated text labels |
-| `Story` is separate from archive objects and links author, lead media, narrative text, publication state, keywords, and related things | Narrative contextualization deserves its own later vertical slice rather than extra catalogue fields |
-| Search follows property chains between media and represented things | Cross-resource indexing is essential to approachable discovery |
-| Project taxonomies classify objects, places, events, topics, organizations, media roles, publication state, and licences | Controlled vocabularies belong to project semantics and configuration, not hard-coded UI logic |
+| Fasnacht pattern                                                                                                                                         | Lesson for SALSAH 2                                                                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CarnivalThing` / `ArchiveObject` is distinct from `ArchiveMediaObject`                                                                                  | The represented cultural object or event must not be confused with its digital media                                                                                    |
+| `ArchiveMediaObject` derives from `shared:MediaObject` and can carry title, description, date, creator, location, topics, rights, and publication status | A media-first catalogue workflow is a genuine requirement and must remain possible                                                                                      |
+| The link from media to a `CarnivalThing` is optional in the current YAML, while topics and organizations can be attached directly to media               | A photograph must remain cataloguable even when no separately modelled depicted object exists                                                                           |
+| `contributingAgent` is distinct from `dcterms:creator`                                                                                                   | File provider or depositor must not be confused with authorship                                                                                                         |
+| `creationDating` explicitly concerns original analogue or born-digital content, not later digitization                                                   | Capture or creation date and digitization date need distinct semantics                                                                                                  |
+| `Place` supports alternate names, hierarchy, types, and WKT geometry                                                                                     | Places should be reusable linked resources rather than repeated text labels                                                                                             |
+| `Story` is separate from archive objects and links author, lead media, narrative text, publication state, keywords, and related things                   | Narrative contextualization deserves its own resource identity rather than extra catalogue fields; SALSAH tests a less rigid ordered-section variant in the Story slice |
+| Search follows property chains between media and represented things                                                                                      | Cross-resource indexing is essential to approachable discovery                                                                                                          |
+| Project taxonomies classify objects, places, events, topics, organizations, media roles, publication state, and licences                                 | Controlled vocabularies belong to project semantics and configuration, not hard-coded UI logic                                                                          |
 
 ### Patterns Not to Copy Unchanged
 
-| Current Fasnacht pattern | Risk or limitation exposed by Chama |
-| --- | --- |
-| `CarnivalThing` is a common project umbrella for objects and events | Useful inside Fasnacht, but it must not become a generic SALSAH `Asset` class |
-| `archiveMediaObjectOf` covers items depicted, digitized, or otherwise represented | These meanings differ; Chama needs direct depiction, digitization source, and broader subject/about relationships to remain distinguishable |
-| `MediaLibraryObject.schema:dateCreated` may mean captured, digitized, or recorded | This can collapse materially different dates; the more precise `ArchiveMediaObject.creationDating` wording is the better direction |
-| A broad creator field covers created, photographed, filmed, or otherwise produced | Ruedi Singer's photograph and Lukas Rosenthaler's digitization prove that more precise roles are sometimes necessary |
-| `CarnivalThing.location` can mean event location or current object location | Capture place, depicted place, event place, and current custody location must not be silently merged |
-| Creative Commons is mandatory for the two media classes | This cannot represent unknown copyright, all-rights-reserved material, permission pending, a requested credit line, or the evidence for a display decision |
-| `MediaLibraryObject` and `ArchiveMediaObject` are separate media classes, and a story lead image must be the former | SALSAH should first test whether media roles and presentation configuration avoid an unnecessarily rigid division |
-| `Story` requires one lead image and one date | Suitable for FasnachtsPage, but too specific to impose on a generic narrative model before other story forms are tested |
+| Current Fasnacht pattern                                                                                            | Risk or limitation exposed by Chama                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CarnivalThing` is a common project umbrella for objects and events                                                 | Useful inside Fasnacht, but it must not become a generic SALSAH `Asset` class                                                                              |
+| `archiveMediaObjectOf` covers items depicted, digitized, or otherwise represented                                   | These meanings differ; Chama needs direct depiction, digitization source, and broader subject/about relationships to remain distinguishable                |
+| `MediaLibraryObject.schema:dateCreated` may mean captured, digitized, or recorded                                   | This can collapse materially different dates; the more precise `ArchiveMediaObject.creationDating` wording is the better direction                         |
+| A broad creator field covers created, photographed, filmed, or otherwise produced                                   | Ruedi Singer's photograph and Lukas Rosenthaler's digitization prove that more precise roles are sometimes necessary                                       |
+| `CarnivalThing.location` can mean event location or current object location                                         | Capture place, depicted place, event place, and current custody location must not be silently merged                                                       |
+| Creative Commons is mandatory for the two media classes                                                             | This cannot represent unknown copyright, all-rights-reserved material, permission pending, a requested credit line, or the evidence for a display decision |
+| `MediaLibraryObject` and `ArchiveMediaObject` are separate media classes, and a story lead image must be the former | SALSAH should first test whether media roles and presentation configuration avoid an unnecessarily rigid division                                          |
+| `Story` requires one lead image and one date                                                                        | Suitable for FasnachtsPage, but too specific to impose on a generic narrative model before other story forms are tested                                    |
 
 ### Concrete Consistency Finding
 
@@ -233,36 +242,36 @@ The comparison strengthens most v0.1 boundaries but reopens the catalogue identi
 
 Consider a hypothetical digitized photograph of Basel's Marktplatz around 1900, held by the Historical Museum Basel:
 
-| Requirement | Generic model | Project-specific model or configuration |
-| --- | --- | --- |
-| Catalogue identity and hierarchy | Described resource; optionally an archive item | Museum collection and accession conventions |
-| Glass-plate negative and IIIF image | Media representations and derivatives | Local preservation workflow |
-| Unknown photographer; museum digitizer | Agents with distinct roles | Local agent records |
-| Marktplatz as capture place | Place and capture-place relationship | Basel place vocabulary |
-| Rathaus and market stalls visible | Generic `depicts` relation | Building and object classes from the museum ontology |
-| Approximate date based on visual evidence | Qualified dating plus date basis | Local dating vocabulary if needed |
-| Curator's original note and normalized caption | Knowledge contribution | Project editorial workflow |
-| Uncertain identification of a person | Contribution uncertainty; claim-level modelling deferred | Person record only if identification becomes useful |
-| Public use and required museum credit | Rights, display permission, and credit line | Museum rights policy and wording |
-| A story about urban change | Preserved narrative text and linked resources | Later story presentation configuration |
+| Requirement                                    | Generic model                                            | Project-specific model or configuration              |
+| ---------------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------- |
+| Catalogue identity and hierarchy               | Described resource; optionally an archive item           | Museum collection and accession conventions          |
+| Glass-plate negative and IIIF image            | Media representations and derivatives                    | Local preservation workflow                          |
+| Unknown photographer; museum digitizer         | Agents with distinct roles                               | Local agent records                                  |
+| Marktplatz as capture place                    | Place and capture-place relationship                     | Basel place vocabulary                               |
+| Rathaus and market stalls visible              | Generic `depicts` relation                               | Building and object classes from the museum ontology |
+| Approximate date based on visual evidence      | Qualified dating plus date basis                         | Local dating vocabulary if needed                    |
+| Curator's original note and normalized caption | Knowledge contribution                                   | Project editorial workflow                           |
+| Uncertain identification of a person           | Contribution uncertainty; claim-level modelling deferred | Person record only if identification becomes useful  |
+| Public use and required museum credit          | Rights, display permission, and credit line              | Museum rights policy and wording                     |
+| A story about urban change                     | Preserved narrative text and linked resources            | Later story presentation configuration               |
 
 The check does not require a railway concept or Chama-specific component. It does expose the same generic needs for file identity, agents and roles, place, dating, depiction, knowledge provenance, uncertainty, rights, and narrative context. Version 0.1 therefore passes this conceptual cross-domain check.
 
 ## Provisional OLDAP Reuse and Gaps
 
-| Need | Existing candidate | Current conclusion |
-| --- | --- | --- |
-| Archival description | `shared:ArchiveUnit` and `shared:Item` | Candidate archive-first pattern for Chama; compare with media-first instantiation before choosing |
-| Digital media | `shared:MediaObject`; Fasnacht media subclasses | Reuse the technical base; decide whether descriptive media is a project subclass or a separate described resource per workflow |
-| File link | `shared:hasMediaObject` | Reuse for archive units; assess broader generic media linking separately |
-| Title and description | `schema:name`, `schema:description` | Reuse |
-| Date or range | `dcterms:temporal` with `oldap:Dating` | Reuse and test approximate-date handling |
-| Agent | `dcterms:Agent`, `schema:Person` | Reuse where appropriate; organization and role patterns need confirmation |
-| Provenance text | `dcterms:provenance` | Reuse for simple custodial history; insufficient alone for a structured contribution |
-| Subject | `schema:about` | Reuse |
-| Direct visual depiction | No selected shared property yet | Evaluate a standard relation before adding anything |
-| Public-display decision and credit line | Not yet represented adequately | Add only after the concrete rights workflow is specified |
-| Knowledge contribution | No selected shared class yet | Prototype in the Chama ontology or import layer before promoting to `shared` |
+| Need                                    | Existing candidate                              | Current conclusion                                                                                                             |
+| --------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Archival description                    | `shared:ArchiveUnit` and `shared:Item`          | Candidate archive-first pattern for Chama; compare with media-first instantiation before choosing                              |
+| Digital media                           | `shared:MediaObject`; Fasnacht media subclasses | Reuse the technical base; decide whether descriptive media is a project subclass or a separate described resource per workflow |
+| File link                               | `shared:hasMediaObject`                         | Reuse for archive units; assess broader generic media linking separately                                                       |
+| Title and description                   | `schema:name`, `schema:description`             | Reuse                                                                                                                          |
+| Date or range                           | `dcterms:temporal` with `oldap:Dating`          | Reuse and test approximate-date handling                                                                                       |
+| Agent                                   | `dcterms:Agent`, `schema:Person`                | Reuse where appropriate; organization and role patterns need confirmation                                                      |
+| Provenance text                         | `dcterms:provenance`                            | Reuse for simple custodial history; insufficient alone for a structured contribution                                           |
+| Subject                                 | `schema:about`                                  | Reuse                                                                                                                          |
+| Direct visual depiction                 | No selected shared property yet                 | Evaluate a standard relation before adding anything                                                                            |
+| Public-display decision and credit line | Not yet represented adequately                  | Add only after the concrete rights workflow is specified                                                                       |
+| Knowledge contribution                  | No selected shared class yet                    | Prototype in the Chama ontology or import layer before promoting to `shared`                                                   |
 
 No `oldaplib` or `oldap-api` change is authorized by this document. Any shared addition must be backward-compatible whenever possible and justified by implementation evidence plus cross-domain validation.
 

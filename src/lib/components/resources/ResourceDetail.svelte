@@ -4,9 +4,11 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages';
 	import { projectPath, projectResourcePath } from '$lib/projects/context';
+	import ArchiveContext from '$lib/components/archive/ArchiveContext.svelte';
 	import IiifImageViewer from '$lib/components/media/IiifImageViewer.svelte';
+	import StoryBody from '$lib/components/stories/StoryBody.svelte';
 	import { loadResource, OldapResourceError } from '$lib/resources/client';
-	import { fallbackLabel, presentResource } from '$lib/resources/model';
+	import { fallbackLabel, localizedText, presentResource } from '$lib/resources/model';
 	import type { JsonScalar, LoadedResource, ResourceDisplayField } from '$lib/resources/types';
 
 	interface Props {
@@ -21,7 +23,19 @@
 	let reloadGeneration = $state(0);
 	let presentation = $derived(loaded ? presentResource(loaded, iri, getLocale()) : null);
 	let relationships = $derived(presentation?.fields.filter(({ links }) => links.length) ?? []);
-	let metadata = $derived(presentation?.fields.filter(({ links }) => !links.length) ?? []);
+	let storyMarkdown = $derived(
+		loaded ? localizedText(loaded.record['schema:text'], getLocale()) : null
+	);
+	let storyAbstract = $derived(
+		storyMarkdown && loaded ? localizedText(loaded.record['schema:abstract'], getLocale()) : null
+	);
+	let metadata = $derived(
+		presentation?.fields.filter(
+			({ iri: propertyIri, links }) =>
+				!links.length &&
+				(!storyMarkdown || !['schema:text', 'schema:abstract'].includes(propertyIri))
+		) ?? []
+	);
 
 	$effect(() => {
 		const requestedProject = project;
@@ -107,6 +121,15 @@
 			</span>
 		</header>
 
+		{#if loaded}
+			<ArchiveContext
+				{project}
+				{iri}
+				record={loaded.record}
+				isMediaObject={presentation.isMediaObject}
+			/>
+		{/if}
+
 		<div class="resource-grid">
 			<div class="main-column">
 				{#if loaded?.media?.kind === 'iiif-image'}
@@ -130,6 +153,13 @@
 							<p>{m.media_placeholder_text()}</p>
 						</div>
 					</section>
+				{/if}
+
+				{#if storyMarkdown}
+					{#if storyAbstract}
+						<p class="story-abstract">{storyAbstract}</p>
+					{/if}
+					<StoryBody {project} markdown={storyMarkdown} />
 				{/if}
 
 				{#if presentation.description}
@@ -385,6 +415,15 @@
 	.metadata-panel,
 	.relationships {
 		padding: 1.35rem 1.5rem;
+	}
+	.story-abstract {
+		max-width: 58rem;
+		margin: 0;
+		padding: 0.2rem clamp(0.2rem, 2vw, 1.2rem);
+		color: var(--navy-soft);
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(1.15rem, 2vw, 1.45rem);
+		line-height: 1.6;
 	}
 	.description > p:last-child {
 		max-width: 62rem;

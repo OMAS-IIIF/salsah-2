@@ -137,7 +137,8 @@ function resourceLinkClass(property: OldapPropertyDefinition | undefined): strin
 		: null;
 }
 
-function hasSuperclass(
+/** Test whether a class is equal to or transitively extends another loaded class. */
+export function hasSuperclass(
 	classIri: string,
 	targetIri: string,
 	models: OldapDataModel[],

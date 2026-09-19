@@ -2,6 +2,7 @@
 export interface WorkingProject {
 	projectIri: string;
 	projectShortName: string;
+	namespaceIri?: string;
 	labels: string[];
 	permissions: string[];
 }

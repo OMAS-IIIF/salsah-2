@@ -18,6 +18,7 @@ let loadPromise: Promise<WorkingProject[]> | null = null;
 let loadGeneration = 0;
 
 interface ProjectResponse {
+	namespaceIri?: unknown;
 	projectIri?: unknown;
 	projectShortName?: unknown;
 	shortName?: unknown;
@@ -68,6 +69,7 @@ async function fetchProject(
 	return {
 		projectIri: body.projectIri,
 		projectShortName: shortName,
+		...(typeof body.namespaceIri === 'string' ? { namespaceIri: body.namespaceIri } : {}),
 		labels: Array.isArray(body.label)
 			? body.label.filter((label): label is string => typeof label === 'string')
 			: [],
@@ -186,4 +188,41 @@ export function projectSearchPath(projectShortName: string, query = ''): string 
 /** Build the canonical read-only archive-tree route for a project. */
 export function projectArchivePath(projectShortName: string): string {
 	return projectPath(projectShortName, 'archive');
+}
+
+/** Build the canonical project-administration route with an optional module suffix. */
+export function projectAdministrationPath(projectShortName: string, suffix = ''): string {
+	const moduleSuffix = suffix ? `/${suffix.replace(/^\/+/, '')}` : '';
+	return projectPath(projectShortName, `admin${moduleSuffix}`);
+}
+
+/** Build the canonical editor route for one Story resource. */
+export function projectStoryEditorPath(
+	projectShortName: string,
+	storyIri: string,
+	language = ''
+): string {
+	const path = projectAdministrationPath(
+		projectShortName,
+		`stories/${encodeURIComponent(storyIri)}`
+	);
+	return language ? `${path}?language=${encodeURIComponent(language)}` : path;
+}
+
+/** Build the canonical route for creating one Story in a project. */
+export function projectStoryCreatePath(projectShortName: string): string {
+	return projectAdministrationPath(projectShortName, 'stories/new');
+}
+
+/** Build the canonical editor route for one ordinary project resource. */
+export function projectResourceEditorPath(
+	projectShortName: string,
+	resourceIri: string,
+	language = ''
+): string {
+	const path = projectAdministrationPath(
+		projectShortName,
+		`resources/${encodeURIComponent(resourceIri)}`
+	);
+	return language ? `${path}?language=${encodeURIComponent(language)}` : path;
 }

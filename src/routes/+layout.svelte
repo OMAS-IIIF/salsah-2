@@ -12,6 +12,7 @@
 		clearProjectContext,
 		loadWorkingProjects,
 		projectContext,
+		projectAdministrationPath,
 		projectDisplayName,
 		projectPath,
 		projectSearchPath,
@@ -71,6 +72,10 @@
 		if (suffix === 'archive') return page.route.id === '/p/[project]/archive';
 		if (hash) return page.url.hash === hash;
 		return page.route.id === '/p/[project]' && !page.url.hash;
+	}
+
+	function administrationActive(): boolean {
+		return page.route.id?.startsWith('/p/[project]/admin') ?? false;
 	}
 
 	function localizedCurrentHref(locale: (typeof locales)[number]): Pathname {
@@ -295,8 +300,13 @@
 						{/each}
 					</nav>
 					<nav class="secondary-nav">
-						<a href={resolve(currentProjectHref('', '#administration'))}
-							><b aria-hidden="true">◇</b><span>{m.nav_administration()}</span></a
+						<a
+							class:active={administrationActive()}
+							href={resolve(
+								(currentProject
+									? projectAdministrationPath(currentProject.projectShortName)
+									: '/projects') as Pathname
+							)}><b aria-hidden="true">◇</b><span>{m.nav_administration()}</span></a
 						>
 						<a href={resolve(currentProjectHref('', '#help'))}
 							><b aria-hidden="true">?</b><span>{m.nav_help()}</span></a

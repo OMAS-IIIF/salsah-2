@@ -3,6 +3,7 @@ import { getApiBaseUrl } from '$lib/api/baseUrl';
 import { assertedClass, linkedPropertyIris, valuesOf } from './model';
 import type {
 	LoadedResource,
+	ArchiveContextPath,
 	ArchiveTreeMedia,
 	ArchiveTreeUnit,
 	MediaDelivery,
@@ -11,7 +12,8 @@ import type {
 	OldapResourceSearchHit,
 	OldapResourceSummary,
 	OldapResourceSummaryResponse,
-	ResourceCard
+	ResourceCard,
+	StoryAsset
 } from './types';
 
 const MEDIA_SUMMARY_PROPERTIES = [
@@ -27,8 +29,16 @@ const CARD_SUMMARY_PROPERTIES = [
 	'shared:hasMediaObject',
 	...MEDIA_SUMMARY_PROPERTIES
 ];
+const ARCHIVE_UNIT_PROPERTIES = [
+	'schema:name',
+	'shared:archiveLevel',
+	'shared:parentArchiveUnit',
+	'shared:hasMediaObject',
+	'schema:position'
+];
 const RESOURCE_SUMMARY_BATCH_SIZE = 100;
 const ARCHIVE_SIBLING_LIMIT = 100;
+const ARCHIVE_PATH_MAX_DEPTH = 64;
 
 export class OldapResourceError extends Error {
 	constructor(
@@ -124,6 +134,53 @@ function firstNumber(record: OldapResourceRecord, property: string): number | nu
 	return null;
 }
 
+function archiveUnitFromRecord(
+	iri: string,
+	resclass: string,
+	record: OldapResourceRecord
+): ArchiveTreeUnit {
+	return {
+		iri,
+		resclass,
+		title: record['schema:name'],
+		archiveLevel: firstString(record, 'shared:archiveLevel'),
+		parentIri: firstString(record, 'shared:parentArchiveUnit'),
+		position: firstNumber(record, 'schema:position'),
+		mediaIris: valuesOf(record['shared:hasMediaObject']).filter(
+			(value): value is string => typeof value === 'string'
+		)
+	};
+}
+
+async function searchArchiveContainers(
+	project: string,
+	resourceIri: string
+): Promise<ArchiveTreeUnit[]> {
+	const result = await readJson<unknown>(
+		`${getApiBaseUrl()}/data/search/${encodeURIComponent(project)}`,
+		{
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				resClass: 'shared:ArchiveUnit',
+				includeProperties: ARCHIVE_UNIT_PROPERTIES,
+				filter: [
+					{
+						property: 'shared:hasMediaObject',
+						op: '==',
+						value: resourceIri,
+						type: 'iri'
+					}
+				],
+				limit: ARCHIVE_SIBLING_LIMIT
+			})
+		}
+	);
+	return searchHits(result).map((record) =>
+		archiveUnitFromRecord(record.iri, record.resclass, record)
+	);
+}
+
 /**
  * Load one visible level of the generic archive tree.
  *
@@ -146,37 +203,35 @@ export async function searchArchiveUnits(
 						type: 'iri'
 					}
 				];
-	const result = await readJson<unknown>(
-		`${getApiBaseUrl()}/data/search/${encodeURIComponent(project)}`,
-		{
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				resClass: 'shared:ArchiveUnit',
-				includeProperties: [
-					'schema:name',
-					'shared:archiveLevel',
-					'shared:parentArchiveUnit',
-					'shared:hasMediaObject',
-					'schema:position'
-				],
-				filter,
-				limit: ARCHIVE_SIBLING_LIMIT
-			})
-		}
-	);
-	return searchHits(result)
-		.map((record) => ({
-			iri: record.iri,
-			resclass: record.resclass,
-			title: record['schema:name'],
-			archiveLevel: firstString(record, 'shared:archiveLevel'),
-			parentIri: firstString(record, 'shared:parentArchiveUnit'),
-			position: firstNumber(record, 'schema:position'),
-			mediaIris: valuesOf(record['shared:hasMediaObject']).filter(
-				(value): value is string => typeof value === 'string'
-			)
-		}))
+	const rows: OldapResourceSearchHit[] = [];
+	const seen = new Set<string>();
+	for (let offset = 0; ; offset += ARCHIVE_SIBLING_LIMIT) {
+		const result = await readJson<unknown>(
+			`${getApiBaseUrl()}/data/search/${encodeURIComponent(project)}`,
+			{
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					resClass: 'shared:ArchiveUnit',
+					includeProperties: ARCHIVE_UNIT_PROPERTIES,
+					filter,
+					limit: ARCHIVE_SIBLING_LIMIT,
+					offset
+				})
+			}
+		);
+		const batch = searchHits(result);
+		if (batch.some((row) => seen.has(row.iri)))
+			throw new OldapResourceError(
+				'Archive hierarchy changed during pagination. Reload the view.',
+				409
+			);
+		batch.forEach((row) => seen.add(row.iri));
+		rows.push(...batch);
+		if (batch.length < ARCHIVE_SIBLING_LIMIT) break;
+	}
+	return rows
+		.map((record) => archiveUnitFromRecord(record.iri, record.resclass, record))
 		.sort(
 			(left, right) =>
 				(left.position ?? Number.MAX_SAFE_INTEGER) - (right.position ?? Number.MAX_SAFE_INTEGER) ||
@@ -197,6 +252,77 @@ export async function loadArchiveMedia(
 		title: summary.data['schema:name'],
 		media: summary.mediaDelivery ?? null
 	}));
+}
+
+/**
+ * Resolve every readable archive placement of a resource.
+ *
+ * ArchiveUnits start at themselves. Other resources are located through the
+ * inverse search of `shared:hasMediaObject`. Ancestors are then read in bounded
+ * batches per depth, preserving multiple valid placements without exposing
+ * missing or unreadable units.
+ */
+export async function loadArchiveContexts(
+	project: string,
+	resourceIri: string,
+	record: OldapResourceRecord
+): Promise<ArchiveContextPath[]> {
+	const resourceClass = firstString(record, 'rdf:type') ?? 'oldap:Thing';
+	const currentArchiveLevel = firstString(record, 'shared:archiveLevel');
+	const starts = currentArchiveLevel
+		? [archiveUnitFromRecord(resourceIri, resourceClass, record)]
+		: await searchArchiveContainers(project, resourceIri);
+	if (!starts.length) return [];
+
+	const units = new Map(starts.map((unit) => [unit.iri, unit]));
+	let frontier = [
+		...new Set(starts.map(({ parentIri }) => parentIri).filter((iri): iri is string => !!iri))
+	];
+	let depth = 0;
+	while (frontier.length && depth < ARCHIVE_PATH_MAX_DEPTH) {
+		const summaries = await readResourceSummaries(
+			project,
+			frontier.filter((iri) => !units.has(iri)),
+			ARCHIVE_UNIT_PROPERTIES
+		);
+		for (const summary of summaries) {
+			units.set(summary.iri, archiveUnitFromRecord(summary.iri, summary.resclass, summary.data));
+		}
+		frontier = [
+			...new Set(
+				summaries
+					.map((summary) => units.get(summary.iri)?.parentIri ?? null)
+					.filter((iri): iri is string => !!iri && !units.has(iri))
+			)
+		];
+		depth += 1;
+	}
+
+	return starts.map((start) => {
+		const branch: ArchiveTreeUnit[] = [];
+		const visited = new Set<string>();
+		let current: ArchiveTreeUnit | undefined = start;
+		while (current && !visited.has(current.iri)) {
+			visited.add(current.iri);
+			branch.unshift(current);
+			current = current.parentIri ? units.get(current.parentIri) : undefined;
+		}
+		const segments = branch.map((unit) => ({
+			iri: unit.iri,
+			title: unit.title,
+			archiveLevel: unit.archiveLevel,
+			isCurrent: currentArchiveLevel !== null && unit.iri === resourceIri
+		}));
+		if (currentArchiveLevel === null) {
+			segments.push({
+				iri: resourceIri,
+				title: record['schema:name'],
+				archiveLevel: null,
+				isCurrent: true
+			});
+		}
+		return { segments };
+	});
 }
 
 /**
@@ -310,6 +436,53 @@ async function loadResourceCards(
  */
 export async function loadRecentResourceCards(project: string, limit = 8): Promise<ResourceCard[]> {
 	return loadResourceCards(project, await searchRecentResources(project, limit));
+}
+
+/**
+ * Resolve resources embedded by Story Markdown without exposing hidden targets.
+ *
+ * Direct media and an archive resource's sole readable representation use the
+ * same conservative selection rule as ordinary cards. The returned order
+ * follows the first occurrence of each requested IRI.
+ */
+export async function loadStoryAssets(project: string, iris: string[]): Promise<StoryAsset[]> {
+	if (!iris.length) return [];
+	const summaries = await readResourceSummaries(project, iris, CARD_SUMMARY_PROPERTIES, true);
+	const summariesByIri = new Map(summaries.map((summary) => [summary.iri, summary]));
+	const representationIris = [
+		...new Set(
+			summaries.flatMap((summary) => {
+				if (summary.mediaDelivery || hasDeliveryReference(summary.data)) return [];
+				const representations = valuesOf(summary.data['shared:hasMediaObject']).filter(
+					(value): value is string => typeof value === 'string'
+				);
+				return representations.length === 1 ? representations : [];
+			})
+		)
+	];
+	const representations = await readResourceSummaries(
+		project,
+		representationIris,
+		CARD_SUMMARY_PROPERTIES,
+		true
+	);
+	for (const representation of representations) {
+		summariesByIri.set(representation.iri, representation);
+	}
+
+	return summaries.map((summary) => {
+		const representationIris = valuesOf(summary.data['shared:hasMediaObject']).filter(
+			(value): value is string => typeof value === 'string'
+		);
+		const representation =
+			representationIris.length === 1 ? summariesByIri.get(representationIris[0]) : null;
+		return {
+			iri: summary.iri,
+			resclass: summary.resclass,
+			title: summary.data['schema:name'],
+			media: summary.mediaDelivery ?? representation?.mediaDelivery ?? null
+		};
+	});
 }
 
 /** Search every readable textual field and enrich unique hits for card display. */

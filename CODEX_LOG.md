@@ -1,5 +1,383 @@
 # CODEX_LOG
 
+### Update 2026-09-19 23:54
+
+- Decisions: Prepare an application-only staged commit; leave all experiment payload/ontology changes local and unstaged. Preserve previously committed experiments and history.
+- Implementation: Include generic archive/staging/resource/Story administration, translations, tests, documentation and published npm dependencies. Ignore private experiment YAML and all real environment files; document repository boundaries and correct obsolete local-library setup notes. Normalize four formatting outliers. Update archive browser test to open the import disclosure before choosing its source.
+- Open: User reviews staged changes and commits/pushes. Existing tracked examples remain in history; this is not a history scrub. Deployment and live backend acceptance remain separate.
+- Risks/Assumptions: Credential-pattern review found only synthetic test tokens and labels, no real credentials in the application candidate set. Typecheck and build pass; 105 unit tests pass; 16 browser tests passed initially and all four archive scenarios passed after correcting the stale UI interaction. Full lint passes before the final log/test edits, with targeted formatting/lint repeated afterward.
+
+### Update 2026-09-15 23:48
+
+- Decisions: Make archive section navigation visually read as tabs rather than action buttons.
+- Implementation: Shared baseline, rounded upper corners, muted inactive tabs and white active tab with accent top edge and open bottom border. Single horizontally scrollable row on narrow screens; selection logic and mounted panels unchanged.
+- Open: User visual acceptance.
+- Risks/Assumptions: CSS-only change to section navigation in both applications; no API or data changes.
+
+### Update 2026-09-15 23:41
+
+- Decisions: Organize archive administration by structure, folder defaults and contents, rather than stacking all tools. Preserve mounted panels and in-progress edits across section changes.
+- Implementation: Consistent accessible section navigation; import disclosure; normalized heading hierarchy. FP adds object/event and media subviews, removes obsolete step numbers. SALSAH embeds its existing generic resource administration and retains existing import capabilities; no project-specific content classes introduced. Technical administration remains below the workspace.
+- Open: User visual acceptance. SALSAH has no YAML import in this existing workflow; no new import backend was added.
+- Risks/Assumptions: No API or permission changes. Browser navigation/state/mobile smoke passed; existing proposal/retry state remains mounted when hidden.
+
+### Update 2026-09-15 23:16
+
+- Decisions: Keep operator recovery secondary to archive work, visible only after server-confirmed canRecover.
+- Implementation: Collapsed native Technical Administration disclosure at the bottom of archive administration; detailed recovery controls/errors stay inside. Poll only while expanded. Rejected coordination requests expose a dismissible operator-only shortcut; ordinary occupied status remains quiet. Existing retry persistence and recovery safeguards retained.
+- Open: User visual acceptance; production deployment separate.
+- Risks/Assumptions: Browser fixture verified both panels, keyboard use, failed-action shortcut and unauthorized hiding without mutations. SALSAH uses published guilib ^0.0.27 to match FP; no backend or role changes.
+
+### Update 2026-09-14 22:59
+
+- Decisions: Distinguish active saves from permission/recovery disabling with an explicit busy prop in the shared mapping editor.
+- Implementation: Wait cursor throughout the editor, animated progress in the assignment button and live status, busy tree semantics and reduced-motion support. Administration passes busy through preflight, apply and authoritative refresh. Browser regression holds preflight/refresh responses to verify feedback persists and clears on failure/completion.
+- Open: User visual acceptance; existing local guilib release workflow unchanged.
+- Risks/Assumptions: Presentation-only change for both consumers; no API, data or permission changes.
+
+### Update 2026-09-14 22:50
+
+- Decisions: Add generic permission-filtered direct media counts to folder-default proposals; use one aggregate query, never per-folder media reads. Counts are display-only and excluded from review hashes.
+- Implementation: oldaplib COUNT(DISTINCT media) covers same-area staging media and configured archive references. Optional directMediaCount documented in shared JSON schema/OpenAPI; regenerated FP types; shared UI consumes counts with older-server fallback. 28 backend tests and browser count/recovery smoke pass. Local GraphDB: 46 folders/125 visible placements, 7–30 ms aggregation; three inventory comparisons agree. API HTTP 200 verified after safe restart (cold proposal 21.6 s, warm 1.86 s for sampled folder).
+- Open: Normal version bumps/publication and consumer updates before production. Existing frontend/library check baselines remain; no ontology changes.
+- Risks/Assumptions: Local API uses a development wheel still labelled 0.7.19, ahead of published 0.7.19; do not deploy that version as if released. Backup: BACKUP/local-media-counts-20260914-224638/installed-oldaplib.tar.gz. No archive data, role or production writes. Zero means no visible direct media, not proof of global emptiness.
+
+### Update 2026-09-14 22:36
+
+- Decisions: Scroll working and archive trees independently in the shared mapping editor; offscreen connections must remain discoverable without moving the opposite pane.
+- Implementation: Separate keyboard-focusable viewports and scroll offsets, fixed SVG geometry, dashed clipped connections and grouped top/bottom reveal buttons. Drag coordinates follow the left offset. FasnachtsPage prototype now wraps the same controlled editor with disposable state. Six model tests and browser independent-scroll/reveal/drag regression pass.
+- Open: User visual acceptance; existing unpublished guilib release requirement remains.
+- Risks/Assumptions: No persistence/API/permission changes. Connections with both endpoints offscreen are omitted; collapsed/search-hidden targets remain reachable with the existing reveal action. Existing type-check baselines retained.
+
+### Update 2026-09-14 22:24
+
+- Decisions: Share the accepted graphical mapping UI and generic OLDAP composition through oldap-guilib; app wrappers retain authentication and key instances by origin/project/user.
+- Implementation: Real folder/unit/default loading, namespace resolution, protected/unavailable states, mapping preflight and persisted exact retries, property-only level edits with uncertain-result readback, inverse undo and legacy FasnachtsPage pending-command migration. Both frontends use local development links. Browser mocked-command/reload tests and four shared model tests pass; builds and targeted lint verified.
+- Open: Authenticated user acceptance against real data; library release and consumer dependency updates before deployment. Live media counts are unavailable in the existing API and explicitly labelled unknown.
+- Risks/Assumptions: No real resource/ACL writes, ontology changes, publication or deployment during tests. Existing unrelated work preserved. Shared library has pre-existing check failures outside the new components; FP baseline remains 23 errors/37 warnings; SALSAH check clean. See shared component docs for generic level-write uncertainty limits.
+
+### Update 2026-09-13 23:18
+
+- Decisions: Activate publication on the local MacBook first; production remains unchanged. API-only media workers do not require an independent archive policy or Redis gate.
+- Implementation: Verified installed oldaplib 0.7.19; replaced three local media containers using old :local/0.7.11 with v0.2.12/0.7.19, persisted Compose tag and backed up configuration. Validated/atomically added local publication policy and safely restarted native API under writer gate. Installed-library GraphDB success/retry/receipt and failure rollback pass; API capabilities 200, unauthenticated 401, authorized IIIF 200/unauthorized 401. BMG-Archivist publisher membership verified read-only.
+- Open: User authenticated UI acceptance; separately coordinated production activation. Public archive viewer token propagation remains separate.
+- Risks/Assumptions: No existing RDF resource, role assignment or public grant changed; fixtures/receipts rolled back. Backups in BACKUP/local-publication-20260913-231358 and local-publication-policy-20260913-231513.json. No CaptureApp, production, version or Git publication changes.
+
+### Update 2026-09-13 00:58
+
+- Decisions: Use the same generic publication backend with no fixed project roles/classes/status values.
+- Implementation: Added PublicationPanel to ResourceEditor with resource-specific capability, reviewed confirmation, actor/API-scoped session retries and dirty-state guard. Configured status is excluded from generic relation editing. Validation: 85 focused backend/gate tests and 4 frontend retry tests pass; local GraphDB success/replay and injected-failure rollback pass. Both frontend builds/lint pass; FP check baseline unchanged (23/37), SALSAH check clean.
+- Open: Matching backend/policy activation and authenticated publication browser acceptance.
+- Risks/Assumptions: Preserved substantial pre-existing uncommitted SALSAH work. No deployment, ontology or CaptureApp change.
+
+### Update 2026-09-10 12:10
+
+- Decisions: Complete WR-04 local operational acceptance; enable only the explicitly authorized rosenth operator. Production remains a separate target-specific rollout.
+- Implementation: Rebuilt and linted the existing recovery UI; repeated browser failure/retry flows and checked native-backed local activation. No SALSAH source or CaptureApp changes in WR-04. Local SALSAH CORS origin localhost:5175 was added and verified against the actual API. Acceptance: 50 recovery/native, 19 deployment, 49 authentication/Capture transport and 8 frontend tests pass; 10 native and 15 pinned Redis checks pass. Both live/fixture UI flows and builds pass; FP typecheck baseline remains 23 errors/37 warnings, SALSAH is clean.
+- Open: Production multi-host/SSH partition, whole-host reboot and independent-storage restore acceptance; native Capture acceptance retains the user's local waiver.
+- Risks/Assumptions: Native services must remain foreground and within the reviewed inventory; unmanaged direct writers are maintenance-only. Persistent controller/gate state never expires. No commit, push or production deployment.
+
+### Update 2026-09-10 01:32
+
+- Decisions: Keep recovery authorization independent of archive editing; all proof and release safety remain in the shared backend.
+- Implementation: Added operations transport/validated projections and an operator-only panel in project archive administration. Explicit global-maintenance and release confirmations, exact persisted retries, read-only polling/lookup, user-scoped storage and revocation handling. Blocked archive errors direct operators to diagnosis. Added focused tests and docs/wr-03.
+- Open: WR-04 real runtime/native MacBook acceptance before enabling recovery. Existing project workspace entry requirements remain intact.
+- Risks/Assumptions: Six focused client tests, targeted ESLint, build and clean svelte-check pass. Browser fixtures cover retries/reload/controller blocking/proof readiness/lost response/revocation/disabled state. No actual archive write, role grant or runtime activation.
+
+### Update 2026-09-09 23:19
+
+- Decisions: Include SALSAH-2 in the authorized MacBook rollout; retain project-neutral behavior.
+- Implementation: Production build passed and local dev server started on port 5175 against activated API/model/policy. Browser login boundary verified; no client source changes in this rollout.
+- Open: Fresh signed-in client walkthrough and separate production rollout; see ../FasnachtsPage/docs/as-09/local-rollout.md.
+- Risks/Assumptions: API authorization checks pass; browser login display is not claimed as authenticated UI acceptance.
+
+### Update 2026-09-08 14:12
+
+- Decisions: Complete AS-07 client source with shared contracts and no project-domain imports; migration/native acceptance and policy rollout remain AS-08/AS-09.
+- Implementation: SALSAH reviewed adoption/unit tools, persistent exact retries, mixed protected references, private folder rename/move, direct defaults and atomic catalogue placement, ZIP controls, namespace-derived IRI compatibility and paginated hierarchy choices. 103 unit tests, 17 browser tests, full lint/build and 0-error/0-warning typecheck pass; desktop/mobile reviewed. Evidence: docs/as-07/README.md.
+- Open: AS-08 migration and acceptance, including production role/data checks and native Capture maintainer coordination; AS-09 rollout.
+- Risks/Assumptions: Browser acceptance uses intercepted museum fixtures. No live RDF/ontology/backend/CaptureApp changes, role provisioning, policy activation or deployment. Existing uncommitted work preserved; disposable preview servers stopped.
+
+### Update 2026-09-08 14:00
+
+- Decisions: Implement AS-07 against shared backend contracts, keeping the existing uncommitted administration work and live Chama data intact. Capability lookup fails closed; no activation or CaptureApp changes.
+- Implementation: Added generic mixed inventory, protected reference actions, revision-bound recovery, folder defaults and atomic archive placement, ZIP export controls and reviewed admin structure management. Four-language interface text added.
+- Open: Complete regression/type/lint/browser verification, strengthen recovery and document final acceptance evidence.
+- Risks/Assumptions: Existing generic catalogue transform still removes media-side Staging placement; retained references live on folders. Tests use fixtures, not production policy activation.
+
+### Update 2026-08-31 01:16
+
+- Decisions: Keep relation candidate types faithful to the ontology. Because Chama declares photograph creator as `chama:Agent`, do not apply a Person-only UI filter. Consolidate the already proven thumbnail/lightbox behavior before using it in a second workflow.
+- Implementation: Added reusable `CompactMediaPreview` with authorized thumbnail, failure fallback, enlarged dialog, backdrop/cancel/close handling, and localized accessibility labels. Replaced the batch catalogue's private implementation and added the same preview beside the generic resource-editor heading. The editor now loads media through the existing complete resource boundary. No ontology or API contract changed.
+- Open: Visually inspect one media-first and one archive-first resource in the live editor. If a project truly needs Person-only creators, express that through the class property's `toClass` rather than a SALSAH filter.
+- Risks/Assumptions: Agent candidates may include both Persons and Organizations by design. The compact preview uses authorized bounded delivery and is for identification; OpenSeadragon remains the full inspection viewer on the read-only resource page.
+
+### Update 2026-08-31 00:55
+
+- Decisions: Keep post-catalogue editing separate from Staging and specialized Story authoring. Start with a conservative model-derived surface—title, description, and optional forward relations—and leave Dating, rights, technical media facts, inverse links, permissions, and archive placement to dedicated widgets/workflows.
+- Implementation: Activated the Resources administration module with bounded recent/search discovery, authorized previews, canonical editor routes, multilingual draft preservation, model-derived relation candidates, partial atomic OLDAP update, exact controlled-field read-back, unsaved-change protection, four-language UI, architecture documentation, and focused model regressions. Staging areas, folders, and media are excluded from ordinary editing.
+- Open: Live-edit one harmless Chama photograph and inspect the read-only detail afterwards. Adding a language, candidate search/pagination, Dating, rights/publication, and archive placement remain independent increments.
+- Risks/Assumptions: The first relation control uses native single/multiple selection and loads at most 100 readable candidates. Existing linked IRIs missing from that list are preserved visibly by IRI rather than silently removed. OLDAP remains authoritative for mutation permission and ontology validation.
+
+### Update 2026-08-31 00:32
+
+- Decisions: Derive the first common object relationships from ontology constraints rather than Chama QNames. Admit optional forward relations with a concrete target class; defer embedded Dating, root-wide Thing selection, inverse relations, multiple selected values, and pagination to interaction patterns that can represent them honestly.
+- Implementation: Extended data-model property typing with `inverseOf`; added model-derived catalogue relation descriptors, bounded permission-filtered candidate loading, localized common-value selectors, preview labels, relation payload/read-back verification, and forwarding through the stop-on-first-failure batch executor. Chama consequently exposes Agent-based creator and Place-based capture place. Added relation derivation/search/mutation regressions and exercised both selectors in the full Staging browser flow.
+- Open: Test creator and capture-place assignment on real Chama photographs. The next independent rich field should be the OLDAP Dating editor rather than widening this simple relation picker.
+- Risks/Assumptions: The first picker applies one common candidate even when the ontology permits several. Candidate lists are bounded to 100 readable resources; larger authority files require search/pagination before this interaction should be promoted as complete.
+
+### Update 2026-08-31 00:14
+
+- Decisions: Treat visual recall as part of usable metadata entry, not optional decoration. Reuse authorized media delivery for bounded previews and keep every delivery capability outside the catalogue draft.
+- Implementation: Added per-item thumbnails to the first batch form, neutral fallback for unavailable delivery, and an accessible second modal with a larger preview, filename caption, backdrop/close/Escape dismissal, and responsive sizing. Extended the full Staging browser test through thumbnail activation and enlarged-preview closure; Svelte accessibility checks remain clean.
+- Open: Exercise the thumbnail density and enlarged preview with several real Chama images of different aspect ratios.
+- Risks/Assumptions: The larger preview is for identification, not the full OpenSeadragon inspection experience. It uses the existing bounded preview URL; full-resolution study remains on the resource detail.
+
+### Update 2026-08-31 00:05
+
+- Decisions: Make the first true batch catalogue workflow explicit and reviewable: common model-derived class/language/description, individual editable titles, full preview, then sequential per-resource transforms. Preserve OLDAP's actual atomicity boundary and stop at the first failure instead of claiming an all-or-nothing client batch.
+- Implementation: Added a reusable batch catalogue executor and modal workflow, filename-derived title suggestions that remain drafts, complete preflight presentation, progress, exact catalogued/failed/not-started reporting, selection/tree reconciliation, four-language copy, two focused executor regressions, and a full mocked UI path from selection through verified batch completion.
+- Open: Exercise two or more real Chama images with harmless minimal metadata. Then decide which richer common relations—creator, capture place, dating, rights, or archive placement—earn the next ontology-driven form increment.
+- Risks/Assumptions: A confirmed multi-item batch may be partially complete because OLDAP exposes one atomic transform per resource. The UI stops immediately, preserves unstarted selections, and reports exact outcomes; it never promises rollback. Suggested titles derived from filenames require human review.
+
+### Update 2026-08-30 23:48
+
+- Decisions: Establish batch work first as an explicit selection and sequential review queue; do not turn several heterogeneous Staging resources into one unchecked bulk mutation before shared-field semantics and partial-failure reporting are designed.
+- Implementation: Added accessible per-media selection across loaded folders, a responsive selection toolbar, clear/edit actions, queue position plus previous/next navigation in the existing review dialog, and automatic queue/tree reconciliation after catalogue or discard. Added four-language copy and extended the full mocked Staging browser lifecycle through selection-based cataloguing.
+- Open: Exercise multi-selection with the newly imported Chama photographs. Next, design model-derived shared metadata with per-resource overrides and an explicit preflight/report boundary before performing any multi-resource catalogue transition.
+- Risks/Assumptions: Selection is intentionally browser-local and resets when the StagingArea changes or the page reloads. Every catalogue/discard remains an individually authorized operation with existing read-back; no new API contract or bulk-write behavior was introduced.
+
+### Update 2026-08-30 23:36
+
+- Decisions: Do not treat textual QName versus absolute-IRI serialization differences—or a browser-side interpretation of expiry/authorization flags—as authorization failures. The UI checks only matching job/report identity and READY lifecycle; OLDAP's version-bound confirm transaction is authoritative for every mutable safety condition.
+- Implementation: Removed over-strict client equality checks for target serialization and filename plus redundant browser gating on expiry and `canConfirm`; retained matching import ID and READY job/report states. Added confirmation entry points both directly below the READY notice and after the potentially long inventory. Corrected the missing global `--teal-dark` and `--canvas` design tokens: Safari had rendered the white confirmation label on a transparent white background because its background declaration referenced the undefined token. Added regression coverage for equivalent target serializations.
+- Open: Reload the real Chama READY job and perform its two-step confirmation.
+- Risks/Assumptions: The browser is a UX guard, not the security boundary. OLDAP still owner-checks the report and rechecks job version, authorization, target, quota, collisions, and expiry on confirmation.
+
+### Update 2026-08-30 22:57
+
+- Decisions: Treat ZIP jobs as durable OLDAP workflow records, not component state; reuse the existing caller-owned paginated list contract and keep project filtering in SALSAH without widening the API.
+- Implementation: Added strict recent-job page parsing, a localized eight-job project history, authoritative reopen-by-import-ID with report recovery and polling, live row reconciliation, and responsive styling. Added unit coverage for list parsing and extended the browser flow to close and resume a READY job before version-bound confirmation.
+- Open: Resume and confirm the existing real Chama READY job, then inspect its committed folder/media rows and IIIF derivatives.
+- Risks/Assumptions: The current bounded view inspects the newest 100 caller-owned jobs and displays eight for the active project; cursor navigation can be added when real usage demonstrates a need for deeper history.
+
+### Update 2026-08-30 00:54
+
+- Decisions: Require both a validated immutable report and a second explicit user action before importing ZIP contents; bind confirmation to the exact reviewed state version and refresh only the selected target after completion.
+- Implementation: Added strict v1 report parsing and cross-checks for identity, target, expiry, SIP/manifest evidence, summary, issues, and entries; localized report/structure/evidence presentation; a two-stage confirmation; authoritative IMPORTING/IMPORTED polling; and target-folder reconciliation. Expanded focused coverage to six client/report tests and a full browser sequence through final imported-tree visibility.
+- Open: Exercise the existing READY Chama job live and inspect the resulting images/IIIF derivatives.
+- Risks/Assumptions: Confirmation is intentionally unavailable when report and job identity, target, filename, state, or expiry disagree.
+
+### Update 2026-08-30 00:13
+
+- Decisions: Reuse the complete OLDAP ZIP job boundary as a project-neutral Staging workflow; require an explicit existing target folder, direct capability upload, authoritative polling, and no automatic import after validation.
+- Implementation: Added strict browser envelope validation, job creation with project QNames, identity-bound capability PUT with progress/cancellation, status polling through `READY`/terminal states, per-folder localized ZIP controls, focused client tests, and an end-to-end regression alongside the existing image lifecycle. Synchronized oldap-api request validation and both OpenAPI copies so the selected project's QName is accepted and canonical absolute IRIs remain response-authoritative.
+- Open: Live-test one small disposable Chama ZIP. The next slice renders the immutable validation report and adds explicit optimistic-lock confirmation before committed-tree inspection.
+- Risks/Assumptions: The first UI slice intentionally stops at `READY`; it cannot import content accidentally. Notification-link hosts are still deployment-specific and must be generalized before relying on ZIP email from non-Fasnacht projects.
+
+### Update 2026-08-29 23:38
+
+- Decisions: Reuse OLDAP's existing atomic instance-transform contract for the first Staging-to-catalogue transition; retain identity and Shared media facts, derive eligible target classes from live models, and exclude classes whose required fields the deliberately small form cannot satisfy.
+- Implementation: Added model-derived catalogue targets, localized single-valued title/description entry, explicit metadata language, guarded `shared:StagingMediaObject` to project-media transformation, exact read-back of class/values/Staging removal/asset identity, tree reconciliation, four-language UI, focused unit coverage, and a mocked end-to-end catalogue flow. No API or media-server change was necessary.
+- Open: Catalogue one real Chama Staging image and inspect the resulting generic resource detail, IIIF image, fixity, permissions, and absent Staging placement. ZIP ingest and richer metadata remain separate increments.
+- Risks/Assumptions: The form intentionally offers only targets whose additional required properties are supported by `schema:name` and `schema:description`; optional creator, dating, place, subjects, rights, and other relations remain for later editing. A successful transition removes the resource from its working-area context but does not move or rewrite media files.
+
+### Update 2026-08-29 23:24
+
+- Decisions: Complete the first single-object Staging lifecycle with an administrative review and identity-bound discard before adding ZIP upload or catalogue transitions.
+- Implementation: Added a preview/fixity/delivery review dialog, exact Staging discard client, explicit confirmation, local tree reconciliation, four-language copy, focused unit coverage, and a mocked browser path covering inspect, upload, discard, and disappearance. The media owner performs the destructive safety checks and rollback.
+- Open: Inspect `PICT0039.JPG` without deleting it, then upload and discard a disposable test image for live acceptance.
+- Risks/Assumptions: Successful discard is destructive by design. SALSAH requires a non-empty asset ID and exact server response identity; catalogued-resource deletion and dependency policy remain outside this Staging-only operation.
+
+### Update 2026-08-29 03:18
+
+- Decisions: Treat the successful OLDAP target response as authoritative and accept canonical absolute target IRIs as equivalent to submitted project QNames; retain strict validation of every required upload response field.
+- Implementation: Removed incorrect string-equality checks between submitted and returned target identifiers, required non-empty returned target IRIs, added canonicalization coverage, and recorded the successful first Chama Staging media/metadata write.
+- Open: Refresh the live Staging workspace and verify that the already-created `PICT0039.JPG` row and thumbnail appear; do not upload it a second time.
+- Risks/Assumptions: The browser does not attempt namespace reasoning. Authorization and canonicalization remain server-side OLDAP responsibilities, and media-server HTTP 200 confirms the first write completed.
+
+### Update 2026-08-29 01:15
+
+- Decisions: Make the first Staging mutation one explicit image-to-folder upload. Keep target authority in OLDAP, reuse the media server's existing derivative/rollback path, and require normal OLDAP plus media-delivery read-back before reporting success.
+- Implementation: Added `PUBLIC_MEDIA_URL`, a typed XHR upload client with progress/cancellation/token renewal and JPEG/PNG/HEIC/HEIF validation, per-folder upload controls, localized status/error UI, folder refresh and IIIF verification, focused unit coverage, and a fully mocked upload browser test.
+- Open: Restart oldap-api, rebuild/restart oldap-mediaserver, restart SALSAH for the public media URL, then upload one real Chama image into `Eigene Fotografien`. ZIP upload and cataloguing transitions remain independent.
+- Risks/Assumptions: This increment intentionally accepts one still image only. A successful transfer followed by failed read-back is reported honestly as a partial-success condition. No live data or GraphDB-backed test was touched.
+
+### Update 2026-08-29 00:39
+
+- Decisions: Accept the Chama staging metadata increment as live and idempotent only after all three gates—dry-run, first apply, and identical rerun—succeed for the complete five-resource batch.
+- Implementation: Recorded `would_create`, then `created`, then `existing_verified` for the StagingArea, technical `top`, `Eingang`, `Eigene Fotografien`, and `Historische Quellen`; every phase correctly reported `media=not_declared`. Documented the three audit-report paths and updated the stable live-state context.
+- Open: Inspect the hierarchy in SALSAH. If presentation is correct, design the first single-file upload into the explicitly selected `Eigene Fotografien` folder before introducing ZIP upload.
+- Risks/Assumptions: Metadata success does not yet prove that the `chama` media path is writable by the media service; that belongs to the single-file upload acceptance test. No binary was uploaded in this increment.
+
+### Update 2026-08-29 00:10
+
+- Decisions: Establish one minimal private Chama ingest workspace before implementing upload. Preserve the technical `top` root expected by existing OLDAP staging workflows; keep `Eingang`, `Eigene Fotografien`, and `Historische Quellen` as operational folders rather than pretending they are the final archive hierarchy.
+- Implementation: Added a five-resource, create-only/idempotent `oldap-tools` batch for a generic Shared StagingArea, its 10-GiB quota, `chama` media path, Curator default/write role, and three-level folder structure. Documented the exact prompt-safe dry-run/apply commands, acceptance sequence, permissions, and the boundary between the next single-file test and later ZIP ingestion.
+- Open: Run the live dry-run and inspect all five planned resources; apply only after a clean preflight, rerun for `existing_verified`, and inspect the resulting SALSAH tree. Then design one-file upload into `Eigene Fotografien` before ZIP upload.
+- Risks/Assumptions: `chama:Curator` must exist, be visible, and be assigned to future ingest users; project administration is not a substitute for the operational role. The `shared:mediaPath` value `chama` is storage configuration and must be accepted by the media services before binary upload. No live data was changed while preparing this batch.
+
+### Update 2026-08-28 23:52
+
+- Decisions: Add thumbnails as a bounded enrichment of the existing generic staging rows, not as a gallery or one viewer per object. Resolve delivery once per expanded folder, request only image media, and preserve the neutral type icon for non-images and failed delivery.
+- Implementation: Added reusable 160-pixel IIIF thumbnail URL generation with capability propagation; batch-enriched visible image objects through the resource-summary endpoint; rendered lazy, asynchronously decoded thumbnails with accessible fallback; and added focused URL, staging-client, non-image, and mocked browser coverage. Updated the staging architecture and stable project context.
+- Open: Verify thumbnail appearance and fallback behavior in several live BMG-Staging folders. Then create a minimal Chama StagingArea/folder hierarchy before designing one-file upload; large-folder pagination remains independent.
+- Risks/Assumptions: Each expanded folder is still bounded to 100 readable objects and each visible image causes one small IIIF request, normally browser/server cached. Delivery capabilities remain short-lived and are never persisted. All tests use mocks and perform no GraphDB writes.
+
+### Update 2026-08-28 23:36
+
+- Decisions: Extend the existing read-only tree with generic staged media rather than designing a photo-only gallery or introducing upload/catalogue mutations. Keep direct folder membership and OLDAP permission filtering authoritative.
+- Implementation: Added a typed `shared:StagingMediaObject` search constrained by selected area and folder; expanding a folder now loads subfolders and media together and renders filename, MIME type, staging status, generic image/document icon, and the normal resource-detail link. Updated four-language copy, focused client coverage, and the fully mocked read-only browser workflow.
+- Open: Verify several real BMG-Staging folders in the live UI. Then create a minimal Chama StagingArea/folder hierarchy before designing one-file upload; pagination remains a separate evidence-driven increment.
+- Risks/Assumptions: Each direct media search remains bounded to 100 readable objects. Large-folder pagination is intentionally deferred. Unit tests, Svelte/TypeScript checking, and the mocked browser test pass without GraphDB writes.
+
+### Update 2026-08-28 00:34
+
+- Decisions: Preserve the explicit OLDAP filter-expression contract in the staging client; multiple structured filters must be separated by a logic operator rather than relying on an implicit conjunction.
+- Implementation: Inserted `AND` between the StagingArea boundary and root/parent-folder condition for both root and child searches. Tightened unit and browser fixtures to require the operator. SALSAH checking and focused unit/browser tests pass; all 15 OLDAP API structured-search tests also pass.
+- Open: Refresh the live Fasnacht staging page and verify that root folder `top` and its lazy children render with the authenticated user's real permissions.
+- Risks/Assumptions: This was a SALSAH request-construction defect; no Fasnacht data, OLDAP API contract, or oldaplib implementation changed.
+
+### Update 2026-08-28 00:24
+
+- Decisions: Make the second administration increment a strictly read-only view over the existing generic Shared staging vocabulary. Keep OLDAP permission filtering authoritative, constrain every folder query to the selected StagingArea, and load one tree level on demand. Defer staged media, uploads, folder mutation, movement, and catalogue transitions to explicit later contracts.
+- Implementation: Activated `/p/[project]/admin/staging` and its administration card; added typed StagingArea/StagingFolder search mapping, area metadata, area switching, lazy folder expansion, generic record links, honest loading/error/empty states, responsive four-language UI, focused client tests, and an end-to-end navigation/switch/expand test. Type checking is clean, focused unit tests pass, the browser test passes, and its 1280×720 trace was visually reviewed.
+- Open: Validate the empty state in Chama or create a real project StagingArea through the established OLDAP administration workflow. Design the next small increment as one-file upload into an explicitly selected existing folder with progress, validation, recovery, and read-back.
+- Risks/Assumptions: Search responses are bounded to 100 areas or folders per queried level; pagination is deferred until real collections require it. A folder without loaded children initially remains expandable because the client cannot know whether readable children exist until queried. No data mutation is performed by this module.
+
+### Update 2026-08-28 00:07
+
+- Decisions: Complete the existing Story workflow before starting staging. Treat title, optional summary, and Markdown as language-specific facets of one editor draft; keep author Story-wide and constrained by the live ontology target. Update only controlled Story properties and require exact read-back rather than inferring success from the mutation response.
+- Implementation: Added localized title, summary, and model-derived author editing to the existing responsive Story editor; unified languages found across metadata and narrative without inventing values; preserved untouched translations; added required-title/author validation, reset/navigation protection, focused atomic payloads, and exact set-based verification of name, abstract, author, text, and mentions. Added four-language UI text, model/client regressions, and an end-to-end metadata+narrative+asset save test. Visual trace review at 1280×720 confirms the metadata panel integrates cleanly above the Markdown/preview split.
+- Open: Perform a harmless live edit/save/reset check on the Chama Story. Then add a read-only administration view for existing StagingAreas and StagingFolders before implementing upload or catalogue transitions.
+- Risks/Assumptions: The current editor manages existing language variants but does not add or remove languages. It deliberately leaves permissions and unrelated Story properties unchanged. The author search remains bounded to 100 readable resources; the current author is retained by IRI even if absent from that result set.
+
+### Update 2026-08-27 23:35
+
+- Decisions: Treat Story authorship as a project-model decision rather than a SALSAH special case. Narrow Chama's author target from `chama:Agent` to `chama:Person`, while retaining the broader Agent class for provenance relationships and allowing other projects to choose their own author target.
+- Implementation: Updated the Chama Story constraint and ontology documentation; synchronized Story administration fixtures so creation searches `chama:Person`; documented the generic `schema:author to_class` boundary in the administration architecture and stable project context. The ontology validates, focused unit tests pass, both Story administration browser tests pass, and check, lint, and production build are clean.
+- Open: Load the ontology through backed-up update mode, refresh SALSAH, and confirm that the live author list contains only visible Person resources. Continue next with focused Story metadata editing.
+- Risks/Assumptions: Existing Chama Story authors must satisfy `chama:Person`; the current live author `chama:LukasRosenthaler` already does, so no instance-data migration is expected. A running API may need its model cache refreshed according to the normal ontology-update workflow.
+
+### Update 2026-08-27 23:11
+
+- Decisions: Create Stories through the same ontology-derived class contract as editing; keep the authenticated OLDAP user distinct from the catalogued author resource; require an explicitly assigned project role; let OLDAP generate the identity; do not persist empty prose or infer anonymous publication.
+- Implementation: Added `/p/[project]/admin/stories/new`, a localized responsive create form, model-derived author candidates, current-project role selection, verified `PUT /data/{project}/{class}` creation without an `iri` field, generated-URN routing, and clean blank-draft initialization in the chosen language. Added focused model/client tests and a full create/read-back/editor browser test; visually verified the form against live Chama data without submitting it.
+- Open: Add focused Story metadata editing for title, summary, and author. Define editorial release and permission transitions before exposing publication, and dependency checks before deletion.
+- Risks/Assumptions: Assigned project roles are returned by OLDAP as QNames using the project short name as prefix. The first create slice grants the selected role `DATA_PERMISSIONS`; users without an assigned current-project role cannot create, preventing accidental public or inaccessible records.
+
+### Update 2026-08-27 19:20
+
+- Decisions: Keep asset selection as a reusable, project-scoped editor component; offer only permission-filtered resources with a readable image representation; persist only the stable resource IRI; defer captions, multi-select, image groups, and layout controls.
+- Implementation: Added recent-resource discovery and project search with authorized thumbnails, localized accessible dialog states, Escape/backdrop close behavior, cursor/selection-aware `:::asset` insertion with restored focus, immediate live preview, and automatic `schema:mentions` integration. Added insertion unit coverage and an end-to-end search/select/save test; visually verified recent assets and search against the live Chama project without changing persisted data.
+- Open: Add minimal ontology-driven Story creation as the next vertical administration increment. Keep broader Story metadata, editorial release, deletion, and staging independent.
+- Risks/Assumptions: The picker intentionally filters out readable resources without an image representation and currently inserts one uncaptained asset at a time. OLDAP remains authoritative for visibility and mutation permission; short-lived media capabilities never enter Markdown.
+
+### Update 2026-08-27 18:28
+
+- Decisions: Establish administration as an extensible project-scoped module area and make existing-Story editing the first complete function. Discover Story classes from the ontology contract rather than `chama:Story`; keep OLDAP permissions authoritative; defer creation, asset picking, publication, and deletion to separate testable increments.
+- Implementation: Activated `/p/[project]/admin`, Story list and editor routes; added generic model-driven Story discovery, multilingual draft conversion, cross-language `schema:mentions` derivation, invalid-directive blocking, complete update plus read-back verification, live sanitized preview, unsaved-change protection, responsive module/list/editor UI, four-language messages, focused unit/client/browser coverage, and administration architecture documentation.
+- Open: Perform one harmless live edit/reset/save check, then add the permission-aware OLDAP asset picker with cursor-position directive insertion. Define explicit editorial state and permission transitions before implementing release; define dependency checks before deletion.
+- Risks/Assumptions: The first editor intentionally edits only existing `schema:text` variants. It has no concurrent-edit token, autosave, or revision history; last accepted OLDAP update remains authoritative. Module visibility does not grant write access, and a server rejection is surfaced to the user.
+
+### Update 2026-08-27 16:17
+
+- Decisions: Accept the additive Markdown Story model and instance migration as live only after API read-back verifies both language variants, all embedded-resource links, and non-destructive retention of the first StorySection experiment.
+- Implementation: Recorded ontology backup `chama-model-backup-20260827-161732.trig.gz`; migration returned `updated_and_verified` for `chama:ChamaFromPlatToLivingRailway`, German and English `schema:text`, and the map, station photograph, and locomotive photograph in `schema:mentions`.
+- Open: Visually inspect the live narrative and its three permission-aware inline assets; then begin the separate Markdown editor and OLDAP asset-picker increment.
+- Risks/Assumptions: The restricted 1885 map remains governed by its existing Curator permission. Successful migration does not change reproduction rights or make the Story public.
+
+### Update 2026-08-27 15:28
+
+- Decisions: Replace new StorySection authoring with multilingual Markdown on the Story after live UX evaluation; keep the original sections non-destructively, use stable `:::asset` resource-IRI directives for placement, mirror embedded IRIs through `schema:mentions`, and defer the editor/picker to a separate increment. Do not use CKEditor or persist media delivery URLs/capabilities.
+- Implementation: Added the sanitized Markdown parser and tests, a permission-aware inline-asset renderer supporting direct and sole archive-first representations, generic Story integration in resource detail, four-language states, additive Chama ontology changes, an exact migration payload and idempotent API migration script, updated architecture/data documentation, and focused client/browser coverage.
+- Open: Load the revised Chama ontology, run `update_chama_story_markdown.py`, and visually inspect the three live embedded resources before implementing the Markdown editor and OLDAP asset picker.
+- Risks/Assumptions: `schema:text` remains optional during migration. Missing or unreadable assets render a neutral state without existence probing. The renderer supports one asset per directive; grids, image series, raw HTML, and editorial workflow states remain deferred.
+
+### Update 2026-08-27 14:58
+
+- Decisions: Accept the Story batch as import-complete after its idempotent rerun; keep visual inverse-relation inspection as the final data/UI gate.
+- Implementation: Recorded `metadata=existing_verified` and `media=not_declared` for the Story and all three sections. Confirmed SALSAH is served on port 5173; the separate test browser correctly requires its own login and was not given user credentials.
+- Open: Inspect `chama:ChamaFromPlatToLivingRailway` in the user's authenticated SALSAH session, then implement the read-only Story renderer.
+- Risks/Assumptions: The rerun report was written under the earlier `/tmp/chama-story-01-import.yaml` name; report naming does not affect verified state. Browser sessions are intentionally isolated.
+
+### Update 2026-08-27 14:54
+
+- Decisions: Accept the initial Story instance import as successful; require the usual second apply and inverse-reasoning inspection before treating the data slice as complete.
+- Implementation: Recorded four successful creates with no media operations: `chama:ChamaFromPlatToLivingRailway` and its three ordered StorySections. Audit report: `/tmp/chama-story-01-import.yaml`.
+- Open: Rerun for `existing_verified`, then inspect `schema:hasPart` on the Story and proceed to the read-only Story renderer.
+- Risks/Assumptions: Creation success alone does not prove importer comparison idempotency or that inverse relations are exposed through the API response.
+
+### Update 2026-08-27 14:51
+
+- Decisions: Accept the four-resource Story batch as ready for create-only apply after the corrected canonical relationship removed the dependency cycle.
+- Implementation: Recorded the successful live dry-run: Story plus three ordered sections all report `metadata=would_create` and `media=not_declared`; the audit report is `/tmp/chama-story-01-preflight.yaml`.
+- Open: Apply the batch, rerun it for `existing_verified`, and inspect inverse section visibility before building the Story presentation.
+- Risks/Assumptions: The preflight verifies current references, permissions, and SHACL constraints but does not replace the post-apply inverse-reasoning and UI checks.
+
+### Update 2026-08-27 14:47
+
+- Decisions: Store only `StorySection schema:isPartOf Story` as the canonical batch relationship and let OLDAP expose the inverse `Story schema:hasPart StorySection`. Permit an empty Story during incremental editorial construction.
+- Implementation: Removed the circular forward references from the Story data and explicitly set the Story-side section `min_count` to `null` so OLDAP update semantics delete the already-live constraint; documented the canonical direction and acyclic import order.
+- Open: Reload the small additive ontology adjustment, then repeat the four-resource dry-run.
+- Risks/Assumptions: A Story without sections is temporarily valid. Presentation must handle that honest empty state; completed-publication requirements belong to a later editorial workflow, not base SHACL creation constraints.
+
+### Update 2026-08-27 14:44
+
+- Decisions: Accept the silent completion of `oldap-tools ontology load` as successful because the command emits only the backup path on success and reports failures explicitly with a non-zero exit.
+- Implementation: Recorded the live additive Story ontology update and its pre-update backup `chama-model-backup-20260827-144345.trig.gz`.
+- Open: Run the four-resource Story batch dry-run, then apply and rerun if preflight is clean.
+- Risks/Assumptions: The user returned to the shell without an error after the backup message. The backup covers model and list graphs but not instance data, as intended for an ontology update.
+
+### Update 2026-08-27 14:39
+
+- Decisions: Accept the concise German and English Story prose as owner-approved; retain `draft` solely as an editorial/access state while the linked map remains restricted.
+- Implementation: Synchronized the Story YAML comment, experiment status, stable context, and next gate with the completed content review.
+- Open: Load the additive Story ontology and run dry-run/apply/rerun before implementing the read-only Story presentation.
+- Risks/Assumptions: Content approval does not change reproduction rights or permissions. Story and sections remain Curator-only.
+
+### Update 2026-08-27 14:35
+
+- Decisions: Start narrative contextualization as a project-local, permission-aware experiment before Shared promotion. Replace Fasnacht's mandatory image, monolithic text, ambiguous date, and duplicate publication Boolean with optional generic lead media, ordered sections, explicit authored date semantics, and authoritative OLDAP permissions.
+- Implementation: Added locally valid `chama:Story` and `chama:StorySection` classes based on `schema:CreativeWork`; documented the Fasnacht comparison and generic boundary; prepared a locally valid curator-only four-resource bilingual draft linking the 1885 plat, Chama station, and locomotive 488.
+- Open: Owner review of the draft prose; load the additive ontology; dry-run/apply/rerun the Story batch; then add the read-only Story presentation. Design staging next and defer general editing until those concrete workflows expose its requirements.
+- Risks/Assumptions: The Story remains private because one linked map is private. Sections belong to one Story and share one order across languages; rich text, per-language structures, and editorial workflow states are deliberately deferred.
+
+### Update 2026-08-27 14:22
+
+- Decisions: Accept the first cartographic import as technically complete only after a second apply verifies both RDF state and the already-attached IIIF medium. Retain the private Curator-only publication boundary.
+- Implementation: Recorded the successful resumable apply and idempotent rerun: all five resources now report `existing_verified`, and `chama:DepotGroundsPipelineMap1885Digital` reports `media=existing_verified`. Synchronized stable ontology, data-experiment, and repository context documentation.
+- Open: Inspect the map work and digital representation in live SALSAH, exercise high-resolution zoom, and confirm the archive breadcrumb. Begin the first Story slice only after that visual gate.
+- Risks/Assumptions: Technical ingest success does not grant reproduction permission. The map and TIFF remain unavailable to `oldap:Unknown` regardless of the historical work's reported public-domain status.
+
+### Update 2026-08-27 14:17
+
+- Decisions: Do not rely on omitted permissions for restricted map material because the importing user's OLDAP defaults include `oldap:Unknown`. Require an explicit project-private `chama:Curator` role for both the 1885 map work and its TIFF representation.
+- Implementation: Added `chama:Curator -> DATA_PERMISSIONS` to the two restricted resources and documented the prerequisite role assignment. Public catalogue-context Organizations and the structural Series remain unchanged.
+- Open: Create and assign `chama:Curator` to `rosenth`, update the local oldap-tools installation if needed, then rerun the interrupted batch from actual state.
+- Risks/Assumptions: The role name is intentionally project-scoped and generic enough for future restricted Chama catalogue work. It grants no project administration by itself; existing project-admin authority remains separate.
+
+### Update 2026-08-27 14:09
+
+- Decisions: Respect the effective max-one `schema:identifier` constraint for `chama:CartographicWork`; do not loosen inherited cardinality or introduce qualified identifier resources for one map.
+- Implementation: Combined the holding reference and sheet number into the single traceable value `EDM Box 097 F; map 18-429` after live preflight correctly rejected two identifier values.
+- Open: Rerun the private 1885 map batch preflight, then apply and verify it if clean.
+- Risks/Assumptions: The combined display value is sufficient for the current demo. Separate typed identifiers should be reconsidered only when retrieval or interoperability requirements demonstrate a concrete need.
+
+### Update 2026-08-27 12:12
+
+- Decisions: Use the 1885 Chama depot-grounds and pipeline map as the first cartographic slice, but distinguish public-domain status of the historical work from permission to publish the holding institution's reproduction. Keep the work and TIFF non-anonymous until written permission and the preferred credit line are confirmed.
+- Implementation: Added and locally validated the additive `chama:CartographicWork` ontology class with custody, repeatable source-reference, dating, description, identifier, contribution, and rights fields. Prepared a valid five-resource private batch containing two Organizations, a cartographic Series, the TIFF representation with `image-iiif` ingest, and the archive-first map Item with complete source and rights evidence.
+- Open: Load the ontology in backed-up update mode; dry-run, apply, and idempotently rerun the private map batch; verify the IIIF view and archive breadcrumb. Add the first Story class only after this gate passes.
+- Risks/Assumptions: No stable external media or IIIF endpoint was documented for the supplied TIFF, so this slice preserves the local file and records external evidence URLs rather than inventing a remote media reference. Publication remains blocked by the Colorado Railroad Museum's reproduction policy even though the 1885 work was identified as public domain in the forum.
+
+### Update 2026-08-27 12:05
+
+- Decisions: Show every readable archive placement on eligible resource details instead of declaring an implicit primary path. Derive the context from existing permission-aware search and summary contracts, and keep the main detail read independent from contextual loading.
+- Implementation: Added generic root-to-resource archive-context resolution for ArchiveUnits and media-first resources, bounded multi-parent traversal, a localized and responsive breadcrumb panel with archive-tree navigation, and focused client plus browser coverage. Build, type checks, lint, 50 unit tests, and the four resource-detail E2E scenarios pass.
+- Open: Review one media-first and one archive-first path against the live Chama data, then ingest one rights-reviewed historic map and add one small contextual story as separate visible increments.
+- Risks/Assumptions: The client bounds ancestor traversal at 64 levels and archive-container discovery at 100 visible matches. Missing or unreadable ancestors are not exposed; cyclic or malformed paths terminate rather than blocking the resource detail.
+
 ### Update 2026-08-27 00:34
 
 - Decisions: Treat a unit's `shared:hasMediaObject` links as expandable archive contents while keeping them visually and semantically distinct from structural `shared:ArchiveUnit` children; a disclosure control must never appear inert when readable media contents exist.

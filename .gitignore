@@ -19,7 +19,6 @@ Thumbs.db
 .env
 .env.*
 !.env.example
-!.env.test
 
 # Vite
 vite.config.js.timestamp-*
@@ -39,3 +38,6 @@ vite.config.ts.timestamp-*
 # Paraglide
 /src/lib/paraglide/
 /project.inlang/cache/
+
+# Private local experiment payloads (never application inputs)
+/experiments/chama-data/*-private.yaml

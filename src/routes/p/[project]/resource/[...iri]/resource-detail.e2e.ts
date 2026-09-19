@@ -28,6 +28,27 @@ const projectModel = {
 			properties: [{ iri: 'schema:name', name: ['Name@de'], datatype: 'rdf:langString', order: 1 }]
 		},
 		{
+			iri: 'chama:Story',
+			label: ['Geschichte@de'],
+			properties: [
+				{ iri: 'schema:name', name: ['Titel@de'], datatype: 'rdf:langString', order: 1 },
+				{
+					iri: 'schema:abstract',
+					name: ['Zusammenfassung@de'],
+					datatype: 'rdf:langString',
+					order: 2
+				},
+				{ iri: 'schema:text', name: ['Erzähltext@de'], datatype: 'rdf:langString', order: 3 },
+				{ iri: 'schema:author', name: ['Autor@de'], toClass: 'chama:Agent', order: 4 },
+				{
+					iri: 'schema:mentions',
+					name: ['Erwähnte Ressource@de'],
+					toClass: 'oldap:Thing',
+					order: 8
+				}
+			]
+		},
+		{
 			iri: 'chama:CataloguedPhotograph',
 			label: ['Erschlossene Fotografie@de'],
 			superclass: ['shared:MediaObject'],
@@ -179,16 +200,28 @@ async function mockOldap(page: Page, mediaAttached = false): Promise<void> {
 			return;
 		}
 		if (path === '/data/search/chama' && request.method() === 'POST') {
+			const body = request.postDataJSON() as { resClass?: string };
 			await route.fulfill({
 				status: 200,
 				headers,
-				json: [
-					{
-						iri: 'chama:IMG_1751',
-						resclass: 'chama:CataloguedPhotograph',
-						'schema:name': ['K-36 #488 im Panorama@de']
-					}
-				]
+				json:
+					body.resClass === 'shared:ArchiveUnit'
+						? [
+								{
+									iri: 'chama:LukasRosenthalerChama2018',
+									resclass: 'shared:ArchiveUnit',
+									'schema:name': ['Chama 2018@de'],
+									'shared:archiveLevel': ['shared:File'],
+									'shared:parentArchiveUnit': ['chama:LukasRosenthalerRailwayPhotographs']
+								}
+							]
+						: [
+								{
+									iri: 'chama:IMG_1751',
+									resclass: 'chama:CataloguedPhotograph',
+									'schema:name': ['K-36 #488 im Panorama@de']
+								}
+							]
 			});
 			return;
 		}
@@ -242,6 +275,23 @@ async function mockOldap(page: Page, mediaAttached = false): Promise<void> {
 					data: {
 						'rdf:type': ['chama:Place'],
 						'schema:name': ['Bahnhof Chama@de', 'Chama station@en']
+					}
+				},
+				'chama:LukasRosenthalerRailwayPhotographs': {
+					resclass: 'shared:ArchiveUnit',
+					data: {
+						'rdf:type': ['shared:ArchiveUnit'],
+						'schema:name': ['Eisenbahnfotografien Lukas Rosenthaler@de'],
+						'shared:archiveLevel': ['shared:Series'],
+						'shared:parentArchiveUnit': ['chama:ChamaRailwayHeritageDemo']
+					}
+				},
+				'chama:ChamaRailwayHeritageDemo': {
+					resclass: 'shared:ArchiveUnit',
+					data: {
+						'rdf:type': ['shared:ArchiveUnit'],
+						'schema:name': ['Chama Railway Heritage Demo@en'],
+						'shared:archiveLevel': ['shared:ArchiveGroup']
 					}
 				}
 			};
@@ -300,6 +350,24 @@ async function mockOldap(page: Page, mediaAttached = false): Promise<void> {
 			});
 			return;
 		}
+		if (path === '/data/chama/chama:ChamaFromPlatToLivingRailway') {
+			await route.fulfill({
+				status: 200,
+				headers,
+				json: {
+					'rdf:type': ['chama:Story'],
+					'schema:name': ['Chama: vom Vermessungsplan zur lebendigen Eisenbahn@de'],
+					'schema:abstract': ['Drei Quellen verbinden Vergangenheit und Gegenwart.@de'],
+					'schema:text': [
+						'## Die Eisenbahn fährt weiter\n\nVor der Abfahrt steht Lokomotive 488 in Chama. <script>unsafe()</script>\n\n:::asset{iri="chama:IMG_1751" caption="K-36-Lokomotive 488 vor der Abfahrt"}\n:::@de'
+					],
+					'schema:author': ['chama:LukasRosenthaler'],
+					'schema:mentions': ['chama:IMG_1751'],
+					'oldap:attachedToRole': { 'oldap:Unknown': 'DATA_VIEW' }
+				}
+			});
+			return;
+		}
 		if (path === '/data/mediaobject/iri/chama:IMG_1751' && mediaAttached) {
 			await route.fulfill({
 				status: 200,
@@ -353,9 +421,24 @@ test('renders a live ontology-driven resource and navigates to a linked resource
 
 	await expect(page).toHaveURL('http://localhost:4173/p/chama/resource/chama:IMG_1751');
 	await expect(page.getByRole('heading', { name: 'K-36 #488 im Panorama' })).toBeVisible();
+	const archiveContext = page.getByRole('region', { name: 'Im Archiv' });
+	await expect(archiveContext).toBeVisible();
+	await expect(
+		archiveContext.getByRole('link', { name: 'Chama Railway Heritage Demo' })
+	).toBeVisible();
+	await expect(
+		archiveContext.getByRole('link', { name: 'Eisenbahnfotografien Lukas Rosenthaler' })
+	).toBeVisible();
+	await expect(archiveContext.getByRole('link', { name: 'Chama 2018' })).toBeVisible();
+	await expect(archiveContext.getByText('K-36 #488 im Panorama', { exact: true })).toBeVisible();
+	await expect(archiveContext.getByRole('link', { name: /Zur Archivstruktur/ })).toHaveAttribute(
+		'href',
+		'/p/chama/archive'
+	);
 	await expect(page.getByText('Öffentlich lesbar', { exact: true })).toBeVisible();
 	await expect(page.getByText('Mediendatei noch nicht importiert', { exact: true })).toBeVisible();
-	await expect(page.getByRole('link', { name: /Lukas Rosenthaler/ })).toBeVisible();
+	const creatorLink = page.getByRole('link', { name: 'Person Lukas Rosenthaler' });
+	await expect(creatorLink).toBeVisible();
 	await expect(page.getByRole('link', { name: /Bahnhof Chama/ })).toBeVisible();
 	await expect(page.getByText('Originaler Dateiname')).toBeVisible();
 	await expect(page.getByText('IMG_1751.HEIC', { exact: true })).toBeVisible();
@@ -364,7 +447,7 @@ test('renders a live ontology-driven resource and navigates to a linked resource
 		page.getByText('2018-07-10 - 2018-07-10 (GREGORIAN, DAY)', { exact: true })
 	).toBeVisible();
 
-	await page.getByRole('link', { name: /Lukas Rosenthaler/ }).click();
+	await creatorLink.click();
 	await expect(page).toHaveURL('http://localhost:4173/p/chama/resource/chama%3ALukasRosenthaler');
 	await expect(page.getByRole('heading', { name: 'Lukas Rosenthaler' })).toBeVisible();
 	await expect(page.getByText('Person', { exact: true })).toBeVisible();
@@ -390,6 +473,31 @@ test('opens an attached local image in the generic IIIF viewer', async ({ page }
 	await expect(viewer.getByRole('button', { name: 'Vergrössern' })).toBeVisible();
 	await expect(page.getByText('Mediendatei noch nicht importiert', { exact: true })).toHaveCount(0);
 	await expect(page.getByText('Hochauflösendes Bild wird geladen …')).toHaveCount(0);
+});
+
+test('renders sanitized Story Markdown with a permission-aware inline asset', async ({ page }) => {
+	await mockOldap(page, true);
+	await page.goto('/login?next=/p/chama/resource/chama%3AChamaFromPlatToLivingRailway');
+	await page.getByLabel('User-ID').fill('researcher');
+	await page.getByLabel('Passwort').fill('test-password');
+	await page.getByRole('button', { name: 'Anmelden' }).click();
+
+	await expect(
+		page.getByRole('heading', { name: 'Chama: vom Vermessungsplan zur lebendigen Eisenbahn' })
+	).toBeVisible();
+	await expect(page.getByText('Drei Quellen verbinden Vergangenheit und Gegenwart.')).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Die Eisenbahn fährt weiter' })).toBeVisible();
+	await expect(page.getByText('Vor der Abfahrt steht Lokomotive 488 in Chama.')).toBeVisible();
+	await expect(page.locator('.story-body script')).toHaveCount(0);
+	await expect(page.getByText(':::asset')).toHaveCount(0);
+	const asset = page.getByRole('link', { name: 'K-36 #488 im Panorama öffnen' });
+	await expect(asset).toBeVisible();
+	await expect(asset.getByText('K-36-Lokomotive 488 vor der Abfahrt')).toBeVisible();
+	await expect(asset.locator('img')).toHaveAttribute(
+		'src',
+		'http://media.test/iiif/3/IMG_1751/full/!720,480/0/default.jpg?token=test-media-capability'
+	);
+	await expect(page.getByText('Erzähltext', { exact: true })).toHaveCount(0);
 });
 
 test('shows real project resources with an authorized image preview', async ({ page }) => {

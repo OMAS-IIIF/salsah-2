@@ -29,6 +29,14 @@ export interface ResourceCard {
 	media: MediaDelivery | null;
 }
 
+/** Permission-filtered resource embedded at a precise position in Story Markdown. */
+export interface StoryAsset {
+	iri: string;
+	resclass: string;
+	title: JsonValue | undefined;
+	media: MediaDelivery | null;
+}
+
 /** One permission-filtered archival description in the incremental tree. */
 export interface ArchiveTreeUnit {
 	iri: string;
@@ -48,12 +56,26 @@ export interface ArchiveTreeMedia {
 	media: MediaDelivery | null;
 }
 
+/** One linked segment in a readable archive-context path. */
+export interface ArchivePathSegment {
+	iri: string;
+	title: JsonValue | undefined;
+	archiveLevel: string | null;
+	isCurrent: boolean;
+}
+
+/** One possible archive placement for a resource. */
+export interface ArchiveContextPath {
+	segments: ArchivePathSegment[];
+}
+
 export interface OldapPropertyDefinition {
 	iri: string;
 	name?: string[];
 	description?: string[];
 	datatype?: string;
 	toClass?: string;
+	inverseOf?: string;
 	minCount?: number;
 	maxCount?: number;
 	order?: number;

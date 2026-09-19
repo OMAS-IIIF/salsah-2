@@ -2,8 +2,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { authenticatedFetch } from '$lib/api/client';
 import {
 	displayMediaIriOf,
+	loadArchiveContexts,
 	loadArchiveMedia,
 	loadRecentResourceCards,
+	loadStoryAssets,
 	mediaDeliveryOf,
 	readResourceSummaries,
 	searchArchiveUnits,
@@ -189,7 +191,100 @@ describe('resource summary batches', () => {
 	});
 });
 
+describe('Story assets', () => {
+	it('preserves narrative order and resolves a sole readable representation', async () => {
+		vi.mocked(authenticatedFetch).mockImplementation(async (_input, init) => {
+			const body = JSON.parse(String(init?.body)) as { iris: string[] };
+			return Response.json({
+				resources: body.iris.flatMap<OldapResourceSummary>((iri) => {
+					if (iri === 'chama:Map') {
+						return [
+							{
+								iri,
+								resclass: 'chama:CartographicWork',
+								data: {
+									'schema:name': ['Plan@de'],
+									'shared:hasMediaObject': ['chama:MapDigital']
+								}
+							}
+						];
+					}
+					if (iri === 'chama:Photo') {
+						return [
+							{
+								iri,
+								resclass: 'chama:CataloguedPhotograph',
+								data: { 'schema:name': ['Station@en'] },
+								mediaDelivery: {
+									kind: 'external-image',
+									url: 'https://images.example/station.jpg',
+									thumbnailUrl: null
+								}
+							}
+						];
+					}
+					if (iri === 'chama:MapDigital') {
+						return [
+							{
+								iri,
+								resclass: 'chama:DigitalRepresentation',
+								data: { 'schema:name': ['Map scan@en'] },
+								mediaDelivery: {
+									kind: 'iiif-image',
+									infoUrl: 'https://media.example/iiif/3/map/info.json',
+									capability: 'story-token'
+								}
+							}
+						];
+					}
+					return [];
+				})
+			});
+		});
+
+		await expect(
+			loadStoryAssets('chama', ['chama:Map', 'chama:Hidden', 'chama:Photo'])
+		).resolves.toEqual([
+			{
+				iri: 'chama:Map',
+				resclass: 'chama:CartographicWork',
+				title: ['Plan@de'],
+				media: {
+					kind: 'iiif-image',
+					infoUrl: 'https://media.example/iiif/3/map/info.json',
+					capability: 'story-token'
+				}
+			},
+			{
+				iri: 'chama:Photo',
+				resclass: 'chama:CataloguedPhotograph',
+				title: ['Station@en'],
+				media: {
+					kind: 'external-image',
+					url: 'https://images.example/station.jpg',
+					thumbnailUrl: null
+				}
+			}
+		]);
+	});
+});
+
 describe('incremental archive tree', () => {
+	it('loads a wide sibling level completely and rejects repeated pages', async () => {
+		const rows = Array.from({ length: 100 }, (_, i) => ({
+			iri: `urn:unit:${i}`,
+			resclass: 'shared:ArchiveUnit',
+			'schema:name': [`Unit ${i}@en`],
+			'shared:archiveLevel': ['shared:Series']
+		}));
+		vi.mocked(authenticatedFetch)
+			.mockResolvedValueOnce(Response.json(rows))
+			.mockResolvedValueOnce(Response.json([{ ...rows[0], iri: 'urn:unit:100' }]));
+		expect(await searchArchiveUnits('museum', null)).toHaveLength(101);
+		vi.mocked(authenticatedFetch).mockImplementation(() => Promise.resolve(Response.json(rows)));
+		await expect(searchArchiveUnits('museum', null)).rejects.toThrow('pagination');
+	});
+
 	it('loads roots and direct children through bounded structured searches', async () => {
 		const requestBodies: Record<string, unknown>[] = [];
 		vi.mocked(authenticatedFetch).mockImplementation(async (_input, init) => {
@@ -278,6 +373,84 @@ describe('incremental archive tree', () => {
 					infoUrl: 'https://media.example/iiif/3/IMG_1751/info.json',
 					capability: 'preview-token'
 				}
+			}
+		]);
+	});
+});
+
+describe('archive context paths', () => {
+	it('resolves a media-first resource through its container and readable ancestors', async () => {
+		vi.mocked(authenticatedFetch).mockImplementation(async (input, init) => {
+			const path = decodeURIComponent(new URL(String(input)).pathname);
+			const body = JSON.parse(String(init?.body)) as { iris?: string[] };
+			if (path === '/data/search/chama') {
+				return Response.json([
+					{
+						iri: 'chama:File',
+						resclass: 'shared:ArchiveUnit',
+						'schema:name': ['Chama 2023@de'],
+						'shared:archiveLevel': ['shared:File'],
+						'shared:parentArchiveUnit': ['chama:Series']
+					}
+				]);
+			}
+			const resources: Record<string, OldapResourceSummary> = {
+				'chama:Series': {
+					iri: 'chama:Series',
+					resclass: 'shared:ArchiveUnit',
+					data: {
+						'schema:name': ['Eisenbahnfotografien@de'],
+						'shared:archiveLevel': ['shared:Series'],
+						'shared:parentArchiveUnit': ['chama:Root']
+					}
+				},
+				'chama:Root': {
+					iri: 'chama:Root',
+					resclass: 'shared:ArchiveUnit',
+					data: {
+						'schema:name': ['Chama Railway Heritage Demo@en'],
+						'shared:archiveLevel': ['shared:ArchiveGroup']
+					}
+				}
+			};
+			return Response.json({
+				resources: (body.iris ?? []).flatMap((iri) => (resources[iri] ? [resources[iri]] : []))
+			});
+		});
+
+		await expect(
+			loadArchiveContexts('chama', 'chama:IMG_0171', {
+				'rdf:type': ['chama:CataloguedPhotograph'],
+				'schema:name': ["Foster's Hotel and Saloon@en"]
+			})
+		).resolves.toEqual([
+			{
+				segments: [
+					{
+						iri: 'chama:Root',
+						title: ['Chama Railway Heritage Demo@en'],
+						archiveLevel: 'shared:ArchiveGroup',
+						isCurrent: false
+					},
+					{
+						iri: 'chama:Series',
+						title: ['Eisenbahnfotografien@de'],
+						archiveLevel: 'shared:Series',
+						isCurrent: false
+					},
+					{
+						iri: 'chama:File',
+						title: ['Chama 2023@de'],
+						archiveLevel: 'shared:File',
+						isCurrent: false
+					},
+					{
+						iri: 'chama:IMG_0171',
+						title: ["Foster's Hotel and Saloon@en"],
+						archiveLevel: null,
+						isCurrent: true
+					}
+				]
 			}
 		]);
 	});

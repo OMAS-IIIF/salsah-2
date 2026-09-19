@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mediaPreviewUrl, withMediaCapability } from './capability';
+import { mediaPreviewUrl, mediaThumbnailUrl, withMediaCapability } from './capability';
 
 describe('media capability URLs', () => {
 	it('adds the capability to IIIF metadata and tile requests', () => {
@@ -46,5 +46,27 @@ describe('media preview URLs', () => {
 				thumbnailUrl: null
 			})
 		).toBe('https://images.example.org/full.jpg');
+	});
+});
+
+describe('media thumbnail URLs', () => {
+	it('requests a bounded IIIF list thumbnail and retains the capability', () => {
+		expect(
+			mediaThumbnailUrl({
+				kind: 'iiif-image',
+				infoUrl: 'https://media.example.org/iiif/3/asset/info.json',
+				capability: 'short-lived'
+			})
+		).toBe('https://media.example.org/iiif/3/asset/full/!160,160/0/default.jpg?token=short-lived');
+	});
+
+	it('prefers an external thumbnail when one is supplied', () => {
+		expect(
+			mediaThumbnailUrl({
+				kind: 'external-image',
+				url: 'https://images.example.org/original.jpg',
+				thumbnailUrl: 'https://images.example.org/thumbnail.jpg'
+			})
+		).toBe('https://images.example.org/thumbnail.jpg');
 	});
 });

@@ -170,6 +170,15 @@ honest navigation model. Editing, drag-and-drop, pagination beyond 100 siblings,
 and project-specific hierarchy profiles remain deliberately separate later
 steps.
 
+Resource details expose the inverse navigation context without a new backend
+contract. For an ArchiveUnit, SALSAH follows its readable
+`shared:parentArchiveUnit` chain. For a media-first resource, it first discovers
+every readable ArchiveUnit that links it through `shared:hasMediaObject`, then
+walks each parent chain. The UI presents all resulting root-to-resource paths;
+it does not invent a primary placement, reveal omitted summaries, or treat the
+same descriptive resource as a structural child. Parent traversal is bounded
+to protect the client from malformed cycles or excessive depth.
+
 ## Shared Data Versus Shared Definitions
 
 This proposal concerns reusable schema definitions. Project instance data remains in `<project>:data`.
