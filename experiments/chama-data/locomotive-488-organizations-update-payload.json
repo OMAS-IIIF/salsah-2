@@ -1,8 +1,0 @@
-{
-	"chama:manufacturer": {
-		"add": "chama:BaldwinLocomotiveWorks"
-	},
-	"chama:operator": {
-		"add": ["chama:DenverAndRioGrandeWestern", "chama:CumbresAndToltecScenicRailroad"]
-	}
-}

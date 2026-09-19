@@ -52,9 +52,9 @@ npm run dev
 
 ## Repository boundaries
 
-The application needs no sample archive dataset. `experiments/` contains optional
-modelling and data experiments; do not stage local payload changes as part of an
-application release. Synthetic unit and browser fixtures remain with the source
+The application needs no sample archive dataset. `experiments/` is an ignored, local-only directory for optional modelling and
+data experiments. It is not included in new clones; older versions remain in Git
+history. Synthetic unit and browser fixtures remain with the source
 so the application can be tested without a live archive.
 
 Keep credentials and local endpoints in ignored environment files. Only
@@ -82,4 +82,4 @@ The Playwright command installs its required browser binaries when necessary.
 
 ## Project context
 
-The durable product vision and engineering principles are defined in [`FOUNDATIONS.md`](./FOUNDATIONS.md). The first evidence-based modelling sketch is documented in [`docs/minimal-data-model-v0.1.md`](./docs/minimal-data-model-v0.1.md), with a concrete archive-first/media-first comparison in [`experiments/catalogue-patterns/`](./experiments/catalogue-patterns/README.md), the first locally validated Chama ontology draft in [`experiments/chama-ontology/`](./experiments/chama-ontology/README.md), and the accepted placement strategy for generic archive semantics in [`docs/architecture/generic-archive-foundation.md`](./docs/architecture/generic-archive-foundation.md). The first Markdown narrative model, inline-asset contract, and Fasnacht comparison are documented in [`docs/architecture/story-foundation.md`](./docs/architecture/story-foundation.md); the project-scoped administration shell and first Story editing slice are documented in [`docs/architecture/administration-foundation.md`](./docs/architecture/administration-foundation.md). The search baseline and its future ontology-defined Lucene integration are documented in [`docs/architecture/project-search.md`](./docs/architecture/project-search.md). Architecture, repository state, and the incremental roadmap are documented in [`codex.md`](./codex.md). Technical changes are recorded newest-first in [`CODEX_LOG.md`](./CODEX_LOG.md).
+The durable product vision and engineering principles are defined in [`FOUNDATIONS.md`](./FOUNDATIONS.md). The first evidence-based modelling sketch is documented in [`docs/minimal-data-model-v0.1.md`](./docs/minimal-data-model-v0.1.md), with the accepted placement strategy for generic archive semantics in [`docs/architecture/generic-archive-foundation.md`](./docs/architecture/generic-archive-foundation.md). The first Markdown narrative model, inline-asset contract, and Fasnacht comparison are documented in [`docs/architecture/story-foundation.md`](./docs/architecture/story-foundation.md); the project-scoped administration shell and first Story editing slice are documented in [`docs/architecture/administration-foundation.md`](./docs/architecture/administration-foundation.md). The search baseline and its future ontology-defined Lucene integration are documented in [`docs/architecture/project-search.md`](./docs/architecture/project-search.md). Architecture, repository state, and the incremental roadmap are documented in [`codex.md`](./codex.md). Technical changes are recorded newest-first in [`CODEX_LOG.md`](./CODEX_LOG.md).

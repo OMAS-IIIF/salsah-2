@@ -1,9 +1,0 @@
-{
-  "iri": "LukasRosenthaler",
-  "schema:name": [
-    "Lukas Rosenthaler@de"
-  ],
-  "oldap:attachedToRole": {
-    "oldap:Unknown": "DATA_VIEW"
-  }
-}

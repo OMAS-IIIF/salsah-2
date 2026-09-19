@@ -22,6 +22,8 @@ The durable product vision, its three pillars (archive work, discovery and publi
 
 ## Current Repository State
 
+- `experiments/` is local-only and ignored by Git. Application builds and tests do not require it. Historical experiment references below describe optional local material, absent from fresh clones; previously committed versions remain in Git history.
+
 - AS-07 archive UI source is complete: `/p/[project]/admin/archive` offers reviewed adoption and guarded unit management; the Staging workspace supports mixed protected references, safe private moves/folder changes, folder-derived catalogue placement and mixed ZIP downloads. Exact domain commands survive same-tab reloads without changing UUID or payload. All vocabulary and role capabilities remain project-neutral. See `docs/as-07/README.md`; activation/migration and native Capture acceptance are still separate AS-08/AS-09 work.
 
 - The repository contains a minimal SvelteKit application written in TypeScript.

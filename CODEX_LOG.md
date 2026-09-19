@@ -1,5 +1,12 @@
 # CODEX_LOG
 
+### Update 2026-09-19 23:59
+
+- Decisions: Keep the entire experiments directory local-only, as requested.
+- Implementation: Ignore /experiments/, remove its tracked files from the index with git rm --cached, and document the fresh-clone boundary. Verify local file contents are unchanged.
+- Open: Commit and push the staged cleanup; the earlier application changes have already been committed separately.
+- Risks/Assumptions: Historical commits retain previously versioned examples. Local experiments need a separate backup; Git no longer protects future changes.
+
 ### Update 2026-09-19 23:54
 
 - Decisions: Prepare an application-only staged commit; leave all experiment payload/ontology changes local and unstaged. Preserve previously committed experiments and history.

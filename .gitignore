@@ -39,5 +39,5 @@ vite.config.ts.timestamp-*
 /src/lib/paraglide/
 /project.inlang/cache/
 
-# Private local experiment payloads (never application inputs)
-/experiments/chama-data/*-private.yaml
+# Local modelling experiments and datasets (not required by the application)
+/experiments/
