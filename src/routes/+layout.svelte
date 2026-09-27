@@ -22,6 +22,10 @@
 	import '../app.css';
 
 	let { children } = $props();
+	let isResetRoute = $derived(page.route.id === '/password-reset');
+	let isMailJobRoute = $derived(
+		page.route.id === '/imports/[importId]' || page.route.id === '/exports/[exportId]'
+	);
 	let isLoginRoute = $derived(page.route.id === '/login');
 	let isProjectSelectionRoute = $derived(page.route.id === '/projects');
 	let isProjectRoute = $derived(page.route.id?.startsWith('/p/[project]') ?? false);
@@ -124,6 +128,7 @@
 
 	$effect(() => {
 		if (!authenticationInitialized || $authSession.status !== 'authenticated') return;
+		if (isResetRoute || isMailJobRoute) return;
 		if ($projectContext.status === 'error') {
 			if (page.route.id !== '/projects') void goto(resolve('/projects'), { replaceState: true });
 			return;
@@ -131,7 +136,7 @@
 		if ($projectContext.status !== 'ready') return;
 		// The login route owns its validated `next` destination. Redirecting a
 		// newly authenticated sole-project user here would race that deep link.
-		if (isLoginRoute) return;
+		if (isLoginRoute || isResetRoute || isMailJobRoute) return;
 
 		const projects = $projectContext.projects;
 		if (page.route.id === '/') {
@@ -164,7 +169,13 @@
 	});
 
 	$effect(() => {
-		if (!authenticationInitialized || isLoginRoute || $authSession.status !== 'anonymous') return;
+		if (
+			!authenticationInitialized ||
+			isLoginRoute ||
+			isResetRoute ||
+			$authSession.status !== 'anonymous'
+		)
+			return;
 		const destination = `${page.url.pathname}${page.url.search}${page.url.hash}`;
 		const loginDestination = `/login?next=${encodeURIComponent(destination)}` as Pathname;
 		void goto(resolve(loginDestination));
@@ -187,7 +198,7 @@
 	<title>{m.app_title()}</title>
 </svelte:head>
 
-{#if isLoginRoute}
+{#if isLoginRoute || isResetRoute}
 	{#if authenticationInitialized && $authSession.status === 'anonymous'}
 		{@render children()}
 	{:else}

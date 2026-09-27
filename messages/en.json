@@ -418,5 +418,18 @@
 	"repository_archive_edit": "Edit in archive",
 	"repository_catalogued": "Catalogued; the protected reference remains in the private folder.",
 	"repository_batch_catalogued": "Batch catalogued; protected references remain in the private folders.",
-	"repository_folder_manage": "Manage folder"
+	"repository_folder_manage": "Manage folder",
+	"reset_title": "Password reset",
+	"reset_user": "User ID",
+	"reset_password": "New password",
+	"reset_repeat": "Repeat password",
+	"reset_request": "Send reset link",
+	"reset_confirm": "Set password",
+	"reset_login": "Back to login",
+	"reset_mismatch": "The passwords do not match.",
+	"mail_request_error": "The request failed. Please try again.",
+	"mail_refresh": "Refresh",
+	"mail_download": "Download ZIP",
+	"mail_open_download": "Open download",
+	"mail_loading": "Loading…"
 }

@@ -510,5 +510,18 @@
 	"repository_archive_edit": "Im Archiv bearbeiten",
 	"repository_catalogued": "Katalogisiert; der geschützte Verweis bleibt im privaten Ordner.",
 	"repository_batch_catalogued": "Stapel katalogisiert; die geschützten Verweise bleiben in den privaten Ordnern.",
-	"repository_folder_manage": "Ordner verwalten"
+	"repository_folder_manage": "Ordner verwalten",
+	"reset_title": "Passwort zurücksetzen",
+	"reset_user": "Benutzerkennung",
+	"reset_password": "Neues Passwort",
+	"reset_repeat": "Passwort wiederholen",
+	"reset_request": "Reset-Link senden",
+	"reset_confirm": "Passwort setzen",
+	"reset_login": "Zur Anmeldung",
+	"reset_mismatch": "Die Passwörter stimmen nicht überein.",
+	"mail_request_error": "Die Anfrage ist fehlgeschlagen. Bitte erneut versuchen.",
+	"mail_refresh": "Aktualisieren",
+	"mail_download": "ZIP herunterladen",
+	"mail_open_download": "Download öffnen",
+	"mail_loading": "Wird geladen…"
 }

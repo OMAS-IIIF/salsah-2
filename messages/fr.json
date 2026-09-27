@@ -418,5 +418,18 @@
 	"repository_archive_edit": "Modifier dans les archives",
 	"repository_catalogued": "Catalogué ; la référence protégée reste dans le dossier privé.",
 	"repository_batch_catalogued": "Lot catalogué ; les références protégées restent dans les dossiers privés.",
-	"repository_folder_manage": "Gérer le dossier"
+	"repository_folder_manage": "Gérer le dossier",
+	"reset_title": "Réinitialiser le mot de passe",
+	"reset_user": "Identifiant",
+	"reset_password": "Nouveau mot de passe",
+	"reset_repeat": "Répéter le mot de passe",
+	"reset_request": "Envoyer le lien",
+	"reset_confirm": "Définir le mot de passe",
+	"reset_login": "Connexion",
+	"reset_mismatch": "Les mots de passe ne correspondent pas.",
+	"mail_request_error": "La demande a échoué. Veuillez réessayer.",
+	"mail_refresh": "Actualiser",
+	"mail_download": "Télécharger le ZIP",
+	"mail_open_download": "Ouvrir le téléchargement",
+	"mail_loading": "Chargement…"
 }

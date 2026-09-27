@@ -1,0 +1,14 @@
+.git
+.idea
+.svelte-kit
+build
+node_modules
+.env
+.env.*
+experiments
+docs
+test-results
+playwright-report
+npm-debug.log*
+codex.md
+CODEX_LOG.md

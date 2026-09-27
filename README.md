@@ -83,3 +83,25 @@ The Playwright command installs its required browser binaries when necessary.
 ## Project context
 
 The durable product vision and engineering principles are defined in [`FOUNDATIONS.md`](./FOUNDATIONS.md). The first evidence-based modelling sketch is documented in [`docs/minimal-data-model-v0.1.md`](./docs/minimal-data-model-v0.1.md), with the accepted placement strategy for generic archive semantics in [`docs/architecture/generic-archive-foundation.md`](./docs/architecture/generic-archive-foundation.md). The first Markdown narrative model, inline-asset contract, and Fasnacht comparison are documented in [`docs/architecture/story-foundation.md`](./docs/architecture/story-foundation.md); the project-scoped administration shell and first Story editing slice are documented in [`docs/architecture/administration-foundation.md`](./docs/architecture/administration-foundation.md). The search baseline and its future ontology-defined Lucene integration are documented in [`docs/architecture/project-search.md`](./docs/architecture/project-search.md). Architecture, repository state, and the incremental roadmap are documented in [`codex.md`](./codex.md). Technical changes are recorded newest-first in [`CODEX_LOG.md`](./CODEX_LOG.md).
+
+## Container releases and email links
+
+`make docker-build` follows the FasnachtsPage release workflow and publishes
+`lrosenth/salsah-2:v<package-version>` for linux/amd64 and linux/arm64. Tags are
+immutable; increment the package version before another release. There is no
+implicit `latest` deployment. `make docker-build-local` builds a native image
+without publishing; `make docker-run` starts it on port 3200 for local verification.
+The API must allow `http://localhost:3200` for local authenticated use.
+
+Runtime requires `ORIGIN`, `PUBLIC_API_URL`, and `PUBLIC_MEDIA_URL`. No secret or
+local `.env` file is copied into the image. `/health` checks frontend liveness.
+Production uses `https://salsah.org`, `https://api.salsah.org`, and
+`https://media.oldap.org`. Deployment is owned by sibling `oldap-setup`; see its
+`docs/salsah-deployment.md` for first installation and dedicated/combined updates.
+
+Mail links use public `/password-reset` and authenticated `/imports/[importId]`
+and `/exports/[exportId]` routes. Import review reuses the existing version-bound
+Staging dialog; export status and download use the owner-protected API. Deep links
+survive login without persisting reset or download tokens in browser storage.
+The API chooses mail destinations from trusted server configuration by browser
+Origin. Clients never submit an email base URL or route.

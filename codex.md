@@ -1,5 +1,7 @@
 # SALSAH 2 Project Context
 
+- Added a FasnachtsPage-style multi-stage Docker image/release workflow and authenticated mail landing routes plus public password reset. Runtime configuration uses ORIGIN, PUBLIC_API_URL, PUBLIC_MEDIA_URL.
+
 - Folder-default proposals now optionally expose directMediaCount, aggregated once in oldaplib over readable direct media and archive references. Counts do not affect structure review snapshots or deletion decisions. Shared GUI consumes the field in both apps. Backend activation depends on the installed OLDAP release and project policy; deployment status must be verified on the target system.
 
 - Graphical folder defaults now use the shared controlled editor and generic OLDAP adapter in oldap-guilib/archive-mapping. SALSAH uses the published oldap-guilib ^0.0.27 package through the committed npm lockfile; no local sibling checkout is required. Mapping saves preserve preflight/exact retry, level saves retain uncertain-state checks. See oldap-guilib/docs/archive-mapping.md.

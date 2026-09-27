@@ -86,6 +86,7 @@
 			</button>
 		</form>
 
+		<a href={resolve('/password-reset')}>{m.reset_title()}</a>
 		<p class="privacy-note">{m.login_privacy()}</p>
 	</section>
 </main>

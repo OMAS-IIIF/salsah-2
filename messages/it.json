@@ -418,5 +418,18 @@
 	"repository_archive_edit": "Modifica in archivio",
 	"repository_catalogued": "Catalogato; il riferimento protetto rimane nella cartella privata.",
 	"repository_batch_catalogued": "Lotto catalogato; i riferimenti protetti rimangono nelle cartelle private.",
-	"repository_folder_manage": "Gestisci cartella"
+	"repository_folder_manage": "Gestisci cartella",
+	"reset_title": "Reimposta password",
+	"reset_user": "Identificativo utente",
+	"reset_password": "Nuova password",
+	"reset_repeat": "Ripeti password",
+	"reset_request": "Invia link",
+	"reset_confirm": "Imposta password",
+	"reset_login": "Accedi",
+	"reset_mismatch": "Le password non corrispondono.",
+	"mail_request_error": "La richiesta non è riuscita. Riprova.",
+	"mail_refresh": "Aggiorna",
+	"mail_download": "Scarica ZIP",
+	"mail_open_download": "Apri download",
+	"mail_loading": "Caricamento…"
 }

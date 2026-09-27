@@ -1,3 +1,10 @@
+### Update 2026-09-27 23:08
+- Decisions: Preserve existing deployments; add trusted server-owned mail destinations and opt-in SALSAH installation.
+- Implementation: Added a FasnachtsPage-style multi-stage Docker image/release workflow and authenticated mail landing routes plus public password reset. Runtime configuration uses ORIGIN, PUBLIC_API_URL, PUBLIC_MEDIA_URL.
+- Open: Publish immutable compatible releases; perform coordinated initial installation and real DNS/TLS/browser/SMTP acceptance.
+- Risks/Assumptions: No server deployment or image publication performed. Initial configuration requires an API restart; frontend-only updates do not.
+- Validation: 105 unit tests, three mocked browser mail-link workflows, Svelte check (zero warnings/errors), targeted ESLint/Prettier and production build passed. Native Docker image built and ran as node with healthy /health; test container removed.
+
 # CODEX_LOG
 
 ### Update 2026-09-19 23:59
