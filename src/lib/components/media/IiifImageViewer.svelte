@@ -1,15 +1,20 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { authSession } from '$lib/auth/session';
+	import { localIiifUrl } from '$lib/media/baseUrl';
+	import {
+		managedImageTarget,
+		loadMediaCapability,
+		assertIiifServiceIdentity
+	} from '$lib/media/access';
+	import { MediaCapabilitySession } from '$lib/media/renewal';
 	import { m } from '$lib/paraglide/messages';
-	import { withMediaCapability } from '$lib/media/capability';
 
 	interface Props {
 		infoUrl: string;
-		capability?: string | null;
 		label: string;
 	}
 
-	let { infoUrl, capability = null, label }: Props = $props();
+	let { infoUrl, label }: Props = $props();
 	let viewerElement: HTMLDivElement;
 	let viewer: import('openseadragon').Viewer | null = null;
 	let loading = $state(true);
@@ -23,34 +28,77 @@
 		return 1;
 	}
 
-	onMount(() => {
+	let attempt = $state(0);
+	const principal = $derived($authSession.user?.userIri);
+	// One source/principal owns the viewer. Renewal updates all tile headers in
+	// place, including the navigator, without reconstructing the viewport.
+	$effect(() => {
+		const source = infoUrl;
+		const reader = principal;
+		void attempt;
 		let cancelled = false;
-
-		void (async () => {
-			try {
+		let session: MediaCapabilitySession | undefined;
+		let expiresAt = 0;
+		loading = true;
+		error = false;
+		const fail = () => {
+			if (cancelled) return;
+			session?.dispose();
+			viewer?.destroy();
+			viewer = null;
+			loading = false;
+			error = true;
+		};
+		if (!reader) {
+			fail();
+			return;
+		}
+		let target: ReturnType<typeof managedImageTarget>;
+		try {
+			target = managedImageTarget(localIiifUrl(source));
+		} catch {
+			fail();
+			return;
+		}
+		if (!target) {
+			fail();
+			return;
+		}
+		session = new MediaCapabilitySession(
+			() => loadMediaCapability(target.assetId),
+			async (capability) => {
+				const headers = { Authorization: `Bearer ${capability.token}` };
+				if (viewer) {
+					viewer.setAjaxHeaders(headers, true);
+					if (expiresAt <= Date.now()) {
+						viewer.world.resetItems();
+						viewer.navigator?.world.resetItems();
+					}
+					expiresAt = capability.expiresAt;
+					return;
+				}
 				const [{ default: OpenSeadragon }, response] = await Promise.all([
 					import('openseadragon'),
-					fetch(withMediaCapability(infoUrl, capability), {
-						headers: { Accept: 'application/json' }
+					fetch(target.url, {
+						headers: { ...headers, Accept: 'application/json' },
+						credentials: 'omit',
+						redirect: 'error',
+						signal: AbortSignal.timeout(10_000)
 					})
 				]);
-				if (!response.ok) throw new Error(`IIIF metadata request failed (${response.status}).`);
+				if (!response.ok) throw new Error('IIIF metadata failed.');
 				const info = (await response.json()) as Record<string, unknown>;
-				if (cancelled) return;
-
+				if (cancelled || error) return;
+				assertIiifServiceIdentity(target.url, info);
 				const tileSource = new OpenSeadragon.IIIFTileSource({
 					...info,
 					version: iiifVersion(info)
-				} as OpenSeadragon.TileSourceOptions & { tileFormat?: string; tileQuality?: string });
-				const tileUrl = tileSource.getTileUrl.bind(tileSource);
-				tileSource.getTileUrl = (level, x, y) => {
-					const url = tileUrl(level, x, y);
-					return typeof url === 'string' ? withMediaCapability(url, capability) : url;
-				};
-
+				} as OpenSeadragon.TileSourceOptions);
 				viewer = OpenSeadragon({
 					element: viewerElement,
 					tileSources: tileSource as unknown as OpenSeadragon.TileSourceOptions,
+					loadTilesWithAjax: true,
+					ajaxHeaders: headers,
 					showNavigationControl: false,
 					showNavigator: true,
 					navigatorPosition: 'BOTTOM_RIGHT',
@@ -64,27 +112,27 @@
 					gestureSettingsTouch: { pinchToZoom: true, flickEnabled: true },
 					gestureSettingsMouse: { clickToZoom: false, dblClickToZoom: true }
 				});
+				expiresAt = capability.expiresAt;
 				viewer.addOnceHandler('open', () => {
 					if (!cancelled) loading = false;
 				});
-				viewer.addOnceHandler('open-failed', () => {
-					if (!cancelled) {
-						loading = false;
-						error = true;
-					}
-				});
-			} catch {
-				if (!cancelled) {
-					loading = false;
-					error = true;
-				}
-			}
-		})();
-
+				viewer.addOnceHandler('open-failed', fail);
+			},
+			fail
+		);
+		void session.refresh();
+		const resume = () => {
+			if (!document.hidden) session?.resume();
+		};
+		document.addEventListener('visibilitychange', resume);
+		window.addEventListener('focus', resume);
 		return () => {
 			cancelled = true;
+			session?.dispose();
 			viewer?.destroy();
 			viewer = null;
+			document.removeEventListener('visibilitychange', resume);
+			window.removeEventListener('focus', resume);
 		};
 	});
 
@@ -125,7 +173,11 @@
 	{#if loading}<div class="viewer-state" role="status">
 			<span></span>{m.media_viewer_loading()}
 		</div>{/if}
-	{#if error}<div class="viewer-state error" role="alert">{m.media_viewer_error()}</div>{/if}
+	{#if error}<div class="viewer-state error" role="alert">
+			{m.media_viewer_error()}<button class="retry" type="button" onclick={() => attempt++}
+				>{m.resource_retry()}</button
+			>
+		</div>{/if}
 </section>
 
 <style>
@@ -192,6 +244,11 @@
 		border-top-color: var(--teal);
 		border-radius: 50%;
 		animation: spin 0.8s linear infinite;
+	}
+	.retry {
+		width: auto;
+		font-size: 0.9rem;
+		padding: 0.5rem;
 	}
 	.viewer-state.error {
 		padding: 2rem;

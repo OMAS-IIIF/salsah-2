@@ -1,5 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { mediaPreviewUrl, mediaThumbnailUrl, withMediaCapability } from './capability';
+
+vi.mock('$env/dynamic/public', () => ({ env: { PUBLIC_MEDIA_URL: 'https://media.example.org' } }));
 
 describe('media capability URLs', () => {
 	it('adds the capability to IIIF metadata and tile requests', () => {

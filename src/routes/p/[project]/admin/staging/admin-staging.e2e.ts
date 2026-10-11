@@ -1,5 +1,14 @@
 import { expect, test, type Page } from '@playwright/test';
 
+// Scheduling/binding fixture only; the mock server owns authorization in these tests.
+const mediaToken = (id: string) =>
+	'h.' +
+	Buffer.from(
+		JSON.stringify({ typ: 'media', id, exp: Math.floor(Date.now() / 1000) + 3600 })
+	).toString('base64url') +
+	'.s';
+const imageCapability = mediaToken('asset-1001');
+
 const headers = {
 	'Access-Control-Allow-Credentials': 'true',
 	'Access-Control-Allow-Headers': 'Authorization, Content-Type, X-Upload-Request-Id',
@@ -83,6 +92,15 @@ async function mockOldap(page: Page): Promise<void> {
 	await page.route('http://localhost:8000/**', async (route) => {
 		const request = route.request();
 		const path = decodeURIComponent(new URL(request.url()).pathname);
+		if (path.startsWith('/data/mediaobject/id/')) {
+			const id = path.slice('/data/mediaobject/id/'.length);
+			await route.fulfill({
+				status: 200,
+				headers,
+				json: { token: id === 'asset-1001' ? imageCapability : mediaToken(id) }
+			});
+			return;
+		}
 		if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers });
 		if (path === '/archive/chama/structure/capabilities')
 			return route.fulfill({
@@ -413,7 +431,7 @@ async function mockOldap(page: Page): Promise<void> {
 										mediaDelivery: {
 											kind: 'iiif-image',
 											infoUrl: `http://media.test/iiif/3/${iri === 'chama:StagedImage' ? 'asset-1001' : 'staging-new'}/info.json`,
-											capability: 'thumbnail-token'
+											capability: imageCapability
 										}
 									}
 								]
@@ -635,7 +653,7 @@ test('explores visible staging folders and uploads one image to an explicit fold
 	await expect
 		.poll(() => thumbnailRequests)
 		.toContain(
-			'http://media.test/iiif/3/asset-1001/full/!160,160/0/default.jpg?token=thumbnail-token'
+			`http://media.test/iiif/3/asset-1001/full/!160,160/0/default.jpg?token=${imageCapability}`
 		);
 	const incomingRow = page.getByRole('treeitem').filter({ hasText: 'Eingang' });
 	await incomingRow.getByRole('button', { name: 'Bild hochladen' }).click();

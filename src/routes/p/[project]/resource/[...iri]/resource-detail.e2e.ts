@@ -1,5 +1,14 @@
 import { expect, test, type Page } from '@playwright/test';
 
+// Scheduling/binding fixture only; the mock server owns authorization in these tests.
+const mediaToken = (id: string) =>
+	'h.' +
+	Buffer.from(
+		JSON.stringify({ typ: 'media', id, exp: Math.floor(Date.now() / 1000) + 3600 })
+	).toString('base64url') +
+	'.s';
+const imageCapability = mediaToken('IMG_1751');
+
 const headers = {
 	'Access-Control-Allow-Credentials': 'true',
 	'Access-Control-Allow-Headers': 'Authorization, Content-Type',
@@ -151,6 +160,15 @@ async function mockOldap(page: Page, mediaAttached = false): Promise<void> {
 		const request = route.request();
 		const url = new URL(request.url());
 		const path = decodeURIComponent(url.pathname);
+		if (path.startsWith('/data/mediaobject/id/')) {
+			const id = path.slice('/data/mediaobject/id/'.length);
+			await route.fulfill({
+				status: 200,
+				headers,
+				json: { token: id === 'IMG_1751' ? imageCapability : mediaToken(id) }
+			});
+			return;
+		}
 		if (request.method() === 'OPTIONS') {
 			await route.fulfill({ status: 204, headers });
 			return;
@@ -311,7 +329,7 @@ async function mockOldap(page: Page, mediaAttached = false): Promise<void> {
 												? {
 														kind: 'iiif-image',
 														infoUrl: 'http://media.test/iiif/3/IMG_1751/info.json',
-														capability: 'test-media-capability'
+														capability: imageCapability
 													}
 												: null
 									}
@@ -377,7 +395,7 @@ async function mockOldap(page: Page, mediaAttached = false): Promise<void> {
 					'shared:protocol': 'iiif',
 					'shared:serverUrl': 'http://media.test/iiif/3/',
 					'shared:assetId': 'IMG_1751',
-					token: 'test-media-capability'
+					token: imageCapability
 				}
 			});
 			return;
@@ -495,7 +513,7 @@ test('renders sanitized Story Markdown with a permission-aware inline asset', as
 	await expect(asset.getByText('K-36-Lokomotive 488 vor der Abfahrt')).toBeVisible();
 	await expect(asset.locator('img')).toHaveAttribute(
 		'src',
-		'http://media.test/iiif/3/IMG_1751/full/!720,480/0/default.jpg?token=test-media-capability'
+		`http://media.test/iiif/3/IMG_1751/full/!720,480/0/default.jpg?token=${imageCapability}`
 	);
 	await expect(page.getByText('Erzähltext', { exact: true })).toHaveCount(0);
 });
@@ -515,7 +533,7 @@ test('shows real project resources with an authorized image preview', async ({ p
 	await expect(card.getByText('Erschlossene Fotografie', { exact: true })).toBeVisible();
 	await expect(card.locator('img')).toHaveAttribute(
 		'src',
-		'http://media.test/iiif/3/IMG_1751/full/!720,480/0/default.jpg?token=test-media-capability'
+		`http://media.test/iiif/3/IMG_1751/full/!720,480/0/default.jpg?token=${imageCapability}`
 	);
 	await expect(page.getByText('Nachlass Jacob Burckhardt')).toHaveCount(0);
 	await expect(page.getByText('14’286')).toHaveCount(0);
@@ -543,6 +561,6 @@ test('searches the current project from the header and shows a unique live resul
 	await expect(result.getByText('Erschlossene Fotografie', { exact: true })).toBeVisible();
 	await expect(result.locator('img')).toHaveAttribute(
 		'src',
-		'http://media.test/iiif/3/IMG_1751/full/!720,480/0/default.jpg?token=test-media-capability'
+		`http://media.test/iiif/3/IMG_1751/full/!720,480/0/default.jpg?token=${imageCapability}`
 	);
 });

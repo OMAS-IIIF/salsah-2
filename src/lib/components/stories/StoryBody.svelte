@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { authorizedImage, initialImageSource } from '$lib/media/image';
 	import type { Pathname } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { getLocale } from '$lib/paraglide/runtime';
@@ -74,7 +75,11 @@
 				aria-label={m.story_asset_open({ title: assetTitle(asset) })}
 			>
 				<figure>
-					<img src={mediaPreviewUrl(asset.media!)} alt={assetTitle(asset)} />
+					<img
+						use:authorizedImage={mediaPreviewUrl(asset.media!)}
+						src={initialImageSource(mediaPreviewUrl(asset.media!))}
+						alt={assetTitle(asset)}
+					/>
 					<figcaption>
 						<strong>{node.caption ?? assetTitle(asset)}</strong>
 						<span>{m.story_asset_open_hint()}</span>

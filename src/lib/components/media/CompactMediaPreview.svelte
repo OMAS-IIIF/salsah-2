@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { authorizedImage, initialImageSource } from '$lib/media/image';
 	import { m } from '$lib/paraglide/messages';
+	import { authSession } from '$lib/auth/session';
 	import { mediaPreviewUrl, mediaThumbnailUrl } from '$lib/media/capability';
 	import type { MediaDelivery } from '$lib/resources/types';
 
@@ -12,7 +14,13 @@
 	let { media, title, size = '5rem' }: Props = $props();
 	let dialog = $state<HTMLDialogElement>();
 	let open = $state(false);
-	let thumbnailFailed = $state(false);
+	const principal = $derived($authSession.user?.userIri);
+	// A failed asset must not hide a subsequently selected asset or reader.
+	let thumbnailFailed = $derived.by(() => {
+		void media;
+		void principal;
+		return false;
+	});
 
 	$effect(() => {
 		if (open && dialog && !dialog.open) dialog.showModal();
@@ -32,7 +40,12 @@
 		onclick={() => (open = true)}
 		aria-label={m.media_preview_open({ title })}
 	>
-		<img src={mediaThumbnailUrl(media)} alt={title} onerror={() => (thumbnailFailed = true)} />
+		<img
+			use:authorizedImage={mediaThumbnailUrl(media)}
+			src={initialImageSource(mediaThumbnailUrl(media))}
+			alt={title}
+			onerror={() => (thumbnailFailed = true)}
+		/>
 	</button>
 {:else}
 	<span class="thumbnail fallback" style={`--preview-size: ${size}`} aria-hidden="true">▧</span>
@@ -55,7 +68,11 @@
 			>×</button
 		>
 		<figure>
-			<img src={mediaPreviewUrl(media)} alt={title} />
+			<img
+				use:authorizedImage={mediaPreviewUrl(media)}
+				src={initialImageSource(mediaPreviewUrl(media))}
+				alt={title}
+			/>
 			<figcaption>{title}</figcaption>
 		</figure>
 	</dialog>

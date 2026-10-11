@@ -133,11 +133,7 @@
 		<div class="resource-grid">
 			<div class="main-column">
 				{#if loaded?.media?.kind === 'iiif-image'}
-					<IiifImageViewer
-						infoUrl={loaded.media.infoUrl}
-						capability={loaded.media.capability}
-						label={presentation.title}
-					/>
+					<IiifImageViewer infoUrl={loaded.media.infoUrl} label={presentation.title} />
 				{:else if loaded?.media?.kind === 'external-image'}
 					<figure class="external-image">
 						<img src={loaded.media.url} alt={presentation.title} />

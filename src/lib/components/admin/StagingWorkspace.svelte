@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { authorizedImage, initialImageSource } from '$lib/media/image';
 	import { structureCapabilities } from '$lib/archive/client';
 	import { loadRepositoryMedia, writableDraft } from '$lib/staging/repository';
 	import PrivateFolderActions from './PrivateFolderActions.svelte';
@@ -861,7 +862,8 @@
 									<span class="thumbnail">
 										{#if thumbnailUrl}
 											<img
-												src={thumbnailUrl}
+												use:authorizedImage={thumbnailUrl}
+												src={initialImageSource(thumbnailUrl)}
 												alt=""
 												loading="lazy"
 												decoding="async"
@@ -946,7 +948,11 @@
 		<div class="review-body">
 			<section class="review-preview" aria-label={m.staging_review_preview()}>
 				{#if preview(reviewedMedia)}
-					<img src={preview(reviewedMedia) ?? ''} alt={mediaTitle(reviewedMedia)} />
+					<img
+						use:authorizedImage={preview(reviewedMedia) ?? ''}
+						src={initialImageSource(preview(reviewedMedia) ?? '')}
+						alt={mediaTitle(reviewedMedia)}
+					/>
 				{:else}
 					<span class="media-icon" aria-hidden="true">{mediaIcon(reviewedMedia)}</span>
 				{/if}

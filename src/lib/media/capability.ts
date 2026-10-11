@@ -1,3 +1,4 @@
+import { localIiifUrl } from './baseUrl';
 import type { MediaDelivery } from '$lib/resources/types';
 
 /** Add a short-lived media capability without overwriting existing query parameters. */
@@ -11,7 +12,7 @@ export function withMediaCapability(url: string, capability: string | null): str
 /** Build a bounded project-card preview URL from a viewer-neutral delivery contract. */
 export function mediaPreviewUrl(media: MediaDelivery): string {
 	if (media.kind === 'external-image') return media.thumbnailUrl ?? media.url;
-	const preview = new URL(media.infoUrl);
+	const preview = new URL(localIiifUrl(media.infoUrl));
 	preview.pathname = preview.pathname.replace(/\/info\.json$/, '/full/!720,480/0/default.jpg');
 	return withMediaCapability(preview.toString(), media.capability);
 }
@@ -19,7 +20,7 @@ export function mediaPreviewUrl(media: MediaDelivery): string {
 /** Build a small lazy-list thumbnail URL without requesting a card-sized image. */
 export function mediaThumbnailUrl(media: MediaDelivery): string {
 	if (media.kind === 'external-image') return media.thumbnailUrl ?? media.url;
-	const thumbnail = new URL(media.infoUrl);
+	const thumbnail = new URL(localIiifUrl(media.infoUrl));
 	thumbnail.pathname = thumbnail.pathname.replace(/\/info\.json$/, '/full/!160,160/0/default.jpg');
 	return withMediaCapability(thumbnail.toString(), media.capability);
 }

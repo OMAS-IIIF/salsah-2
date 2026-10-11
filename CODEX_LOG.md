@@ -1,3 +1,27 @@
+### Update 2026-10-09 23:42
+- Decisions: Apply the Safari placeholder correction centrally; retain existing batched summaries and viewport-scoped capability acquisition. No collection-prefetch or popup changes needed. Preserve synthetic authorization-failure errors.
+- Implementation: Replace truncated GIF in media/image.ts with a complete transparent 1x1 GIF; add binary-structure regression coverage and document Safari behavior. Existing unrelated changes preserved.
+- Open: Live Safari visual acceptance remains separate; no backend/image rebuild or deployment needed.
+- Risks/Assumptions: 114 server-side tests pass, targeted ESLint/Prettier pass, Svelte check has zero errors/warnings. Pillow independently decodes the new placeholder as a transparent pixel. Production build and diff checks pass.
+
+### Update 2026-10-07 23:45
+- Decisions: Retain the direct-parent boundary check as defensive validation; correct false search matches at their backend source.
+- Implementation: Diagnosed stray root in oldaplib OPTIONAL/equality SPARQL; branch-local BOUND guards now active in local API. Updated media acceptance documentation to close the backend investigation.
+- Open: Publish backend library correction before external rollout; live one-hour renewal acceptance and full Playwright suite remain separate.
+- Risks/Assumptions: No additional frontend code change. No stored records or permissions changed.
+
+### Update 2026-10-07 23:37
+- Decisions: Complete read-only authenticated acceptance against local OLDAP/SIPI; validate direct archive membership at the search boundary before tree attachment.
+- Implementation: Verified real resource cards, IIIF viewer/zoom/navigator, cookie-session restoration in a second tab, staging thumbnail/review and archive media preview/detail. Fixed recursive archive rendering caused by a stray ancestor in API search results; reject wrong-parent rows and self-references, with a regression test. Updated media documentation and master context.
+- Open: Investigate the extra ancestor returned by OLDAP search. Live capabilities last one hour; a full natural expiry cycle and the complete Playwright suite remain untested. Short-token renewal/denial are covered by the existing component fixture.
+- Risks/Assumptions: No stored records, permissions, uploads or deployment changed. Direct-parent validation does not detect every possible data cycle. 113 server-side unit tests pass; Svelte check has zero errors/warnings, targeted ESLint/Prettier, production build and diff checks pass. Development HMR means the browser session is not an uninterrupted longevity test.
+
+### Update 2026-10-07 23:22
+- Decisions: Port image-capability renewal through SALSAH's existing authenticatedFetch/session boundary, with no project-specific policy, automatic anonymous login or shared-library release. Keep all tokens out of persisted resources and Story directives.
+- Implementation: Added bounded/coalesced renewal sessions, permission-checked per-asset capability loading, configured-origin and metadata-identity validation (including conflicting id/@id). Viewer renews Bearer headers for tiles/navigator without rebuilding its viewport, handles wake/source/reader changes, and stops on denial with localized retry. Native image action covers cards, archive tree, staging/review, Story assets/picker and compact/lightbox previews; it defers acquisition until near the viewport and pauses while hidden. Local IIIF contracts follow PUBLIC_MEDIA_URL; external-image contracts remain unchanged. Updated browser mocks, documentation and master context.
+- Open: Live authenticated OLDAP/SIPI acceptance and the full existing Playwright suite remain separate; no deployment, real-account login or stored-data changes performed. SALSAH has no corresponding imperative Story crop popup. Non-image/upload/ZIP capability flows retain their existing contracts.
+- Risks/Assumptions: Static query-token renewal can fetch image bytes again; already downloaded pixels cannot be revoked. Media CORS must allow Authorization. No global client capability cache. 112 server-side unit tests pass, Svelte check reports0 errors/0 warnings, targeted ESLint/Prettier and production build pass. Actual-component browser fixture with six-second tokens verifies metadata/tiles/navigator/static previews, lightbox, source/reader changes and zero invalid credential requests; offscreen asset remains unrequested until needed. Fixture counters include development HMR reloads.
+
 ### Update 2026-09-27 23:08
 - Decisions: Preserve existing deployments; add trusted server-owned mail destinations and opt-in SALSAH installation.
 - Implementation: Added a FasnachtsPage-style multi-stage Docker image/release workflow and authenticated mail landing routes plus public password reset. Runtime configuration uses ORIGIN, PUBLIC_API_URL, PUBLIC_MEDIA_URL.

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { authorizedImage, initialImageSource } from '$lib/media/image';
 	import { onMount } from 'svelte';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages';
@@ -119,7 +120,11 @@
 			{:else if results.length}
 				{#each results as card (card.resource.iri)}
 					<button type="button" class="asset" onclick={() => onselect(card)}>
-						<img src={mediaPreviewUrl(card.media!)} alt="" />
+						<img
+							use:authorizedImage={mediaPreviewUrl(card.media!)}
+							src={initialImageSource(mediaPreviewUrl(card.media!))}
+							alt=""
+						/>
 						<span>
 							<small>{classLabel(card)}</small>
 							<strong>{title(card)}</strong>

@@ -230,13 +230,19 @@ export async function searchArchiveUnits(
 		rows.push(...batch);
 		if (batch.length < ARCHIVE_SIBLING_LIMIT) break;
 	}
-	return rows
-		.map((record) => archiveUnitFromRecord(record.iri, record.resclass, record))
-		.sort(
-			(left, right) =>
-				(left.position ?? Number.MAX_SAFE_INTEGER) - (right.position ?? Number.MAX_SAFE_INTEGER) ||
-				left.iri.localeCompare(right.iri)
-		);
+	return (
+		rows
+			.map((record) => archiveUnitFromRecord(record.iri, record.resclass, record))
+			// Search results can contain additional ancestors. Never attach a unit
+			// outside the requested direct level, or the root may become its own
+			// descendant when the browser flattens the expanded tree.
+			.filter((unit) => unit.parentIri === parentIri && unit.iri !== parentIri)
+			.sort(
+				(left, right) =>
+					(left.position ?? Number.MAX_SAFE_INTEGER) -
+						(right.position ?? Number.MAX_SAFE_INTEGER) || left.iri.localeCompare(right.iri)
+			)
+	);
 }
 
 /** Resolve the readable media contents of one archive unit with preview delivery. */

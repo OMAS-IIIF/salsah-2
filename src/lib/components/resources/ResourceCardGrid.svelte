@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { authorizedImage, initialImageSource } from '$lib/media/image';
 	import type { Pathname } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { SvelteSet } from 'svelte/reactivity';
@@ -41,7 +42,8 @@
 			<span class="preview">
 				{#if previewUrl(card)}
 					<img
-						src={previewUrl(card) ?? ''}
+						use:authorizedImage={previewUrl(card) ?? ''}
+						src={initialImageSource(previewUrl(card) ?? '')}
 						alt=""
 						loading="lazy"
 						onerror={() => failedPreviews.add(card.resource.iri)}

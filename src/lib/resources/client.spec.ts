@@ -270,6 +270,31 @@ describe('Story assets', () => {
 });
 
 describe('incremental archive tree', () => {
+	it('keeps only direct children when search also returns ancestors or a self-reference', async () => {
+		vi.mocked(authenticatedFetch).mockResolvedValueOnce(
+			Response.json([
+				{ iri: 'chama:Root', resclass: 'shared:ArchiveUnit' },
+				{
+					iri: 'chama:Series',
+					resclass: 'shared:ArchiveUnit',
+					'shared:parentArchiveUnit': ['chama:Series']
+				},
+				{
+					iri: 'chama:OtherChild',
+					resclass: 'shared:ArchiveUnit',
+					'shared:parentArchiveUnit': ['chama:Other']
+				},
+				{
+					iri: 'chama:Item',
+					resclass: 'shared:ArchiveUnit',
+					'shared:parentArchiveUnit': ['chama:Series']
+				}
+			])
+		);
+		expect((await searchArchiveUnits('chama', 'chama:Series')).map((unit) => unit.iri)).toEqual([
+			'chama:Item'
+		]);
+	});
 	it('loads a wide sibling level completely and rejects repeated pages', async () => {
 		const rows = Array.from({ length: 100 }, (_, i) => ({
 			iri: `urn:unit:${i}`,

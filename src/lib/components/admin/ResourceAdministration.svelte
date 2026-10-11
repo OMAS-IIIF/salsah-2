@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { authorizedImage, initialImageSource } from '$lib/media/image';
 	import type { Pathname } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { getLocale } from '$lib/paraglide/runtime';
@@ -128,7 +129,12 @@
 			{#each cards as card (card.resource.iri)}
 				<a href={resolve(projectResourceEditorPath(project, card.resource.iri) as Pathname)}>
 					{#if card.media}
-						<img src={mediaPreviewUrl(card.media)} alt="" loading="lazy" />
+						<img
+							use:authorizedImage={mediaPreviewUrl(card.media)}
+							src={initialImageSource(mediaPreviewUrl(card.media))}
+							alt=""
+							loading="lazy"
+						/>
 					{:else}
 						<i aria-hidden="true">▦</i>
 					{/if}
