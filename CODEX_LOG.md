@@ -1,3 +1,21 @@
+### Update 2026-11-05 12:08
+- Decisions: Checkpoint the reviewed Jena migration changes on the migration branch; keep publication, merges and deployment separate.
+- Implementation: Rechecked Svelte (zero errors/warnings). All 146 packaged source files match the accepted home image snapshot; reviewed compatibility evidence and backend-neutral documentation. Checked candidate changes for accidental credentials and whitespace.
+- Open: Remaining production readiness gates and final release acceptance; see the coordinated setup checkpoint.
+- Risks/Assumptions: This checkpoint does not change running services or production. Existing skipped tests and prior runtime evidence retain their documented scope.
+
+### Update 2026-11-04 23:43
+- Decisions: Install SALSAH additively on home using the reviewed Jena candidate and existing API/media services.
+- Implementation: Published source-fingerprinted AMD64 candidate jena-0.0.2-rc1-47f138b8070c-amd64, digest sha256:83ef7d4910f10826639ab2e5078b4445413ddb0f71d581c4378e1be6d0c1a8c3. Installed through oldap-setup with configuration backups, trusted frontend registry and additive API CORS. Normal DNS/TLS /health and Chromium login page pass, no JavaScript errors; API/media preflight and private-path isolation pass.
+- Open: Interactive user acceptance after login; production deployment remains separate.
+- Risks/Assumptions: DNS salsah.home.org now resolves to 192.168.1.230. Only API was recreated for configuration; Jena/identity/Redis/Caddy containers retained. No role/data changes, source commit or merge.
+
+### Update 2026-11-04 23:02
+- Decisions: Keep SALSAH backend-neutral; perform changes only in the separate migration/jena checkout and sibling Jena setup.
+- Implementation: Added read-only API contract probe/evidence and Jena compatibility runbook; corrected the GraphDB-specific search comment and fresh-clone Paraglide instructions. 115 unit/component tests, 20 mocked browser tests, production build and zero-warning typecheck pass. Home models/search/archive/staging/summaries/media reads pass for Chama/Fasnacht; all four contribution inverse links are returned by explicit backend reads.
+- Open: Actual SALSAH home installation, hostname/CORS/mail/media integration and live browser writes are separate. Optional legacy Python ontology tooling remains pinned to 0.x; use sibling Jena tools for ontology changes.
+- Risks/Assumptions: No resources, roles, deployment or production state changed. Browser tests use mocks; live checks read the existing home API. No general OWL inference is assumed. Setup fixes have 13 passing tests plus Ansible syntax validation.
+
 ### Update 2026-10-09 23:42
 - Decisions: Apply the Safari placeholder correction centrally; retain existing batched summaries and viewport-scoped capability acquisition. No collection-prefetch or popup changes needed. Preserve synthetic authorization-failure errors.
 - Implementation: Replace truncated GIF in media/image.ts with a complete transparent 1x1 GIF; add binary-structure regression coverage and document Safari behavior. Existing unrelated changes preserved.

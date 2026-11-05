@@ -1,0 +1,339 @@
+{
+	"backend": "JenaConnection",
+	"projects": {
+		"chama": {
+			"model_type": "dict",
+			"model_keys": ["annotationProperties", "externalOntologies", "project", "resources"],
+			"inverse_properties": [
+				{
+					"inverseOf": "chama:describes",
+					"iri": "chama:hasKnowledgeContribution",
+					"name": [
+						"Contribution de connaissances@fr",
+						"Knowledge contribution@en",
+						"Contributo di conoscenza@it",
+						"Wissensbeitrag@de"
+					],
+					"order": 26.0,
+					"projectid": "chama",
+					"toClass": "chama:KnowledgeContribution",
+					"type": []
+				},
+				{
+					"inverseOf": "schema:isPartOf",
+					"iri": "schema:hasPart",
+					"name": ["Abschnitt@de", "Section@en", "Sezione@it", "Section@fr"],
+					"order": 9.0,
+					"projectid": "chama",
+					"toClass": "chama:StorySection",
+					"type": []
+				},
+				{
+					"inverseOf": "chama:hasKnowledgeContribution",
+					"iri": "chama:describes",
+					"maxCount": 1,
+					"minCount": 1,
+					"name": ["D\u00e9crit@fr", "Describes@en", "Beschreibt@de", "Descrive@it"],
+					"order": 1.0,
+					"projectid": "chama",
+					"toClass": "oldap:Thing",
+					"type": []
+				},
+				{
+					"inverseOf": "chama:describes",
+					"iri": "chama:hasKnowledgeContribution",
+					"name": [
+						"Contribution de connaissances@fr",
+						"Contributo di conoscenza@it",
+						"Knowledge contribution@en",
+						"Wissensbeitrag@de"
+					],
+					"order": 23.0,
+					"projectid": "chama",
+					"toClass": "chama:KnowledgeContribution",
+					"type": []
+				},
+				{
+					"inverseOf": "chama:describes",
+					"iri": "chama:hasKnowledgeContribution",
+					"name": [
+						"Contribution de connaissances@fr",
+						"Contributo di conoscenza@it",
+						"Knowledge contribution@en",
+						"Wissensbeitrag@de"
+					],
+					"order": 28.0,
+					"projectid": "chama",
+					"toClass": "chama:KnowledgeContribution",
+					"type": []
+				},
+				{
+					"inverseOf": "schema:hasPart",
+					"iri": "schema:isPartOf",
+					"maxCount": 1,
+					"minCount": 1,
+					"name": ["Histoire@fr", "Story@en", "Geschichte@de", "Storia@it"],
+					"order": 1.0,
+					"projectid": "chama",
+					"toClass": "chama:Story",
+					"type": []
+				}
+			],
+			"shared_model_ok": true,
+			"recent_count": 8,
+			"archive_roots": 1,
+			"text_hits": 24,
+			"sample_iri": "urn:uuid:edb1bbb0-54df-593f-8164-46d63dbcedbf",
+			"record_type": "dict",
+			"record_keys": [
+				"chama:capturePlace",
+				"dcterms:creator",
+				"dcterms:type",
+				"oldap:attachedToRole",
+				"oldap:createdBy",
+				"oldap:creationDate",
+				"oldap:lastModificationDate",
+				"oldap:lastModifiedBy",
+				"rdf:type",
+				"schema:description",
+				"schema:name",
+				"shared:assetId",
+				"shared:checksum",
+				"shared:derivativeName",
+				"shared:mediaAccessMode",
+				"shared:originalMimeType",
+				"shared:originalName",
+				"shared:path",
+				"shared:protocol",
+				"shared:serverUrl",
+				"virtual:inferredTypes"
+			],
+			"summary_count": 8,
+			"media_delivery_count": 5,
+			"staging_areas": 1,
+			"archive_capabilities": {
+				"canCreateUnits": false,
+				"canManageStructure": false,
+				"enabled": false,
+				"maxMutations": 500,
+				"maxRequestBytes": 2000000,
+				"maxSourceFolders": 5000
+			}
+		},
+		"fasnacht": {
+			"model_type": "dict",
+			"model_keys": ["annotationProperties", "externalOntologies", "project", "resources"],
+			"inverse_properties": [
+				{
+					"description": [
+						"Lieu ou unit\u00e9 spatiale plus vaste dont ce lieu fait partie.@fr",
+						"Luogo o unit\u00e0 spaziale pi\u00f9 ampia di cui questo luogo fa parte.@it",
+						"\u00dcbergeordneter Ort oder r\u00e4umliche Einheit, zu der dieser Ort geh\u00f6rt.@de",
+						"Larger place or spatial unit that contains this place.@en"
+					],
+					"inverseOf": "dcterms:hasPart",
+					"iri": "dcterms:isPartOf",
+					"maxCount": 1,
+					"name": ["Teil von@de", "Fa parte di@it", "Part of@en", "Fait partie de@fr"],
+					"order": 7.0,
+					"projectid": "fasnacht",
+					"toClass": "fasnacht:Place",
+					"type": []
+				},
+				{
+					"description": [
+						"Lieux ou unit\u00e9s spatiales plus petits contenus dans ce lieu.@fr",
+						"Luoghi o unit\u00e0 spaziali pi\u00f9 piccoli contenuti in questo luogo.@it",
+						"Smaller places or spatial units contained within this place.@en",
+						"Untergeordnete Orte oder r\u00e4umliche Einheiten, die in diesem Ort enthalten sind.@de"
+					],
+					"inverseOf": "dcterms:isPartOf",
+					"iri": "dcterms:hasPart",
+					"name": ["Contient@fr", "Contains@en", "Enth\u00e4lt@de", "Contiene@it"],
+					"order": 8.0,
+					"projectid": "fasnacht",
+					"toClass": "fasnacht:Place",
+					"type": []
+				},
+				{
+					"description": [
+						"Indique que l'objet d'archive fait partie d'un objet de carnaval plus grand, tel qu'un festival, une exposition ou un \u00e9v\u00e9nement.@fr",
+						"Indicates that the archival object is part of a larger carnival thing, such as a festival, exhibition, or event.@en",
+						"Gibt an, dass das Fasnachtsding Teil eines gr\u00f6\u00dferen Fasnachtsding ist, z. B. eines Festivals, einer Ausstellung oder eines Ereignisses.@de",
+						"Indica che l'oggetto d'archivio fa parte di un oggetto di Carnevale pi\u00f9 grande, come un festival, un'esposizione o un evento.@it"
+					],
+					"inverseOf": "dcterms:hasPart",
+					"iri": "dcterms:isPartOf",
+					"name": ["Fa parte di@it", "Part of@en", "Fait partie de@fr", "Teil von@de"],
+					"order": 6.0,
+					"projectid": "fasnacht",
+					"toClass": "fasnacht:CarnivalThing",
+					"type": []
+				},
+				{
+					"description": [
+						"Gibt an, dass das Fasnachtsding Teil eines gr\u00f6\u00dferen Fasnachtsding ist, z. B. eines Festivals, einer Ausstellung oder eines Ereignisses.@de",
+						"Indica che l'oggetto d'archivio fa parte di un oggetto di Carnevale pi\u00f9 grande, come un festival, un'esposizione o un evento.@it",
+						"Indique que l'objet d'archive fait partie d'un objet de carnaval plus grand, tel qu'un festival, une exposition ou un \u00e9v\u00e9nement.@fr",
+						"Indicates that the archival object is part of a larger carnival thing, such as a festival, exhibition, or event.@en"
+					],
+					"inverseOf": "dcterms:isPartOf",
+					"iri": "dcterms:hasPart",
+					"name": ["A une partie@fr", "Has part@en", "Hat Teil@de", "Ha parte@it"],
+					"order": 7.0,
+					"projectid": "fasnacht",
+					"toClass": "fasnacht:CarnivalThing",
+					"type": []
+				}
+			],
+			"shared_model_ok": true,
+			"recent_count": 8,
+			"archive_roots": 1,
+			"text_hits": 24,
+			"sample_iri": "urn:uuid:7186d2c8-863c-4798-a196-20fb8712a631",
+			"record_type": "dict",
+			"record_keys": [
+				"dcterms:rights",
+				"dcterms:type",
+				"fasnacht:contributingAgent",
+				"fasnacht:publicationStatus",
+				"fasnacht:representationRole",
+				"oldap:attachedToRole",
+				"oldap:createdBy",
+				"oldap:creationDate",
+				"oldap:lastModificationDate",
+				"oldap:lastModifiedBy",
+				"rdf:type",
+				"schema:description",
+				"schema:name",
+				"shared:mediaAccessMode",
+				"shared:mediaUrl",
+				"shared:originalName",
+				"shared:protocol",
+				"shared:thumbnailUrl",
+				"virtual:inferredTypes"
+			],
+			"summary_count": 8,
+			"media_delivery_count": 5,
+			"staging_areas": 2,
+			"archive_capabilities": {
+				"canCreateUnits": true,
+				"canManageStructure": true,
+				"enabled": true,
+				"maxMutations": 500,
+				"maxRequestBytes": 2000000,
+				"maxSourceFolders": 5000
+			}
+		}
+	},
+	"failures": [],
+	"chama_owl_axioms": [
+		{
+			"g": {
+				"type": "uri",
+				"value": "https://chama.salsah.org/ns/onto"
+			},
+			"s": {
+				"type": "uri",
+				"value": "https://schema.org/hasPart"
+			},
+			"p": {
+				"type": "uri",
+				"value": "http://www.w3.org/2002/07/owl#inverseOf"
+			},
+			"o": {
+				"type": "uri",
+				"value": "https://schema.org/isPartOf"
+			}
+		},
+		{
+			"g": {
+				"type": "uri",
+				"value": "https://chama.salsah.org/ns/onto"
+			},
+			"s": {
+				"type": "uri",
+				"value": "https://schema.org/isPartOf"
+			},
+			"p": {
+				"type": "uri",
+				"value": "http://www.w3.org/2002/07/owl#inverseOf"
+			},
+			"o": {
+				"type": "uri",
+				"value": "https://schema.org/hasPart"
+			}
+		},
+		{
+			"g": {
+				"type": "uri",
+				"value": "https://chama.salsah.org/ns/onto"
+			},
+			"s": {
+				"type": "uri",
+				"value": "https://chama.salsah.org/ns/hasKnowledgeContribution"
+			},
+			"p": {
+				"type": "uri",
+				"value": "http://www.w3.org/2002/07/owl#inverseOf"
+			},
+			"o": {
+				"type": "uri",
+				"value": "https://chama.salsah.org/ns/describes"
+			}
+		},
+		{
+			"g": {
+				"type": "uri",
+				"value": "https://chama.salsah.org/ns/onto"
+			},
+			"s": {
+				"type": "uri",
+				"value": "https://chama.salsah.org/ns/describes"
+			},
+			"p": {
+				"type": "uri",
+				"value": "http://www.w3.org/2002/07/owl#inverseOf"
+			},
+			"o": {
+				"type": "uri",
+				"value": "https://chama.salsah.org/ns/hasKnowledgeContribution"
+			}
+		}
+	],
+	"contribution_navigation": [
+		{
+			"annotation": "https://chama.salsah.org/ns/Annotation_IMG_0171_2026_08_21",
+			"target": "https://chama.salsah.org/ns/IMG_0171",
+			"inverse_field_returned": true
+		},
+		{
+			"annotation": "https://chama.salsah.org/ns/Annotation_IMG_1751_2026_08_21",
+			"target": "https://chama.salsah.org/ns/IMG_1751",
+			"inverse_field_returned": true
+		},
+		{
+			"annotation": "https://chama.salsah.org/ns/Annotation_IMG_1521_2026_08_21",
+			"target": "https://chama.salsah.org/ns/IMG_1521",
+			"inverse_field_returned": true
+		},
+		{
+			"annotation": "https://chama.salsah.org/ns/Annotation_IMG_1508_2026_08_21",
+			"target": "https://chama.salsah.org/ns/IMG_1508",
+			"inverse_field_returned": true
+		}
+	],
+	"status": "passed",
+	"verification": {
+		"unit_tests": 115,
+		"browser_tests": 20,
+		"browser_backend": "mocked OLDAP; no live data writes",
+		"svelte_check": "0 errors, 0 warnings",
+		"production_build": "passed",
+		"setup_tests": 13,
+		"live_api": "read-only home API calls using existing service credentials",
+		"chama_asserted_describes": 4,
+		"chama_asserted_hasKnowledgeContribution": 0,
+		"deployment_performed": false
+	}
+}
