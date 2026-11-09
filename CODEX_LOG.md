@@ -1,3 +1,9 @@
+### Update 2026-11-09 17:33
+- Decisions: Preserve complete migration history in main via a non-squashed merge; keep pre-jena-merge-20261109 at the previous remote primary tip. No final release/version change or deployment.
+- Implementation: Refreshed origin; primary has no unique commits and merge-tree exactly matches reviewed migration a0bb3ff3b70c. Added current integration context only; runtime sources remain unchanged.
+- Open: Verify coordinated remote refs and record final merge IDs in setup/docs/jena-mainline-merge-20261109.md. Final 1.0.0 artifact publication and old checkout cleanup remain separate.
+- Risks/Assumptions: Existing deployed/candidate acceptance covers identical runtime trees; this is not a fresh full-system test. All nine checkouts were clean. Existing GraphDB checkouts and migration branches are retained.
+
 ### Update 2026-11-05 12:08
 - Decisions: Checkpoint the reviewed Jena migration changes on the migration branch; keep publication, merges and deployment separate.
 - Implementation: Rechecked Svelte (zero errors/warnings). All 146 packaged source files match the accepted home image snapshot; reviewed compatibility evidence and backend-neutral documentation. Checked candidate changes for accidental credentials and whitespace.
