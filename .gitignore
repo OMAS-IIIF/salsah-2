@@ -41,3 +41,7 @@ vite.config.ts.timestamp-*
 
 # Local modelling experiments and datasets (not required by the application)
 /experiments/
+
+# Python runtime artifacts from the optional API probe
+__pycache__/
+*.py[cod]

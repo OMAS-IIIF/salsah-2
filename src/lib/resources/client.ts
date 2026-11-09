@@ -75,9 +75,9 @@ async function readJson<T>(url: string, init?: RequestInit): Promise<T> {
 /**
  * List the most recently modified readable resources in a project.
  *
- * `oldap:Thing` is the project-neutral root class; GraphDB reasoning exposes
- * instances of project subclasses through it while OLDAP still enforces each
- * result's attached-role permission.
+ * `oldap:Thing` is the project-neutral root class. The OLDAP API resolves
+ * project subclasses and enforces attached-role permissions independently of
+ * the selected database backend.
  */
 export async function searchRecentResources(
 	project: string,

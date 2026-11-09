@@ -63,7 +63,9 @@ Keep credentials and local endpoints in ignored environment files. Only
 
 ## Verification
 
-Before committing, run:
+On a fresh clone, run `npm run build` once to generate the Paraglide modules
+before standalone type checks. Starting the Vite development server also
+generates them. Before committing, run:
 
 ```sh
 npm run check
@@ -105,3 +107,9 @@ Staging dialog; export status and download use the owner-protected API. Deep lin
 survive login without persisting reset or download tokens in browser storage.
 The API chooses mail destinations from trusted server configuration by browser
 Origin. Clients never submit an email base URL or route.
+
+## Jena migration
+
+The `migration/jena` checkout is checked against the Jena-backed home API.
+See [compatibility and deployment notes](docs/jena-compatibility.md). The
+application remains an API client; it does not select or connect to a database.
