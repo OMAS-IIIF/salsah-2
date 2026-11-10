@@ -70,6 +70,11 @@ const projectModel: OldapDataModel = {
 					toClass: 'chama:KnowledgeContribution',
 					inverseOf: 'chama:describes',
 					order: 26
+				},
+				{
+					iri: 'chama:reversePath',
+					toClass: 'chama:KnowledgeContribution',
+					inversePath: 'chama:describes'
 				}
 			]
 		},

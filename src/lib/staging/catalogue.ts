@@ -110,6 +110,7 @@ function isSimpleRelation(
 		property.toClass &&
 		(property.minCount ?? 0) === 0 &&
 		!property.inverseOf &&
+		!property.inversePath &&
 		!SIMPLE_RELATION_EXCLUSIONS.has(property.toClass)
 	);
 }

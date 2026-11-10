@@ -75,6 +75,8 @@ export interface OldapPropertyDefinition {
 	description?: string[];
 	datatype?: string;
 	toClass?: string;
+	/** Derived reverse relation; edit the forward property on the related resource. */
+	inversePath?: string;
 	inverseOf?: string;
 	minCount?: number;
 	maxCount?: number;

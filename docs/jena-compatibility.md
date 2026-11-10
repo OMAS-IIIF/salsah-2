@@ -1,4 +1,37 @@
-# Jena compatibility review — 2026-11-04
+# Jena compatibility review
+
+## Current review — 2026-11-10
+
+The primary development checkout is now `OLDAP/salsah-2` on `main`.
+The previous migration history was fast-forwarded from origin before this review.
+SALSAH remains an API-only client; no direct RDF/SPARQL transport is needed.
+
+One compatibility correction was necessary: the API exposes SHACL reverse fields
+as `inversePath`, in addition to legacy `inverseOf`. Both the resource editor and
+staging catalogue now exclude either kind from writable relation inputs. Reverse
+values remain available for display; changes belong to the forward relation on
+the related object. Regression fixtures include both metadata forms and verify
+that ordinary forward relations remain editable. Public API signatures are unchanged.
+
+Validation:
+
+- 115 unit/component tests and 20 mocked browser workflows pass.
+- Production build passes; Svelte/TypeScript reports zero errors and warnings.
+- Read-only requests against the local native Jena API 1.0.1 pass for Chama and
+  Fasnacht: models, recent search, archive roots, fulltext, details, summaries,
+  media delivery, staging and archive capabilities.
+- Each project returns eight recent resources/eight summaries, five media delivery
+  contracts, one archive root and 24 text hits. Staging counts are one/two.
+  All four sampled Chama contribution targets expose the reverse navigation field.
+- The local dataset is a separate restored home snapshot, not current production.
+  These checks do not establish live write, upload or browser CORS acceptance.
+
+No image was built/published and no deployment changed during this review.
+The source version remains 0.0.2; package/image release is a separate step.
+The older evidence below is historical; `jena-api-results.json` belongs to that
+review. Home installation was subsequently completed on November 4 (see codex.md).
+
+## Historical review — 2026-11-04
 
 The `migration/jena` checkout is cloned separately under OLDAP-Jena. SALSAH
 remains a project-neutral TypeScript/Svelte API client. No SPARQL, GraphDB
@@ -52,6 +85,6 @@ standalone type checking.
 The inherited Python/Poetry project is optional legacy ontology-experiment
 tooling, not a dependency of npm builds or the Node image. Its oldap-tools 0.x
 pin was not upgraded as part of the frontend review. For Jena ontology operations,
-use the independently verified sibling OLDAP-Jena/oldap-tools environment; do not
+use the independently verified sibling OLDAP/oldap-tools environment; do not
 use the legacy Poetry environment to write to the Jena dataset. Local ignored
 `experiments/` were deliberately not copied into the migration clone.

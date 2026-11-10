@@ -1,5 +1,7 @@
 # SALSAH 2 Project Context
 
+- Consolidation/API review (2026-11-10): `OLDAP/salsah-2` on `main` is the primary checkout. Resource editing and staging catalogue exclude both SHACL `inversePath` and legacy `inverseOf` from writable relations. Current local Jena API reads, 115 tests, 20 mocked browser workflows, build and typecheck pass. See `docs/jena-compatibility.md` for scope; no deployment or package version change. Earlier checkout/deployment notes below describe their dated state.
+
 - Jena mainline integration (2026-11-09): the accepted migration is integrated into `main` with its complete ancestry. Core runtime/package versions remain the tested RC versions; this Git integration does not publish final 1.0.0 packages or change deployed images. Prior primary ref is retained by `pre-jena-merge-20261109`; this tag records Git history, not the deployed GraphDB baseline. Migration branches and old GraphDB checkouts are retained. Coordinated evidence: ../oldap-setup/docs/jena-mainline-merge-20261109.md. Older pending-merge notes below are historical.
 
 - Home deployment (2026-11-04): https://salsah.home.org runs digest-pinned Jena AMD64 candidate `jena-0.0.2-rc1-47f138b8070c-amd64`, with API/media origin acceptance and trusted mail registry. Normal DNS/TLS and Chromium login page pass. See sibling oldap-setup/docs/jena-apps-home.md for provenance/rollback; production is unchanged.

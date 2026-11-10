@@ -1,3 +1,9 @@
+### Update 2026-11-10 16:51
+- Decisions: Consolidate development in OLDAP/salsah-2/main; retain the API-only architecture and current package version until release.
+- Implementation: Fast-forwarded accepted Jena history. Added inversePath metadata and excluded derived reverse relations from resource-editor/staging inputs alongside inverseOf; extended existing exact-field regression fixtures. Updated compatibility/context documentation.
+- Open: Release/image publication and deployment of this correction; live browser write/upload acceptance remains separate.
+- Risks/Assumptions: 115 unit/component and 20 mocked browser tests pass, production build passes, typecheck has zero errors/warnings. Read-only local Jena API 1.0.1 checks pass for Chama/Fasnacht on a restored home snapshot; no production data or services changed.
+
 ### Update 2026-11-09 17:33
 - Decisions: Preserve complete migration history in main via a non-squashed merge; keep pre-jena-merge-20261109 at the previous remote primary tip. No final release/version change or deployment.
 - Implementation: Refreshed origin; primary has no unique commits and merge-tree exactly matches reviewed migration a0bb3ff3b70c. Added current integration context only; runtime sources remain unchanged.

@@ -25,7 +25,8 @@ const model: OldapDataModel = {
 				{ iri: 'dcterms:creator', toClass: 'chama:Agent', order: 22 },
 				{ iri: 'chama:capturePlace', toClass: 'chama:Place', maxCount: 1, order: 24 },
 				{ iri: 'chama:dating', toClass: 'oldap:Dating' },
-				{ iri: 'chama:inverse', toClass: 'chama:Thing', inverseOf: 'chama:forward' }
+				{ iri: 'chama:inverse', toClass: 'chama:Thing', inverseOf: 'chama:forward' },
+				{ iri: 'chama:reversePath', toClass: 'chama:Agent', inversePath: 'chama:forward' }
 			]
 		}
 	]

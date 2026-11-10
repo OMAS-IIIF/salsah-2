@@ -69,6 +69,7 @@ function isEditableRelation(
 		property.toClass &&
 		(property.minCount ?? 0) === 0 &&
 		!property.inverseOf &&
+		!property.inversePath &&
 		!RELATION_TARGET_EXCLUSIONS.has(property.toClass)
 	);
 }
