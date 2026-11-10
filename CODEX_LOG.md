@@ -1,3 +1,9 @@
+### Update 2026-11-10 17:09
+- Decisions: Publish the accepted 0.0.3 image under an immutable version tag; deploy home before production.
+- Implementation: Built both architectures from release commit dae1bb9, checked runtime version/health/login, then pushed the same images (index 27cf49a30537). Home image-only update and public browser login pass; all other containers retain identity.
+- Open: Production deployment awaits VPN; see sibling setup release evidence for digest/rollback.
+- Risks/Assumptions: No latest overwrite, API/database changes or data migration. Authenticated write/upload tests remain outside this release smoke check.
+
 ### Update 2026-11-10 17:00
 - Decisions: Release the reviewed inversePath compatibility correction as SALSAH 0.0.3; publish an immutable multi-platform image and deploy through the shared image-only Jena updater.
 - Implementation: Increased package/lockfile patch version from 0.0.2 to 0.0.3. Application code is the accepted 7f5fadc tree.
