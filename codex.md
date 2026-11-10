@@ -1,6 +1,6 @@
 # SALSAH 2 Project Context
 
-- Release 0.0.3 (2026-11-10): source dae1bb9, published multi-platform image `lrosenth/salsah-2:v0.0.3`, digest `27cf49a30537b8931f4173e6bb86b77dcd44049065934a2d9aa9bf5ac5937406`. AMD64/ARM64 startup, version, health and login checks pass; home rollout replaces only SALSAH and public browser login passes. Production awaits VPN access. Evidence and rollback: sibling oldap-setup/docs/salsah-0.0.3-release.md.
+- Release 0.0.3 (2026-11-10): source dae1bb9, published multi-platform image `lrosenth/salsah-2:v0.0.3`, digest `27cf49a30537b8931f4173e6bb86b77dcd44049065934a2d9aa9bf5ac5937406`. AMD64/ARM64 startup, version, health and login checks pass; home rollout replaces only SALSAH and public browser login passes. Production deployment also passes: only SALSAH replaced, sibling containers unchanged, public health/browser login verified. Evidence and rollback: sibling oldap-setup/docs/salsah-0.0.3-release.md.
 
 - Consolidation/API review (2026-11-10): `OLDAP/salsah-2` on `main` is the primary checkout. Resource editing and staging catalogue exclude both SHACL `inversePath` and legacy `inverseOf` from writable relations. Current local Jena API reads, 115 tests, 20 mocked browser workflows, build and typecheck pass. See `docs/jena-compatibility.md` for scope; no deployment or package version change. Earlier checkout/deployment notes below describe their dated state.
 

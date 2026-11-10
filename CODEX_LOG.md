@@ -1,3 +1,9 @@
+### Update 2026-11-10 19:21
+- Decisions: Promote the exact home-accepted 0.0.3 image to salsah.org.
+- Implementation: Production deployment passed using the immutable multi-platform digest. Verified runtime version/origins, container health, HTTPS SALSAH/API health and browser login page; seven sibling containers unchanged. Rollback evidence is in sibling setup/docs/salsah-0.0.3-release.md.
+- Open: Optional user acceptance of authenticated workflows; no new source or image changes.
+- Risks/Assumptions: Initial busy coordination lock caused a safe refusal before changes; retry after release succeeded. No database or API changes.
+
 ### Update 2026-11-10 17:09
 - Decisions: Publish the accepted 0.0.3 image under an immutable version tag; deploy home before production.
 - Implementation: Built both architectures from release commit dae1bb9, checked runtime version/health/login, then pushed the same images (index 27cf49a30537). Home image-only update and public browser login pass; all other containers retain identity.
