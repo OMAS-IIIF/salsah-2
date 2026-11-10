@@ -1,3 +1,9 @@
+### Update 2026-11-10 17:00
+- Decisions: Release the reviewed inversePath compatibility correction as SALSAH 0.0.3; publish an immutable multi-platform image and deploy through the shared image-only Jena updater.
+- Implementation: Increased package/lockfile patch version from 0.0.2 to 0.0.3. Application code is the accepted 7f5fadc tree.
+- Open: Image acceptance/publication, home rollout and subsequent production rollout.
+- Risks/Assumptions: Existing 115 unit/component tests, 20 browser workflows and local API read acceptance cover the unchanged application code. Deployment selects only SALSAH; no API or database migration is required.
+
 ### Update 2026-11-10 16:51
 - Decisions: Consolidate development in OLDAP/salsah-2/main; retain the API-only architecture and current package version until release.
 - Implementation: Fast-forwarded accepted Jena history. Added inversePath metadata and excluded derived reverse relations from resource-editor/staging inputs alongside inverseOf; extended existing exact-field regression fixtures. Updated compatibility/context documentation.
